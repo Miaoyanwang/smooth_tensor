@@ -82,7 +82,7 @@ hgmodel.block = function(W,n,order = T){
   P=symmetrize(W)[u,u,u] ## symmetric probability tensor
   U=array(runif(n^3,0,1),c(n,n,n)) ## i.i.d. Unif tensor
   U=symmetrize(U) ## symmetric Unif tensor. i.i.d. in subtensor
-  A=1*(U>P) ## generate Bernoulli entries with prob P. Both U and P are symmetric, so A is symmetric
+  A=1*(U<P) ## generate Bernoulli entries with prob P. Both U and P are symmetric, so A is symmetric
 
   ## output
   output = list()

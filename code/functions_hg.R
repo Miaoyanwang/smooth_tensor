@@ -1,14 +1,27 @@
 ## produce probability tensor
 pbtensor = function(K){
-  W = array(0,c(K,K,K))
-  for (i in 1:K){
-    for (j in 1:K){
-      for(k in 1:K){
-        W[i,j,k] = runif(1)
-      }
-    }
-  }
+   ####################################
+  ## Update by Miaoyan. Replace loop by array operation
+  ####################################
+  #W = array(0,c(K,K,K))
+  #for (i in 1:K){
+  #  for (j in 1:K){
+  #    for(k in 1:K){
+  #      W[i,j,k] = runif(1)
+  #   }
+  # }
+  #}
+  W=array(runif(K^3,0,1),c(K,K,K))
   return(W)
+}
+
+symmetrize=function(W){
+    W_sym=W
+    perm_group=rbind(c(1,3,2),c(2,1,3),c(2,3,1),c(3,1,2),c(3,2,1))
+    for(s in 1:nrow(perm_group)){
+        W_sym=W_sym+aperm(W,perm=perm_group[s,])
+    }
+    return(W_sym/6)
 }
 
 ## cut function
@@ -50,18 +63,27 @@ hgmodel.block = function(W,n,order = T){
   
   u = round((K-1)*v)+1
   
+  ####################################
+  ## Update by Miaoyan. Loop is slow. should be avoided by all means.
+  ####################################
   ## Construct Probability tensor and  a random hyper graph
-  P = array(0,c(n,n,n)); A = array(0,c(n,n,n))
-  for (i in 1:(n-2)){
-    for (j in (i+1):(n-1)){
-      for(k in (j+1):n){
-        p = W[u[i],u[j],u[k]]
-        P[i,j,k] = P[i,k,j] = P[j,i,k] = P[j,k,i] = P[k,i,j] = P[k,j,i] = p
-        A[i,j,k] = A[i,k,j] = A[j,i,k] = A[j,k,i] = A[k,i,j] = A[k,j,i] = rbinom(1,1,p)
-      }
-    }
-  }
+  #P = array(0,c(n,n,n)); A = array(0,c(n,n,n))
+  #for (i in 1:(n-2)){
+  # for (j in (i+1):(n-1)){
+  #   for(k in (j+1):n){
+  #     p = W[u[i],u[j],u[k]]
+  #     P[i,j,k] = P[i,k,j] = P[j,i,k] = P[j,k,i] = P[k,i,j] = P[k,j,i] = p
+  #       A[i,j,k] = A[i,k,j] = A[j,i,k] = A[j,k,i] = A[k,i,j] = A[k,j,i] = rbinom(1,1,p)
+  #    }
+  #  }
+  #}
   
+  ## replace loop by array operation
+  P=symmetrize(W)[u,u,u] ## symmetric probability tensor
+  U=array(runif(n^3,0,1),c(n,n,n)) ## i.i.d. Unif tensor
+  U=symmetrize(U) ## symmetric Unif tensor. i.i.d. in subtensor
+  A=1*(U>P) ## generate Bernoulli entries with prob P. Both U and P are symmetric, so A is symmetric
+
   ## output
   output = list()
   output$A = A

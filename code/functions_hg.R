@@ -1,6 +1,6 @@
 ## produce probability tensor
 pbtensor = function(K){
-   ####################################
+  ####################################
   ## Update by Miaoyan. Replace loop by array operation
   ####################################
   #W = array(0,c(K,K,K))
@@ -16,12 +16,12 @@ pbtensor = function(K){
 }
 
 symmetrize=function(W){
-    W_sym=W
-    perm_group=rbind(c(1,3,2),c(2,1,3),c(2,3,1),c(3,1,2),c(3,2,1))
-    for(s in 1:nrow(perm_group)){
-        W_sym=W_sym+aperm(W,perm=perm_group[s,])
-    }
-    return(W_sym/6)
+  W_sym=W
+  perm_group=rbind(c(1,3,2),c(2,1,3),c(2,3,1),c(3,1,2),c(3,2,1))
+  for(s in 1:nrow(perm_group)){
+    W_sym=W_sym+aperm(W,perm=perm_group[s,])
+  }
+  return(W_sym/6)
 }
 
 ## cut function
@@ -30,21 +30,29 @@ cut = function(tnsr){
   if (!(cond)){
     stop("* tensor must have same dimension for each mode")
   }
-  n = dim(tnsr)[1]
-  for(i in 1:n){
-    for(j in 1:n){
-      for(k in 1:n)
-        if((i-j)*(j-k)*(k-i)==0){
-          tnsr[i,j,k] = 0
-        }
-    }
-  }
+  # n = dim(tnsr)[1]
+  # for(i in 1:n){
+  #   for(j in 1:n){
+  #     for(k in 1:n)
+  #       if((i-j)*(j-k)*(k-i)==0){
+  #         tnsr[i,j,k] = 0
+  #       }
+  #   }
+  # }
+  tnsr = array( apply( tnsr, 3, function(x) {x[ row(x) == col(x) ] <-0; x} ), dim(tnsr) )
+  tnsr = array( apply( tnsr, 2, function(x) {x[ row(x) == col(x) ] <-0; x} ), dim(tnsr) )
+  tnsr = array( apply( tnsr, 1, function(x) {x[ row(x) == col(x) ] <-0; x} ), dim(tnsr) )
+  
+  
   return(tnsr)
 }
 
 
+
+
+
 ## given probability tensor, generate adjacenty tensor.
-hgmodel.block = function(W,n,order = T){
+hgmodel.block = function(W,n,order = T,diagP = T){
   ## Check W
   cond1 = ((all(W>=0))&&(all(W<=1)))
   cond2 = (dim(W)[1]==dim(W)[2])&(dim(W)[1]==dim(W)[3])
@@ -80,10 +88,14 @@ hgmodel.block = function(W,n,order = T){
   
   ## replace loop by array operation
   P=symmetrize(W)[u,u,u] ## symmetric probability tensor
+  if(diagP==F){
+    P = cut(P)  
+  }
+  
   U=array(rnorm(n^3,0,1),c(n,n,n)) ## i.i.d. Gaussian tensor
   U=symmetrize(U) ## symmetric Gaussian tensor. i.i.d. in subtensor
   A=1*(U<qnorm(P,0,1/sqrt(6))) ## an equivalent way of generating Bernoulli entries with prob P. Both U and P are symmetric, so A is symmetric
-
+  
   ## output
   output = list()
   output$A = A
@@ -91,25 +103,30 @@ hgmodel.block = function(W,n,order = T){
   return(output)
 }
 
-f1 = function(x,c) return(1/(1+exp(-c*sum(x^2))))
+f1 = function(x,c) return(1/(1+exp(-(c*sum(x^2)))))
 
-hgmodel.smooth = function(n,c,option = 1){
+hgmodel.smooth = function(n,c,option = 1, diagP = T){
   if (option ==1){
     xi = runif(n)
-    P = array(0,c(n,n,n)); A = array(0,c(n,n,n))
-    
-    for (i in 1:(n-2)){
-      for (j in (i+1):(n-1)){
-        for(k in (j+1):n){
-          x = c(xi[i],xi[j],xi[k])
-          P[i,j,k] = P[i,k,j] = P[j,i,k] = P[j,k,i] = P[k,i,j] = P[k,j,i] = f1(x,c)
-          A[i,j,k] = A[i,k,j] = A[j,i,k] = A[j,k,i] = A[k,i,j] = A[k,j,i] = rbinom(1,1,f1(x,c))
-        }
-      }
+    P = array(apply(expand.grid(xi, xi, xi), 1, function(x) f1(x,c)), dim=c(n,n,n))
+    if(diagP==F){
+      P = cut(P)
     }
+    
+    U=array(rnorm(n^3,0,1),c(n,n,n)) ## i.i.d. Gaussian tensor
+    U=symmetrize(U)   
+    A=1*(U<qnorm(P,0,1/sqrt(6)))
+    # for (i in 1:(n-2)){
+    #   for (j in (i+1):(n-1)){
+    #     for(k in (j+1):n){
+    #       x = c(xi[i],xi[j],xi[k])
+    #       P[i,j,k] = P[i,k,j] = P[j,i,k] = P[j,k,i] = P[k,i,j] = P[k,j,i] = f1(x,c)
+    #       A[i,j,k] = A[i,k,j] = A[j,i,k] = A[j,k,i] = A[k,i,j] = A[k,j,i] = rbinom(1,1,f1(x,c))
+    #     }
+    #   }
+    # }
   }
-  
-  
+
   
   ## output
   output = list()

@@ -64,7 +64,7 @@ hgmodel.block = function(W,n,order = T){
   u = round((K-1)*v)+1
   
   ####################################
-  ## Update by Miaoyan. Loop is slow. should be avoided by all means.
+  ## Update by Miaoyan. Loop is slow. should be avoided if possible.
   ####################################
   ## Construct Probability tensor and  a random hyper graph
   #P = array(0,c(n,n,n)); A = array(0,c(n,n,n))

@@ -80,9 +80,9 @@ hgmodel.block = function(W,n,order = T){
   
   ## replace loop by array operation
   P=symmetrize(W)[u,u,u] ## symmetric probability tensor
-  U=array(runif(n^3,0,1),c(n,n,n)) ## i.i.d. Unif tensor
-  U=symmetrize(U) ## symmetric Unif tensor. i.i.d. in subtensor
-  A=1*(U<P) ## an equivalent way of generating Bernoulli entries with prob P. Both U and P are symmetric, so A is symmetric
+  U=array(runif(n^3,0,1),c(n,n,n)) ## i.i.d. Gaussian tensor
+  U=symmetrize(U) ## symmetric Gaussian tensor. i.i.d. in subtensor
+  A=1*(U<qnorm(P,0,1/sqrt(6))) ## an equivalent way of generating Bernoulli entries with prob P. Both U and P are symmetric, so A is symmetric
 
   ## output
   output = list()

@@ -75,8 +75,8 @@ hgmodel.block = function(W,n,order = T,diagP = T){
   ## Update by Miaoyan. Loop is slow. should be avoided if possible.
   ####################################
   ## Construct Probability tensor and  a random hyper graph
-  #P = array(0,c(n,n,n)); A = array(0,c(n,n,n))
-  #for (i in 1:(n-2)){
+  # P = array(0,c(n,n,n)); A = array(0,c(n,n,n))
+  # for (i in 1:(n-2)){
   # for (j in (i+1):(n-1)){
   #   for(k in (j+1):n){
   #     p = W[u[i],u[j],u[k]]
@@ -84,7 +84,7 @@ hgmodel.block = function(W,n,order = T,diagP = T){
   #       A[i,j,k] = A[i,k,j] = A[j,i,k] = A[j,k,i] = A[k,i,j] = A[k,j,i] = rbinom(1,1,p)
   #    }
   #  }
-  #}
+  # }
   
   ## replace loop by array operation
   P=symmetrize(W)[u,u,u] ## symmetric probability tensor

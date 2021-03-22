@@ -1,17 +1,21 @@
 ## produce probability tensor
-pbtensor = function(K){
+pbtensor = function(K,sym = T){
   ####################################
   ## Update by Miaoyan. Replace loop by array operation
   ####################################
-  #W = array(0,c(K,K,K))
-  #for (i in 1:K){
-  #  for (j in 1:K){
-  #    for(k in 1:K){
-  #      W[i,j,k] = runif(1)
-  #   }
-  # }
-  #}
-  W=array(runif(K^3,0,1),c(K,K,K))
+
+  if(sym==T){
+    W = array(0,c(K,K,K))
+    for (i in 1:K){
+      for (j in i:K){
+        for(k in j:K){
+          W[i,j,k] = W[i,k,j] = W[j,i,k]  = W[j,k,i] = W[k,i,j] = W[k,j,i] =runif(1)
+        }
+      }
+    }
+  }else{
+    W=array(runif(K^3,0,1),c(K,K,K)) 
+  }
   return(W)
 }
 
@@ -87,7 +91,7 @@ hgmodel.block = function(W,n,order = T,diagP = T){
   # }
   
   ## replace loop by array operation
-  P=symmetrize(W)[u,u,u] ## symmetric probability tensor
+  P=symmetrize(W[u,u,u]) ## symmetric probability tensor
   if(diagP==F){
     P = cut(P)  
   }

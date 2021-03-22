@@ -20,34 +20,52 @@ for(i in 1:4){
   }
 }
 
+
 g = index[BATCH,1]
 n = index[BATCH,2]
 
 
-err = NULL; 
-for(r in 1:5){
-      W = pbtensor(g)
-      W2 = pbtensor(g,sym = F)
-      hgmod = hgmodel.block(W,n,diagP = F)
 
-      A = hgmod$A
-      P = hgmod$P
-      res = tbmClustering(A,g,g,g,sym=T,diagP = F)
-
-      
-      
-      err = c(err,mean(abs(res$judgeX-P)^2))
-
+# comparison of two scenarios
+err1 = NULL; err2= NULL
+rep = 1
+for(r in 1:rep){
+  W = pbtensor(g)  # symmetric core => picking one non-diagonal entry
+  W2 = pbtensor(g,sym = F) # nonsymmetric=> average corresponding non diagnal entries
+  hgmod = hgmodel.block(W,n,diagP = F)
+  hgmod2 = hgmodel.block(W2,n,diagP = F)
+  
+    
+  A = hgmod$A
+  P = hgmod$P
+    
+  A2 = hgmod2$A
+  P2 = hgmod2$P
+  
+  res = tbmClustering(A,g,g,g,sym=T,diagP = F)
+  res2 = tbmClustering(A2,g,g,g,sym=T,diagP = F)
+  
+  err1 = c(err1,mean(abs(res$judgeX-P)^2))
+  err2 = c(err2,mean(abs(res2$judgeX-P2)^2))
 }
+  
+  
 
 #A is generated from sym
-#A2 is generated from non sym
+#A2 is generated from non ]-sym
+
+mean(abs(res$judgeX-P)^2)
+plot(c(res$judgeX[,,1]),c(P[,,1]))
+
+mean(abs(res2$judgeX-P2)^2)
+plot(c(res2$judgeX[,,1]),c(P2[,,1]))
 
 
 
-MSE = mean(err)
-sd = sd(err)
-save(MSE,sd,file = paste("sbm_verify",g,"_",n,".RData",sep = ""))
+
+# MSE = mean(err)
+# sd = sd(err)
+# save(MSE,sd,file = paste("sbm_verify",g,"_",n,".RData",sep = ""))
 
 
 # 

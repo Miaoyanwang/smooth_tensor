@@ -24,40 +24,57 @@ g = index[BATCH,1]
 n = index[BATCH,2]
 
 
-err1 = NULL; err2 = NULL
+err = NULL; 
 for(r in 1:5){
       W = pbtensor(g)
-      hgmod = hgmodel.block(W,n)
+      W2 = pbtensor(g,sym = F)
+      hgmod = hgmodel.block(W,n,diagP = F)
+
       A = hgmod$A
       P = hgmod$P
-      res = tbmClustering(A,g,g,g,sym=T)
-      err1 = c(err1,mean(abs(cut(res$judgeX)-P)^2))
-      err2 = c(err2,sum(abs(cut(res$judgeX)-P)^2)/length(which(P!=0)))
+      res = tbmClustering(A,g,g,g,sym=T,diagP = F)
+
+      
+      
+      err = c(err,mean(abs(res$judgeX-P)^2))
+
 }
-MSE1 = mean(err1); MSE2 = mean(err2)
-sd1 = sd(err1); sd2 = sd(err2)
 
-save(MSE1,MSE2,sd1,sd2,file = paste("sbm",g,"_",n,".RData",sep = ""))
+#A is generated from sym
+#A2 is generated from non sym
 
-# smooth hypergraphon model
-hgmod = hgmodel.smooth(n,1)
-A = hgmod$A
-P = hgmod$P
 
-res = tbmClustering(A,g,g,g)
-mean(abs(cut(res$judgeX)-P)^2)
 
-err = NULL
-for(r in 1:5){
-  hgmod = hgmodel.smooth(n,1)
-  A = hgmod$A
-  P = hgmod$P
-  
-  res = tbmClustering(A,g,g,g)
-  err = c(err,mean(abs(cut(res$judgeX)-P)^2))
-}
 MSE = mean(err)
 sd = sd(err)
-save(MSE,sd,file = paste("smooth",g,"_",n,".RData",sep = ""))
+save(MSE,sd,file = paste("sbm_verify",g,"_",n,".RData",sep = ""))
 
 
+# 
+# ##################################################################################
+# # smooth hypergraphon model
+# hgmod = hgmodel.smooth(n,1)
+# A = hgmod$A
+# P = hgmod$P
+# 
+# res = tbmClustering(A,g,g,g)
+# mean(abs(cut(res$judgeX)-P)^2)
+# 
+# err = NULL
+# for(r in 1:5){
+#   hgmod = hgmodel.smooth(n,1)
+#   A = hgmod$A
+#   P = hgmod$P
+#   
+#   res = tbmClustering(A,g,g,g)
+#   err = c(err,mean(abs(cut(res$judgeX)-P)^2))
+# }
+# MSE = mean(err)
+# sd = sd(err)
+# save(MSE,sd,file = paste("smooth",g,"_",n,".RData",sep = ""))
+# 
+# library(plot.matrix)
+# par(mar=c(5.1, 4.1, 4.1, 4.1))
+# plot(A[,,2])
+# plot(P[,,3])
+# plot(W[,,1])

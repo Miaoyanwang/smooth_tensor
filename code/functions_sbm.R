@@ -70,22 +70,6 @@ cut = function(tnsr){
 
 
 
-tbmClustering = function(x,k,r,l,lambda=0,sym = F,diagP = T,max.iter=100,threshold = 1e-5,sim.times=1,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,method="L0"){
-  #x=test;lambda=1e-3;max.iter=200;threshold = 5e-3;sim.times=10
-  if (sim.times == 1) return(classify2(x,k,r,l,sym,diagP,lambda=lambda,max.iter = max.iter,threshold = threshold,Cs.init = Cs.init,Ds.init = Ds.init,Es.init = Es.init,method=method))
-  if (.Platform$OS.type == "windows") {
-    result = lapply(rep(list(x),sim.times), classify2, k,r,l,sym,diagP,lambda,max.iter,threshold,trace,Cs.init,Ds.init,Es.init,method=method)
-    objs = unlist(lapply(result, function(result){result$objs}))
-  } else {
-    result = mclapply(rep(list(x),sim.times), classify2, k,r,l,sym,diagP,lambda,max.iter,threshold,trace,Cs.init,Ds.init,Es.init,nstart = sample(1:1000,1),method=method,mc.cores = n.cores)
-    objs = unlist(lapply(result, function(result){result$objs}))
-  }
-  result = result[[which(objs == min(objs))[1]]]
-  
-  return(result)
-}
-
-
 
 
 #give x as an array

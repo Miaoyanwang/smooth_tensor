@@ -70,7 +70,7 @@ cut = function(tnsr){
 
 
 
-tbmClustering = function(x,k,r,l,lambda=0,sym = F,diagP = T,max.iter=1000,threshold = 1e-10,sim.times=1,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,method="L0"){
+tbmClustering = function(x,k,r,l,lambda=0,sym = F,diagP = T,max.iter=100,threshold = 1e-5,sim.times=1,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,method="L0"){
   #x=test;lambda=1e-3;max.iter=200;threshold = 5e-3;sim.times=10
   if (sim.times == 1) return(classify2(x,k,r,l,sym,diagP,lambda=lambda,max.iter = max.iter,threshold = threshold,Cs.init = Cs.init,Ds.init = Ds.init,Es.init = Es.init,method=method))
   if (.Platform$OS.type == "windows") {
@@ -142,24 +142,24 @@ UpdateClusters_tensor = function (x, mus, curCs, curDs) {
 
 
 
-classify2 = function(x,k,r,l,sym = F,diagP = T,lambda=0,max.iter=1000,threshold = 1e-15,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=20,method="L0",center=FALSE){
+classify2 = function(x,k,r,l,sym = F,diagP = T,lambda=0,max.iter=100,threshold = 1e-5,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=20,method="L0",center=FALSE){
   n = dim(x)[1]; p = dim(x)[2]; q = dim(x)[3]
   if(center == TRUE) {
     mustemp <- mean(x)
     x <- x-mustemp
   }
   if(is.null(Cs.init)){
-    if(k==1) Cs = rep(1,n) else {Cs  = kmeans(tensor_unfold(x,1),k,nstart = nstart)$cluster}
+    if(k==1) Cs = rep(1,n) else {Cs  = kmeans(tensor_unfold(x,1),algorithm="Lloyd",k,nstart = nstart)$cluster}
   } else {
     Cs = Cs.init
   }
   if(is.null(Ds.init)){
-    if(r==1) Ds = rep(1,p) else {Ds  = kmeans(tensor_unfold(x,2),r,nstart = nstart)$cluster}
+    if(r==1) Ds = rep(1,p) else {Ds  = kmeans(tensor_unfold(x,2),algorithm="Lloyd",r,nstart = nstart)$cluster}
   } else {
     Ds = Ds.init
   }
   if(is.null(Es.init)){
-    if(l==1) Es = rep(1,q) else {Es  = kmeans(tensor_unfold(x,3),l,nstart = nstart)$cluster}
+    if(l==1) Es = rep(1,q) else {Es  = kmeans(tensor_unfold(x,3),algorithm="Lloyd",l,nstart = nstart)$cluster}
   } else {
     Es = Es.init
   }
@@ -221,7 +221,7 @@ classify2 = function(x,k,r,l,sym = F,diagP = T,lambda=0,max.iter=1000,threshold 
 
 
 
-tbmClustering = function(x,k,r,l,lambda=0,sym = F,diagP = T,max.iter=1000,threshold = 1e-10,sim.times=1,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,method="L0"){
+tbmClustering = function(x,k,r,l,lambda=0,sym = F,diagP = T,max.iter=100,threshold = 1e-3,sim.times=1,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,method="L0"){
   #x=test;lambda=1e-3;max.iter=200;threshold = 5e-3;sim.times=10
   if (sim.times == 1){
     result = classify2(x,k,r,l,sym,diagP,lambda=lambda,max.iter = max.iter,threshold = threshold,Cs.init = Cs.init,Ds.init = Ds.init,Es.init = Es.init,method=method)

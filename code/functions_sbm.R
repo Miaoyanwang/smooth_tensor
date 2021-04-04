@@ -127,8 +127,8 @@ UpdateClusters_tensor = function (x, mus, curCs, curDs) {
 
 
 
-
-classify2 = function(x,k,r,l,sym = F,diagP = T,lambda=0,max.iter=1000,threshold = 1e-15,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=80,method="L0",center=FALSE){
+#Classify => tbmClustering
+tbmClustering = function(x,k,r,l,sym = F,diagP = T,lambda=0,max.iter=100,threshold = 1e-15,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=80,method="L0",center=FALSE){
   n = dim(x)[1]; p = dim(x)[2]; q = dim(x)[3]
   if(center == TRUE) {
     mustemp <- mean(x)
@@ -204,32 +204,34 @@ classify2 = function(x,k,r,l,sym = F,diagP = T,lambda=0,max.iter=1000,threshold 
     mu.array <- mu.array + mustemp
   }
   mu.array[abs(mu.array)<=1e-6] = 0
-  return(list("judgeX"=mu.array[Cs,Ds,Es, drop=FALSE],"Cs"=Cs,"Ds"=Ds,"Es"=Es,"objs"=objs[length(objs)], "mus"=mu.array))
-}
-
-
-tbmClustering = function(x,k,r,l,lambda=0,sym = F,diagP = T,max.iter=100,threshold = 1e-3,sim.times=1,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,method="L0"){
-  #x=test;lambda=1e-3;max.iter=200;threshold = 5e-3;sim.times=10
-  if (sim.times == 1){
-    result = classify2(x,k,r,l,sym,diagP,lambda=lambda,max.iter = max.iter,threshold = threshold,Cs.init = Cs.init,Ds.init = Ds.init,Es.init = Es.init,method=method)
-    if(diagP == F){
-      result$judgeX = cut(result$judgeX)
-    }
-    return(result)
-  } 
-  if (.Platform$OS.type == "windows") {
-    result = lapply(rep(list(x),sim.times), classify2, k,r,l,sym,diagP,lambda,max.iter,threshold,trace,Cs.init,Ds.init,Es.init,method=method)
-    objs = unlist(lapply(result, function(result){result$objs}))
-  } else {
-    result = mclapply(rep(list(x),sim.times), classify2, k,r,l,sym,diagP,lambda,max.iter,threshold,trace,Cs.init,Ds.init,Es.init,nstart = 80,method=method,mc.cores = n.cores)
-    objs = unlist(lapply(result, function(result){result$objs}))
+  if(diagP==F){
+    judgeX = cut(mu.array[Cs,Ds,Es, drop=FALSE])
   }
-  result = result[[which(objs == min(objs))[1]]]
-  if(diagP == F){
-    result$judgeX = cut(result$judgeX)
-  }
-  return(result)
+  return(list("judgeX"=judgeX,"Cs"=Cs,"Ds"=Ds,"Es"=Es,"objs"=objs[length(objs)], "mus"=mu.array))
 }
 
 
 
+# 
+# tbmClustering = function(x,k,r,l,lambda=0,sym = F,diagP = T,max.iter=100,threshold = 1e-3,sim.times=1,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,method="L0"){
+#   #x=test;lambda=1e-3;max.iter=200;threshold = 5e-3;sim.times=10
+#   if (sim.times == 1){
+#     result = classify2(x,k,r,l,sym,diagP,lambda=lambda,max.iter = max.iter,threshold = threshold,Cs.init = Cs.init,Ds.init = Ds.init,Es.init = Es.init,method=method)
+#     if(diagP == F){
+#       result$judgeX = cut(result$judgeX)
+#     }
+#     return(result)
+#   } 
+#   if (.Platform$OS.type == "windows") {
+#     result = lapply(rep(list(x),sim.times), classify2, k,r,l,sym,diagP,lambda,max.iter,threshold,trace,Cs.init,Ds.init,Es.init,method=method)
+#     objs = unlist(lapply(result, function(result){result$objs}))
+#   } else {
+#     result = mclapply(rep(list(x),sim.times), classify2, k,r,l,sym,diagP,lambda,max.iter,threshold,trace,Cs.init,Ds.init,Es.init,nstart = 80,method=method,mc.cores = n.cores)
+#     objs = unlist(lapply(result, function(result){result$objs}))
+#   }
+#   result = result[[which(objs == min(objs))[1]]]
+#   if(diagP == F){
+#     result$judgeX = cut(result$judgeX)
+#   }
+#   return(result)
+# }

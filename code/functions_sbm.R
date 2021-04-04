@@ -221,7 +221,7 @@ tbmClustering = function(x,k,r,l,lambda=0,sym = F,diagP = T,max.iter=100,thresho
     result = lapply(rep(list(x),sim.times), classify2, k,r,l,sym,diagP,lambda,max.iter,threshold,trace,Cs.init,Ds.init,Es.init,method=method)
     objs = unlist(lapply(result, function(result){result$objs}))
   } else {
-    result = mclapply(rep(list(x),sim.times), classify2, k,r,l,sym,diagP,lambda,max.iter,threshold,trace,Cs.init,Ds.init,Es.init,nstart = sample(1:1000,1),method=method,mc.cores = n.cores)
+    result = mclapply(rep(list(x),sim.times), classify2, k,r,l,sym,diagP,lambda,max.iter,threshold,trace,Cs.init,Ds.init,Es.init,nstart = 80,method=method,mc.cores = n.cores)
     objs = unlist(lapply(result, function(result){result$objs}))
   }
   result = result[[which(objs == min(objs))[1]]]

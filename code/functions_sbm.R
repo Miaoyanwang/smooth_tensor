@@ -127,8 +127,43 @@ UpdateClusters_tensor = function (x, mus, curCs, curDs) {
 
 
 
+HSC = function(x,k,l,r){
+  result = list()
+  u1 = svd(tensor_unfold(x,1))$u[,1:k]
+  u2 = svd(tensor_unfold(x,2))$u[,1:l]
+  u3 = svd(tensor_unfold(x,3))$u[,1:r]
+  hu1 = svd(tensor_unfold(ttl(as.tensor(x),list(t(u2),t(u3)),ms = c(2,3))@data,1))$u[,1:k]
+  hu2 = svd(tensor_unfold(ttl(as.tensor(x),list(t(u1),t(u3)),ms = c(1,3))@data,2))$u[,1:l]
+  hu3 = svd(tensor_unfold(ttl(as.tensor(x),list(t(u1),t(u2)),ms = c(1,2))@data,3))$u[,1:r]
+  Y1 = hu1%*%t(hu1)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu2),t(hu3)),ms = c(2,3))@data,1)
+  Y2 = hu2%*%t(hu2)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu1),t(hu3)),ms = c(1,3))@data,2)
+  Y3 = hu3%*%t(hu3)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu1),t(hu2)),ms = c(1,2))@data,3)
+  result$Cs  = kmeans(Y1,k)$cluster
+  result$Ds  = kmeans(Y2,r)$cluster
+  result$Es  = kmeans(Y3,l)$cluster
+  
+  return(result)
+}
+
+
+
+
+
+
+
+
 #Classify => tbmClustering
-tbmClustering = function(x,k,r,l,sym = F,diagP = T,lambda=0,max.iter=100,threshold = 1e-15,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=80,method="L0",center=FALSE){
+#Followings are changes
+#1) I change the order of updates: from Cs=>Es=>Ds=>core to Cs=>core=>Es=>core=>Ds=>core 
+#This is because previous order of update makes the number of clustering in Es and Ds small
+
+#2) Initialization really matters for the performance. I change nstart option in Kmeans from 25=>100 to make sure we have good initialization
+#However, current one makes algorithm slow. I constructed HSC initialization but did not work well by now. 
+#I will figure out how to initialize group efficiently.
+
+#3) Fix some bugs which happened when initial values (Cs.init,Ds.init,Es.init) are given.
+
+tbmClustering = function(x,k,r,l,sym = F,diagP = T,lambda=0,max.iter=100,threshold = 1e-15,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=100,method="L0",center=FALSE){
   n = dim(x)[1]; p = dim(x)[2]; q = dim(x)[3]
   if(center == TRUE) {
     mustemp <- mean(x)

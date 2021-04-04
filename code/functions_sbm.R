@@ -94,15 +94,6 @@ HSC = function(x,k,l,r){
     return(result)
 }
 
-tic("start")
-ini=HSC(A,k,r,l)
-res = tbmClustering(A,k,r,l,sym = T, diagP = F,Cs.init = ini$Cs,Ds.init = ini$Cs,Es.init = ini$Cs)
-mean(abs(res$judgeX-P)^2)
-toc()
-
-res = tbmClustering(A,k,r,l,sym = T, diagP = F)
-mean(abs(res$judgeX-P)^2)
-
 #Classify => tbmClustering
 #Followings are changes
 #1) I change the order of updates: from Cs=>Es=>Ds=>core to Cs=>core=>Es=>core=>Ds=>core

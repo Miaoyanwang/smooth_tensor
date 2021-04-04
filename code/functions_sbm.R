@@ -94,6 +94,15 @@ HSC = function(x,k,l,r){
     return(result)
 }
 
+tic("start")
+ini=HSC(A,k,r,l)
+res = tbmClustering(A,k,r,l,sym = T, diagP = F,Cs.init = ini$Cs,Ds.init = ini$Cs,Es.init = ini$Cs)
+mean(abs(res$judgeX-P)^2)
+toc()
+
+res = tbmClustering(A,k,r,l,sym = T, diagP = F)
+mean(abs(res$judgeX-P)^2)
+
 #Classify => tbmClustering
 #Followings are changes
 #1) I change the order of updates: from Cs=>Es=>Ds=>core to Cs=>core=>Es=>core=>Ds=>core
@@ -105,7 +114,7 @@ HSC = function(x,k,l,r){
 
 #3) Fix some bugs which happened when initial values (Cs.init,Ds.init,Es.init) are given.
 
-tbmClustering = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-15,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=10){
+tbmClustering = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-15,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=100){
     n = dim(x)[1]; p = dim(x)[2]; q = dim(x)[3]
     if(is.null(Cs.init)){
         if(k==1) Cs = rep(1,n) else {Cs  = kmeans(tensor_unfold(x,1),k,nstart = nstart)$cluster}

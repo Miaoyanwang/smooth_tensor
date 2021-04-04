@@ -104,6 +104,7 @@ hgmodel.block = function(W,n,order = T,diagP = T){
   output = list()
   output$A = A
   output$P = P
+  output$Cs = u
   return(output)
 }
 

@@ -1,31 +1,16 @@
-library(rTensor)
 
-Objective = function (x, mu.array, Cs, Ds, Es, lambda = 0, method="L0") {
-  if(method=="L0") return(sum((x - mu.array[Cs, Ds, Es, drop=FALSE])^2,na.rm = T)+2*lambda*sum(mu.array !=0 ,na.rm = T))
-  if(method=="L1") return(sum((x - mu.array[Cs, Ds, Es, drop=FALSE])^2,na.rm = T)+2*lambda*sum(abs(mu.array),na.rm = T))
-  stop("No such kind of method:", method,".\n")
+library(rTensor)
+Objective = function (x, mu.array, Cs, Ds, Es) {
+  return(sum((x - mu.array[Cs, Ds, Es, drop=FALSE])^2,na.rm = T))
 }
 
 makediagNA = function(n){
-  
   tnsr = array(1,dim = c(n,n,n))
   tnsr = array( apply( tnsr, 3, function(x) {x[ row(x) == col(x) ] <-NA; x} ), dim(tnsr) )
   tnsr = array( apply( tnsr, 2, function(x) {x[ row(x) == col(x) ] <-NA; x} ), dim(tnsr) )
   tnsr = array( apply( tnsr, 1, function(x) {x[ row(x) == col(x) ] <-NA; x} ), dim(tnsr) )
-  
-  
   return(tnsr)
 }
-
-
-Soft = function (a, b, method="L0"){
-  if (b < 0) 
-    stop("Can soft-threshold by a nonnegative quantity only.")
-  if(method == "L0") return(sign(a) * ifelse(abs(a)>b, abs(a), 0))
-  if(method == "L1") return(sign(a) * pmax(0, abs(a) - b))
-  stop("No such kind of method:", method,".\n")
-}
-
 
 tensor_unfold = function(tensor,dim=1){
   if (dim == 1) unfold = aperm(tensor,c(3,2,1))
@@ -36,8 +21,7 @@ tensor_unfold = function(tensor,dim=1){
 }
 
 
-ReNumber = function (Cs) 
-{
+ReNumber = function (Cs){
   newCs <- rep(NA, length(Cs))
   uniq <- sort(unique(Cs))
   for (i in 1:length(uniq)) {
@@ -52,61 +36,49 @@ cut = function(tnsr){
   if (!(cond)){
     stop("* tensor must have same dimension for each mode")
   }
-  # n = dim(tnsr)[1]
-  # for(i in 1:n){
-  #   for(j in 1:n){
-  #     for(k in 1:n)
-  #       if((i-j)*(j-k)*(k-i)==0){
-  #         tnsr[i,j,k] = 0
-  #       }
-  #   }
-  # }
   tnsr = array( apply( tnsr, 3, function(x) {x[ row(x) == col(x) ] <-0; x} ), dim(tnsr) )
   tnsr = array( apply( tnsr, 2, function(x) {x[ row(x) == col(x) ] <-0; x} ), dim(tnsr) )
   tnsr = array( apply( tnsr, 1, function(x) {x[ row(x) == col(x) ] <-0; x} ), dim(tnsr) )
   
-  
   return(tnsr)
 }
 
-
-
-
-
-
-#give x as an array
-UpdateMus_tensor = function (x, Cs, Ds, Es, lambda=0, method="L0") {
+UpdateMus_tensor = function (x, Cs, Ds, Es) {
   uniqCs = sort(unique(Cs))
   uniqDs = sort(unique(Ds))
   uniqEs = sort(unique(Es))
-
+  
   mus = array(NA, c(length(uniqCs), length(uniqDs), length(uniqEs)))
-  if(method=="L1"){
-    for (k in uniqCs){
-      for (r in uniqDs){
-        for (l in uniqEs){
-          if (lambda == 0) mus[k,r,l] = mean(x[Cs==k,Ds==r,Es==l],na.rm = T)
-          if (lambda > 0) mus[k,r,l] = Soft(mean(x[Cs==k,Ds==r,Es==l],na.rm = T),lambda/(2*sum(Cs==k)*sum(Ds==r)*sum(Es==l)),method=method)
-          if (lambda < 0) stop("Cannot have a negative tuning parameter value.")
-        }
+  for (k in uniqCs){
+    for (r in uniqDs){
+      for (l in uniqEs){
+        mus[k,r,l] = mean(x[Cs==k,Ds==r,Es==l],na.rm = T)
       }
     }
-  }## added 
-  if(method=="L0"){
-    for (k in uniqCs){
-      for (r in uniqDs){
-        for (l in uniqEs){
-          if (lambda == 0) mus[k,r,l] = mean(x[Cs==k,Ds==r,Es==l],na.rm = T)
-          if (lambda > 0) mus[k,r,l] = Soft(mean(x[Cs==k,Ds==r,Es==l],na.rm = T),sqrt(lambda/(sum(Cs==k)*sum(Ds==r)*sum(Es==l))),method=method)
-          ### modified
-          ## Soft(mean(x[Cs==k,Ds==r,Es==l]),lambda/sum(Cs==k)*sum(Ds==r)*sum(Es==l),method=method)
-          if (lambda < 0) stop("Cannot have a negative tuning parameter value.")
-        }
-      }
-    }
-  }## added
+  }
   return(mus)
 }
+
+
+# Update cluster_tensor version 1
+
+# UpdateClusters_tensor = function (x, mus, curCs, curDs) {
+#   Cs.new <- rep(NA, length(curCs))
+#   uniq <- 1:max(curCs)
+#   mus.expandcolumns <- mus[, curDs, drop = FALSE]
+#   for (i in 1:nrow(x)) {
+#     dist2.clust <- NULL
+#     for (k in 1:length(uniq)) {
+#       #see which cluster is closest to one sample
+#       dist2.clust <- c(dist2.clust, sum((x[i, , drop = FALSE] -
+#                                            mus.expandcolumns[k, , drop = FALSE])^2,na.rm = T))
+#     }
+#     wh <- which(dist2.clust == min(dist2.clust))
+#     Cs.new[i] <- wh[1]
+#   }
+#   return(Cs.new)
+# }
+
 
 Cal_yk = function(x,Cs,Ds,Es,mode){
   d = dim(x)
@@ -140,7 +112,7 @@ Cal_yk = function(x,Cs,Ds,Es,mode){
 }
 
 
-
+# Update cluster_tensor version 2
 
 UpdateClusters_tensor = function (x, mu.array, Cs, Ds, Es,mode) {
   new <- rep(NA,length(list(Cs,Ds,Es)[[mode]]))
@@ -158,27 +130,9 @@ UpdateClusters_tensor = function (x, mu.array, Cs, Ds, Es,mode) {
   return(new)
 }
 
-# UpdateClusters_tensor = function (x, mus, curCs, curDs) {
-#   Cs.new <- rep(NA, length(curCs))
-#   uniq <- 1:max(curCs)
-#   mus.expandcolumns <- mus[, curDs, drop = FALSE]
-#   #if (dim(mus.expandcolumns)[1]==1) mus
-#   for (i in 1:nrow(x)) {
-#     dist2.clust <- NULL
-#     for (k in 1:length(uniq)) {
-#       #see which cluster is closest to one sample
-#       dist2.clust <- c(dist2.clust, sum((x[i, , drop = FALSE] - 
-#                                            mus.expandcolumns[k, , drop = FALSE])^2,na.rm = T))
-#     }
-#     wh <- which(dist2.clust == min(dist2.clust))
-#     Cs.new[i] <- wh[1]
-#   }
-#   return(Cs.new)
-# }
 
 
-
-HSC = function(x,k,l,r,nstart=100,sym = F){
+HSC = function(x,k,l,r){
   result = list()
   u1 = svd(tensor_unfold(x,1))$u[,1:k]
   u2 = svd(tensor_unfold(x,2))$u[,1:l]
@@ -189,28 +143,16 @@ HSC = function(x,k,l,r,nstart=100,sym = F){
   Y1 = hu1%*%t(hu1)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu2),t(hu3)),ms = c(2,3))@data,1)
   Y2 = hu2%*%t(hu2)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu1),t(hu3)),ms = c(1,3))@data,2)
   Y3 = hu3%*%t(hu3)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu1),t(hu2)),ms = c(1,2))@data,3)
-  if (sym==T) {
-    result$Ds = result$Es = result$Cs  = kmeans(Y1,k,nstart = nstart)$cluster
-    
-  }else{
-    result$Cs  = kmeans(Y1,k,nstart = nstart)$cluster
-    result$Ds  = kmeans(Y2,r,nstart = nstart)$cluster
-    result$Es  = kmeans(Y3,l,nstart = nstart)$cluster
-  }
+  result$Cs  = kmeans(Y1,k,nstart = 100)$cluster
+  result$Ds  = kmeans(Y2,r,nstart = 100)$cluster
+  result$Es  = kmeans(Y3,l,nstart = 100)$cluster
   
   return(result)
 }
 
-#Classify => tbmClustering
-#Followings are changes
-#1) I change the order of updates: from Cs=>Es=>Ds=>core to Cs=>core=>Es=>core=>Ds=>core
-#This is because previous order of update makes the number of clustering in Es and Ds small
 
-#2) Initialization really matters for the performance. I change nstart option in Kmeans from 25=>100 to make sure we have good initialization
-#However, current one makes algorithm slow. I constructed HSC initialization but did not work well by now.
-#I will figure out how to initialize group efficiently.
+# tbm Clustering v2 based on Update cluster_tensor version 2
 
-#3) Fix some bugs which happened when initial values (Cs.init,Ds.init,Es.init) are given.
 
 tbmClustering = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-15,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=25){
   n = dim(x)[1]; p = dim(x)[2]; q = dim(x)[3]
@@ -292,12 +234,10 @@ tbmClustering = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-1
   return(list("judgeX"=judgeX,"Cs"=Cs,"Ds"=Ds,"Es"=Es,"objs"=objs[-1], "mus"=mu.array))
 }
 
+# tbm Clustering v1 based on Update cluster_tensor version 1
 
 
-
-
-
-# tbmClustering = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-15,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=100){
+# tbmClustering = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-15,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=10){
 #   n = dim(x)[1]; p = dim(x)[2]; q = dim(x)[3]
 #   if(is.null(Cs.init)){
 #     if(k==1) Cs = rep(1,n) else {Cs  = kmeans(tensor_unfold(x,1),k,nstart = nstart)$cluster}
@@ -374,4 +314,3 @@ tbmClustering = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-1
 #   }
 #   return(list("judgeX"=judgeX,"Cs"=Cs,"Ds"=Ds,"Es"=Es,"objs"=objs[length(objs)], "mus"=mu.array))
 # }
-

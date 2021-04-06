@@ -1,4 +1,3 @@
-
 library(rTensor)
 Objective = function (x, mu.array, Cs, Ds, Es) {
   return(sum((x - mu.array[Cs, Ds, Es, drop=FALSE])^2,na.rm = T))
@@ -132,7 +131,7 @@ UpdateClusters_tensor = function (x, mu.array, Cs, Ds, Es,mode) {
 
 
 
-HSC = function(x,k,l,r){
+HSC = function(x,k,l,r,nstart=100){
   result = list()
   u1 = svd(tensor_unfold(x,1))$u[,1:k]
   u2 = svd(tensor_unfold(x,2))$u[,1:l]
@@ -143,9 +142,10 @@ HSC = function(x,k,l,r){
   Y1 = hu1%*%t(hu1)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu2),t(hu3)),ms = c(2,3))@data,1)
   Y2 = hu2%*%t(hu2)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu1),t(hu3)),ms = c(1,3))@data,2)
   Y3 = hu3%*%t(hu3)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu1),t(hu2)),ms = c(1,2))@data,3)
-  result$Cs  = kmeans(Y1,k,nstart = 100)$cluster
-  result$Ds  = kmeans(Y2,r,nstart = 100)$cluster
-  result$Es  = kmeans(Y3,l,nstart = 100)$cluster
+  result$Cs  = kmeans(Y1,k,nstart = nstart)$cluster
+  result$Ds =result$Es =result$Cs
+  #result$Ds  = kmeans(Y2,r,nstart = nstart)$cluster
+  #result$Es  = kmeans(Y3,l,nstart = nstart)$cluster
   
   return(result)
 }
@@ -154,7 +154,7 @@ HSC = function(x,k,l,r){
 # tbm Clustering v2 based on Update cluster_tensor version 2
 
 
-tbmClustering = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-15,trace=FALSE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=25){
+tbmClustering = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-15,trace=TRUE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=25){
   n = dim(x)[1]; p = dim(x)[2]; q = dim(x)[3]
   if(is.null(Cs.init)){
     if(k==1) Cs = rep(1,n) else {Cs  = kmeans(tensor_unfold(x,1),k,nstart = nstart)$cluster}
@@ -177,10 +177,10 @@ tbmClustering = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-1
   if(diagP==F){
     x = x*makediagNA(n)
   }
-  objs <- 1e+15
   improvement <- 1e+10
   i <- 1
   mu.array = UpdateMus_tensor(x,Cs,Ds,Es)
+  objs <- Objective(x, mu.array, Cs, Ds, Es)
   while((improvement > threshold) & (i <= max.iter)){
     ### first mode
     Cs = UpdateClusters_tensor(x,mu.array,Cs,Ds,Es,1)

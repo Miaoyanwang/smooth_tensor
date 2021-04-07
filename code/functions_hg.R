@@ -3,13 +3,15 @@ pbtensor = function(K,sym = T){
   ####################################
   ## Update by Miaoyan. Replace loop by array operation
   ####################################
-
+  temp=sort(runif(K*(K-1)*(K-2)/6+K*(K-1)+K,0,1)) ## sorted
+s=0
   if(sym==T){
     W = array(0,c(K,K,K))
     for (i in 1:K){
       for (j in i:K){
         for(k in j:K){
-          W[i,j,k] = W[i,k,j] = W[j,i,k]  = W[j,k,i] = W[k,i,j] = W[k,j,i] =runif(1)
+            s=s+1
+          W[i,j,k] = W[i,k,j] = W[j,i,k]  = W[j,k,i] = W[k,i,j] = W[k,j,i] =temp[s]
         }
       }
     }
@@ -95,6 +97,7 @@ hgmodel.block = function(W,n,order = T,diagP = T){
   if(diagP==F){
     P = cut(P)  
   }
+  
   
   U=array(rnorm(n^3,0,1),c(n,n,n)) ## i.i.d. Gaussian tensor
   U=symmetrize(U) ## symmetric Gaussian tensor. i.i.d. in subtensor

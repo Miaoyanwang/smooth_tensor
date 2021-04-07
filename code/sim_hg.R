@@ -18,12 +18,7 @@ Cs = hgmod$Cs
 ini=HSC(A,k,r,l)
 res =tbmClustering(A,k,r,l,Cs.init=ini$Cs,Ds.init=ini$Cs,Es.init=ini$Cs,sym = T, diagP = F)
 result[i,rep]=mean((res$judgeX-P)^2)
-
-ini2=HSC(P,k,r,l)
-res2 =tbmClustering(P,k,r,l,Cs.init=ini2$Cs,Ds.init=ini2$Cs,Es.init=ini2$Cs,sym = T, diagP = F)
-result2[i,rep]=mean((res2$judgeX-P)^2)
-
 }
 }
 
-plot(apply(result,1,mean)-apply(result2,1,mean))
+plot(apply(result,1,mean))

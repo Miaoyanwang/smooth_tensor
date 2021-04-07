@@ -4,14 +4,14 @@ pbtensor = function(K,sym = T){
   ## Update by Miaoyan. Replace loop by array operation
   ####################################
   temp=sort(runif(K*(K-1)*(K-2)/6+K*(K-1)+K,0,1)) ## sorted
-s=0
+  s=0
   if(sym==T){
     W = array(0,c(K,K,K))
     for (i in 1:K){
       for (j in i:K){
         for(k in j:K){
             s=s+1
-          W[i,j,k] = W[i,k,j] = W[j,i,k]  = W[j,k,i] = W[k,i,j] = W[k,j,i] =temp[s]
+            W[i,j,k] = W[i,k,j] = W[j,i,k]  = W[j,k,i] = W[k,i,j] = W[k,j,i]=temp[s]
         }
       }
     }

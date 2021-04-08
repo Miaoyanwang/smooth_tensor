@@ -20,9 +20,13 @@ tensor_unfold = function(tensor,dim=1){
 }
 
 
-ReNumber = function (Cs){
+ReNumber = function (Cs,sort = T){
   newCs <- rep(NA, length(Cs))
-  uniq <- sort(unique(Cs))
+  if(sort==T){
+    uniq <- unique(Cs)
+  }else{
+    uniq <- sort(unique(Cs)) 
+  }
   for (i in 1:length(uniq)) {
     newCs[Cs == uniq[i]] <- i
   }
@@ -131,7 +135,7 @@ UpdateClusters_tensor = function (x, mu.array, Cs, Ds, Es,mode) {
 
 
 
-HSC = function(x,k,l,r,nstart=100){
+HSC = function(x,k,l,r,nstart = 40,sym = F){
   result = list()
   u1 = svd(tensor_unfold(x,1))$u[,1:k]
   u2 = svd(tensor_unfold(x,2))$u[,1:l]
@@ -142,10 +146,14 @@ HSC = function(x,k,l,r,nstart=100){
   Y1 = hu1%*%t(hu1)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu2),t(hu3)),ms = c(2,3))@data,1)
   Y2 = hu2%*%t(hu2)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu1),t(hu3)),ms = c(1,3))@data,2)
   Y3 = hu3%*%t(hu3)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu1),t(hu2)),ms = c(1,2))@data,3)
-  result$Cs  = kmeans(Y1,k,nstart = nstart)$cluster
-  result$Ds =result$Es =result$Cs
-  #result$Ds  = kmeans(Y2,r,nstart = nstart)$cluster
-  #result$Es  = kmeans(Y3,l,nstart = nstart)$cluster
+  if(sym ==F){
+    result$Cs  = kmeans(Y1,k,nstart = nstart)$cluster
+    result$Ds  = kmeans(Y2,r,nstart = nstart)$cluster
+    result$Es  = kmeans(Y3,l,nstart = nstart)$cluster  
+  }else{
+    result$Ds =result$Es =result$Cs = kmeans(Y1,k,nstart = nstart)$cluster
+  }
+  
   
   return(result)
 }
@@ -230,6 +238,8 @@ tbmClustering = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-1
   }
   if(diagP==F){
     judgeX = cut(mu.array[Cs,Ds,Es, drop=FALSE])
+  }else{
+    judgeX = mu.array[Cs,Ds,Es, drop=FALSE]
   }
   return(list("judgeX"=judgeX,"Cs"=Cs,"Ds"=Ds,"Es"=Es,"objs"=objs[-1], "mus"=mu.array))
 }

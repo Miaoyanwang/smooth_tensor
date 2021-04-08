@@ -1,25 +1,42 @@
 ## produce probability tensor
-pbtensor = function(K,sym = T){
+pbtensor = function(K,sym = T,smooth = T){
   ####################################
   ## Update by Miaoyan. Replace loop by array operation
   ####################################
-  temp=sort(runif(K*(K-1)*(K-2)/6+K*(K-1)+K,0,1)) ## sorted
-  s=0
-  if(sym==T){
-    W = array(0,c(K,K,K))
-    for (i in 1:K){
-      for (j in i:K){
-        for(k in j:K){
+  if(smooth ==T){
+    temp=sort(runif(K*(K-1)*(K-2)/6+K*(K-1)+K,0,1)) ## sorted
+    s=0
+    if(sym==T){
+      W = array(0,c(K,K,K))
+      for (i in 1:K){
+        for (j in i:K){
+          for(k in j:K){
             s=s+1
             W[i,j,k] = W[i,k,j] = W[j,i,k]  = W[j,k,i] = W[k,i,j] = W[k,j,i]=temp[s]
+          }
         }
       }
+    }else{
+      W=array(sort(runif(K^3,0,1)),c(K,K,K)) 
     }
   }else{
-    W=array(runif(K^3,0,1),c(K,K,K)) 
+    if(sym==T){
+      W = array(0,c(K,K,K))
+      for (i in 1:K){
+        for (j in i:K){
+          for(k in j:K){
+            W[i,j,k] = W[i,k,j] = W[j,i,k]  = W[j,k,i] = W[k,i,j] = W[k,j,i]=runif(1)
+          }
+        }
+      }
+    }else{
+      W=array(runif(K^3,0,1),c(K,K,K)) 
+    }    
   }
+
   return(W)
 }
+
 
 symmetrize=function(W){
   W_sym=W
@@ -142,4 +159,78 @@ hgmodel.smooth = function(n,c,option = 1, diagP = T){
   output$P = P
   return(output)
 }
+
+
+
+
+#### signal + noise model #########################
+
+signaltensor = function(K,A,sym = F,smooth = T){
+
+  if(smooth == T){
+    if(sym==T){
+      temp=sort(runif(K*(K-1)*(K-2)/6+K*(K-1)+K,-A,A))
+      s = 0
+      W = array(0,c(K,K,K))
+      for (i in 1:K){
+        for (j in i:K){
+          for(k in j:K){
+            s = s+1
+            W[i,j,k] = W[i,k,j] = W[j,i,k]  = W[j,k,i] = W[k,i,j] = W[k,j,i] =temp[s]
+          }
+        }
+      }
+    }else{
+      W=array(sort(runif(K^3,-A,A)),c(K,K,K)) 
+    }
+  }else{
+    if(sym==T){
+      W = array(0,c(K,K,K))
+      for (i in 1:K){
+        for (j in i:K){
+          for(k in j:K){
+            W[i,j,k] = W[i,k,j] = W[j,i,k]  = W[j,k,i] = W[k,i,j] = W[k,j,i] =runif(1,-A,A)
+          }
+        }
+      }
+    }else{
+      W=array(runif(K^3,-A,A),c(K,K,K)) 
+    }
+  }
+  
+  return(W)
+}
+
+
+
+snmod.block = function(W,n,order = T){
+  K = dim(W)[1]
+  
+  if(order == T){
+    v1 = sort(runif(n));v2 = sort(runif(n));v3 = sort(runif(n))
+  }else{
+    v1 = runif(n);  v2 = runif(n); v3 = runif(n)
+  }
+  
+  
+  u1 = round((K-1)*v1)+1;u2 = round((K-1)*v2)+1;u3 = round((K-1)*v3)+1
+  
+  
+  noise=array(rnorm(n^3,0,1),c(n,n,n)) ## i.i.d. Gaussian noise tensor
+  obsTensor = W[u1,u2,u3]+noise
+  ## output
+  output = list()
+  output$noise = noise
+  output$obsTensor = obsTensor
+  output$Sig = obsTensor-noise
+  output$Cs = u1;output$Ds = u2; output$Es = u3
+  
+  return(output)
+}
+
+
+
+
+
+
 

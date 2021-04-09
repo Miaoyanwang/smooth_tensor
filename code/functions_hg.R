@@ -75,7 +75,7 @@ cut = function(tnsr){
 
 
 ## given probability tensor, generate adjacenty tensor.
-hgmodel.block = function(W,n,order = T,diagP = T){
+hgmodel.block = function(W,n,order = T,diagP = T,type="Bernoulli"){
   ## Check W
   cond1 = ((all(W>=0))&&(all(W<=1)))
   cond2 = (dim(W)[1]==dim(W)[2])&(dim(W)[1]==dim(W)[3])
@@ -118,7 +118,12 @@ hgmodel.block = function(W,n,order = T,diagP = T){
   
   U=array(rnorm(n^3,0,1),c(n,n,n)) ## i.i.d. Gaussian tensor
   U=symmetrize(U) ## symmetric Gaussian tensor. i.i.d. in subtensor
+  if(type=="Bernoulli"){
   A=1*(U<qnorm(P,0,1/sqrt(6))) ## an equivalent way of generating Bernoulli entries with prob P. Both U and P are symmetric, so A is symmetric
+  }else if(type=="Gaussian"){
+      A=P+0.1*U## gaussian noise
+  }
+
   
   ## output
   output = list()

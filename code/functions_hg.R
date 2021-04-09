@@ -217,7 +217,7 @@ snmod.block = function(W,n,sym = T,diagP = F){
   }else{
     v1 = v2 = v3 = runif(n)
     noise=array(rnorm(n^3,0,1),c(n,n,n)) ## i.i.d. Gaussian tensor
-    noise=symmetrize(noise)/sqrt(3) ## symmetric Gaussian tensor. i.i.d. in subtensor
+    noise=symmetrize(noise)*sqrt(6) ## symmetric Gaussian tensor. i.i.d. in subtensor
   }
    
 

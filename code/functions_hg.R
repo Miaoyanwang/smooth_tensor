@@ -208,21 +208,30 @@ signaltensor = function(K,A,sym = F,smooth = T){
 
 
 
-snmod.block = function(W,n,order = T){
+snmod.block = function(W,n,sym = T,diagP = F){
   K = dim(W)[1]
   
-  if(order == T){
-    v1 = sort(runif(n));v2 = sort(runif(n));v3 = sort(runif(n))
-  }else{
+  if(sym==F){
     v1 = runif(n);  v2 = runif(n); v3 = runif(n)
+    noise=array(rnorm(n^3,0,1),c(n,n,n)) ## i.i.d. Gaussian noise tensor
+  }else{
+    v1 = v2 = v3 = runif(n)
+    noise=array(rnorm(n^3,0,1),c(n,n,n)) ## i.i.d. Gaussian tensor
+    noise=symmetrize(noise)/sqrt(3) ## symmetric Gaussian tensor. i.i.d. in subtensor
   }
+   
+
   
   
   u1 = round((K-1)*v1)+1;u2 = round((K-1)*v2)+1;u3 = round((K-1)*v3)+1
   
   
-  noise=array(rnorm(n^3,0,1),c(n,n,n)) ## i.i.d. Gaussian noise tensor
+  
   obsTensor = W[u1,u2,u3]+noise
+  if(diagP==F){
+    noise = cut(noise)
+    obsTensor = cut(obsTensor)
+  }
   ## output
   output = list()
   output$noise = noise

@@ -46,22 +46,38 @@ cut = function(tnsr){
   return(tnsr)
 }
 
+# UpdateMus_tensor = function (x, Cs, Ds, Es) {
+#   uniqCs = sort(unique(Cs))
+#   uniqDs = sort(unique(Ds))
+#   uniqEs = sort(unique(Es))
+#   
+#   mus = array(NA, c(length(uniqCs), length(uniqDs), length(uniqEs)))
+#   for (k in uniqCs){
+#     for (r in uniqDs){
+#       for (l in uniqEs){
+#         mus[k,r,l] = mean(x[Cs==k,Ds==r,Es==l],na.rm = T)
+#       }
+#     }
+#   }
+#   return(mus)
+# }
+
+
+
 UpdateMus_tensor = function (x, Cs, Ds, Es) {
-  uniqCs = sort(unique(Cs))
-  uniqDs = sort(unique(Ds))
-  uniqEs = sort(unique(Es))
+  Cs = ReNumber(Cs,sort = F); Ds = ReNumber(Ds,sort = F); Es = ReNumber(Es,sort = F)
   
-  mus = array(NA, c(length(uniqCs), length(uniqDs), length(uniqEs)))
-  for (k in uniqCs){
-    for (r in uniqDs){
-      for (l in uniqEs){
+  mus = array(NA, c(length(unique(Cs)), length(unique(Ds)), length(unique(Es))))
+  d = dim(mus)
+  for (k in 1:d[1]){
+    for (r in 1:d[2]){
+      for (l in 1:d[3]){
         mus[k,r,l] = mean(x[Cs==k,Ds==r,Es==l],na.rm = T)
       }
     }
   }
   return(mus)
 }
-
 
 # Update cluster_tensor version 1
 
@@ -242,6 +258,100 @@ tbmClustering = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-1
     judgeX = mu.array[Cs,Ds,Es, drop=FALSE]
   }
   return(list("judgeX"=judgeX,"Cs"=Cs,"Ds"=Ds,"Es"=Es,"objs"=objs[-1], "mus"=mu.array))
+}
+
+
+
+
+tbmClustering2 = function(x,k,r,l,sym = F,diagP = T,max.iter=100,threshold = 1e-5,trace=TRUE,Cs.init=NULL,Ds.init=NULL,Es.init=NULL,nstart=25){
+  n = dim(x)[1]; p = dim(x)[2]; q = dim(x)[3]
+  if(is.null(Cs.init)){
+    if(k==1) Cs = rep(1,n) else {Cs  = kmeans(tensor_unfold(x,1),k,nstart = nstart)$cluster}
+  } else {
+    Cs = ReNumber(Cs.init)
+  }
+  if(is.null(Ds.init)){
+    if(r==1) Ds = rep(1,p) else {Ds  = kmeans(tensor_unfold(x,2),r,nstart = nstart)$cluster}
+  } else {
+    Ds = ReNumber(Ds.init)
+  }
+  if(is.null(Es.init)){
+    if(l==1) Es = rep(1,q) else {Es  = kmeans(tensor_unfold(x,3),l,nstart = nstart)$cluster}
+  } else {
+    Es = ReNumber(Es.init)
+  }
+  
+  improvement <- 1e+10
+  i <- 1
+  mu.array = UpdateMus_tensor(x,Cs,Ds,Es)
+  objs =Objective(x, mu.array, Cs, Ds, Es)
+  while((improvement > threshold) & (i <= max.iter)){
+    ### first mode 
+    Yk_fold <- tensor_unfold(Cal_yk(x,Cs,Ds,Es,1),1)
+    temp <-  kmeans(Yk_fold,k,nstart = 40)$cluster
+    #Cs = UpdateClusters_tensor(x,mu.array,Cs,Ds,Es,1)
+    #objs <- c(objs, Objective(x, mu.array, Cs, Ds, Es))
+    temp <- ReNumber(temp)
+    if(Objective(x, UpdateMus_tensor(x,temp,Ds,Es), temp, Ds, Es)<min(objs)){
+      Cs <- temp
+      mu.array = UpdateMus_tensor(x,Cs,Ds,Es)
+    }
+    objs <- c(objs, Objective(x, mu.array, Cs, Ds, Es));objs
+    
+    ### second mode
+    Yk_fold <- tensor_unfold(Cal_yk(x,Cs,Ds,Es,2),2)
+    temp <-  kmeans(Yk_fold,r,nstart = 40)$cluster
+    #Ds = UpdateClusters_tensor(x,mu.array,Cs,Ds,Es,2)
+    #objs <- c(objs, Objective(x, mu.array, Cs, Ds, Es))
+    temp <- ReNumber(temp)
+    if(Objective(x, UpdateMus_tensor(x,Cs,temp,Es), Cs, temp, Es)<min(objs)){
+      Ds <- temp
+      mu.array = UpdateMus_tensor(x,Cs,Ds,Es)
+    }
+    objs <- c(objs, Objective(x, mu.array, Cs, Ds, Es));objs
+    
+    
+    ### third mode
+    Yk_fold <- tensor_unfold(Cal_yk(x,Cs,Ds,Es,3),3)
+    temp <-  kmeans(Yk_fold,l,nstart = 40)$cluster
+    #Es = UpdateClusters_tensor(x,mu.array,Cs,Ds,Es,3)
+    #objs <- c(objs, Objective(x, mu.array, Cs, Ds, Es))
+    temp <- ReNumber(temp)
+    if(Objective(x, UpdateMus_tensor(x,Cs,Ds,temp), Cs, Ds, temp)<min(objs)){
+      Es <- temp
+      mu.array = UpdateMus_tensor(x,Cs,Ds,Es)
+    }
+    objs <- c(objs, Objective(x, mu.array, Cs, Ds, Es));objs
+    ### end of update
+    improvement <- abs(objs[length(objs)] - objs[length(objs) -
+                                                   3])/abs(objs[length(objs) - 3])
+    i <- i + 1
+    if(trace) cat("step",i,",improvement=",improvement,".\n")
+    if (is.na(improvement)) break
+  }
+  if (sym ==T){
+    symobj = NULL
+    
+    temp = UpdateMus_tensor(x,Cs,Cs,Cs)
+    symobj = c(symobj,Objective(x, temp, Cs, Cs, Cs))
+    temp = UpdateMus_tensor(x,Ds,Ds,Ds)
+    symobj = c(symobj,Objective(x, temp, Ds, Ds, Ds))
+    temp = UpdateMus_tensor(x,Es,Es,Es)
+    symobj = c(symobj,Objective(x, temp, Es, Es, Es))
+    Cs = Ds = Es = list(Cs,Ds,Es)[[which.min(symobj)]]
+    mu.array = UpdateMus_tensor(x,Cs,Ds,Es)
+    objs <- c(objs, Objective(x, mu.array, Cs, Ds, Es))
+  }
+  if (i > max.iter) {
+    warning("The algorithm has not converged by the specified maximum number of iteration.\n")
+  }
+  if(diagP==F){
+    mu.array = UpdateMus_tensor(x*makediagNA(n),Cs,Ds,Es)
+    judgeX = cut(mu.array[Cs,Ds,Es, drop=FALSE])
+  }else{
+    judgeX = mu.array[Cs,Ds,Es, drop=FALSE]
+  }
+  return(list("judgeX"=judgeX,"Cs"=Cs,"Ds"=Ds,"Es"=Es,"objs"=objs, "mus"=mu.array))
 }
 
 # tbm Clustering v1 based on Update cluster_tensor version 1

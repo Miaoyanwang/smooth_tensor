@@ -75,7 +75,7 @@ cut = function(tnsr){
 
 
 ## given probability tensor, generate adjacenty tensor.
-hgmodel.block = function(W,n,order = T,diagP = T,type="Bernoulli"){
+hgmodel.block = function(W,n,order = T,diagP = F,type="Bernoulli"){
   ## Check W
   cond1 = ((all(W>=0))&&(all(W<=1)))
   cond2 = (dim(W)[1]==dim(W)[2])&(dim(W)[1]==dim(W)[3])
@@ -94,20 +94,6 @@ hgmodel.block = function(W,n,order = T,diagP = T,type="Bernoulli"){
   
   u = round((K-1)*v)+1
   
-  ####################################
-  ## Update by Miaoyan. Loop is slow. should be avoided if possible.
-  ####################################
-  ## Construct Probability tensor and  a random hyper graph
-  # P = array(0,c(n,n,n)); A = array(0,c(n,n,n))
-  # for (i in 1:(n-2)){
-  # for (j in (i+1):(n-1)){
-  #   for(k in (j+1):n){
-  #     p = W[u[i],u[j],u[k]]
-  #     P[i,j,k] = P[i,k,j] = P[j,i,k] = P[j,k,i] = P[k,i,j] = P[k,j,i] = p
-  #       A[i,j,k] = A[i,k,j] = A[j,i,k] = A[j,k,i] = A[k,i,j] = A[k,j,i] = rbinom(1,1,p)
-  #    }
-  #  }
-  # }
   
   ## replace loop by array operation
   P=symmetrize(W[u,u,u]) ## symmetric probability tensor
@@ -133,30 +119,42 @@ hgmodel.block = function(W,n,order = T,diagP = T,type="Bernoulli"){
   return(output)
 }
 
-f1 = function(x,c) return(1/(1+exp(-(c*sum(x^2)))))
 
-hgmodel.smooth = function(n,c,option = 1, diagP = T){
-  if (option ==1){
+f1 = function(x) return(1/(1+exp(-(sum(x^2)))))
+f2 = function(x) return(prod(x))
+f3 = function(x) return(log(1+max(x)))
+f4 = function(x) return(exp(-min(x)))
+
+hgmodel.smooth = function(n,option = 1, diagP = F){
+  if (option == 1){
     xi = runif(n)
-    P = array(apply(expand.grid(xi, xi, xi), 1, function(x) f1(x,c)), dim=c(n,n,n))
+    P = array(apply(expand.grid(xi, xi, xi), 1, function(x) f1(x)), dim=c(n,n,n))
     if(diagP==F){
       P = cut(P)
     }
-    
-    U=array(rnorm(n^3,0,1),c(n,n,n)) ## i.i.d. Gaussian tensor
-    U=symmetrize(U)   
-    A=1*(U<qnorm(P,0,1/sqrt(6)))
-    # for (i in 1:(n-2)){
-    #   for (j in (i+1):(n-1)){
-    #     for(k in (j+1):n){
-    #       x = c(xi[i],xi[j],xi[k])
-    #       P[i,j,k] = P[i,k,j] = P[j,i,k] = P[j,k,i] = P[k,i,j] = P[k,j,i] = f1(x,c)
-    #       A[i,j,k] = A[i,k,j] = A[j,i,k] = A[j,k,i] = A[k,i,j] = A[k,j,i] = rbinom(1,1,f1(x,c))
-    #     }
-    #   }
-    # }
+  }else if(option == 2){
+    xi = runif(n)
+    P = array(apply(expand.grid(xi, xi, xi), 1, function(x) f2(x)), dim=c(n,n,n))
+    if(diagP==F){
+      P = cut(P)
+    }
+  }else if(option == 3){
+    xi = runif(n)
+    P = array(apply(expand.grid(xi, xi, xi), 1, function(x) f3(x)), dim=c(n,n,n))
+    if(diagP==F){
+      P = cut(P)
+    }
+  }else if(option == 4){
+    xi = runif(n)
+    P = array(apply(expand.grid(xi, xi, xi), 1, function(x) f4(x)), dim=c(n,n,n))
+    if(diagP==F){
+      P = cut(P)
+    }
   }
 
+  U=array(rnorm(n^3,0,1),c(n,n,n)) ## i.i.d. Gaussian tensor
+  U=symmetrize(U)   
+  A=1*(U<qnorm(P,0,1/sqrt(6)))
   
   ## output
   output = list()

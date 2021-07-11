@@ -72,7 +72,7 @@ cut = function(tnsr){
 
 
 
-
+cut(P)
 
 ## given probability tensor, generate adjacenty tensor.
 hgmodel.block = function(W,n,order = T,diagP = F,type="Bernoulli"){

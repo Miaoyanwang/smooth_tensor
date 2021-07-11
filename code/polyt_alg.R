@@ -71,7 +71,7 @@ Spectral = function(A,row_idx,col_idx){
   threshold = sqrt(max(dim(A_unfolded)))
   Decomp = svd(A_unfolded)
   
-  s = length(which(ifelse(Decomp$d>threshold,Decomp$d,0)>0))
+  s = max(length(which(ifelse(Decomp$d>threshold,Decomp$d,0)>0)),1)
   D = diag(Decomp$d,s)
   Theta = Decomp$u[,1:s,drop = F] %*% D %*% t(Decomp$v[,1:s,drop = F])
   Theta = fold(Theta,row_idx = row_idx,col_idx = col_idx,dim(A))@data
@@ -79,6 +79,34 @@ Spectral = function(A,row_idx,col_idx){
 }
 
 
+
+# High-order spectral method with threshold.
+Hspectral = function(A,rk){
+  m = length(dim(A))
+  if(m==2){
+    k = rk[1]
+    u1 = svd(A)$u[,1:k]
+    u2 = svd(t(A))$u[,1:k]
+    hu1 = svd(A%*%u2)$u[,1:k]
+    hu2 = svd(A%*%u1)$u[,1:k]
+    Theta = hu1%*%t(hu1)%*%A%*%hu2%*%t(hu2)
+  }else if(m==3){
+    k = rk[1]; l = rk[2]; r = rk[3]
+    u1 = svd(tensor_unfold(A,1))$u[,1:k]
+    u2 = svd(tensor_unfold(A,2))$u[,1:l]
+    u3 = svd(tensor_unfold(A,3))$u[,1:r]
+    hu1 = svd(tensor_unfold(ttl(as.tensor(A),list(t(u2),t(u3)),ms = c(2,3))@data,1))$u[,1:k]
+    hu2 = svd(tensor_unfold(ttl(as.tensor(A),list(t(u1),t(u3)),ms = c(1,3))@data,2))$u[,1:l]
+    hu3 = svd(tensor_unfold(ttl(as.tensor(A),list(t(u1),t(u2)),ms = c(1,2))@data,3))$u[,1:r]
+    
+    Theta = ttl(as.tensor(A),list(hu1%*%t(hu1),hu2%*%t(hu2),hu3%*%t(hu3)),ms = c(1,2,3))@data
+  }else{
+    stop("* Input array should be matrix or 3-order tensor")
+  }
+  
+  
+  return(Theta)
+}
 
 
 ##################### simple test #####################
@@ -98,7 +126,10 @@ mean((P-SASmooth(A,c(k,k,k)))^2)
 mean((P-Spectral(A,1,c(2,3)))^2)
 
 
-source("functions_hg.R")
+## Hspectral method
+mean((P-Hspectral(A,c(k,k,k)))^2)
+
+source("functions_hg.R") 
 source("functions_sbm.R")
 ini=HSC(A,k,k,k,sym=T)
 res =tbmClustering(A,k,k,k,Cs.init=ini$Cs,Ds.init=ini$Cs,Es.init=ini$Cs,sym = T, diagP = F)
@@ -120,7 +151,10 @@ for(d in 1:10){
   m = length(dim(A))
   k = round((10*d)^{m/(m+2)})
   Dat[d,2] = mean((P-SASmooth(A,c(k,k,k)))^2)
-  
+  tic()
+  ini=HSC(A,k,k,k,sym=T)
+  res =tbmClustering(A,k,k,k,Cs.init=ini$Cs,Ds.init=ini$Cs,Es.init=ini$Cs,sym = T, diagP = F)
+  toc()
   ## Spectral method
   Dat[d,3] = mean((P-Spectral(A,1,c(2,3)))^2)
   

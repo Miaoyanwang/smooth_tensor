@@ -245,9 +245,9 @@ plot(pP42,border = NA,col =brewer.pal(n =9, name = "Blues"),breaks=c(0.11*(0:8),
 plot(pP43,border = NA,col =brewer.pal(n =9, name = "Blues"),breaks=c(0.11*(0:8),1),na.col="gray")
 
 
-################## hypergrapon analysis ############################################
-Dat1 = Dat2 = Dat3 = Dat4 = as.data.frame(matrix(nrow = 10,ncol = 5))
-colnames(Dat1) = colnames(Dat2) = colnames(Dat3) =colnames(Dat4) = c("d","SAS","Spectral","HSpectral","SBM")
+################## hypergrapon analysis (updated) ############################################
+Dat1 = Dat2 = Dat3 = Dat4 = as.data.frame(matrix(nrow = 10,ncol = 6))
+colnames(Dat1) = colnames(Dat2) = colnames(Dat3) =colnames(Dat4) = c("d","SAS","Spectral","HSpectral","SBM","HSpectral2")
 Dat1[,1]= Dat2[,1] = Dat3[,1] = Dat4[,1] = 10*(1:10)
 
 for(d in 1:10){
@@ -279,46 +279,52 @@ for(d in 1:10){
   
   ## SBM method
   ini=HSC(gp1$A,k,k,k,sym=T)
-  res =tbmClustering(gp1$A,k,k,k,Cs.init=ini$Cs,Ds.init=ini$Cs,Es.init=ini$Cs,sym = T, diagP = F)
+  res =tbmClustering(gp1$A,k,k,k,Cs.init=ini$Cs,Ds.init=ini$Cs,Es.init=ini$Cs,sym = T, diagP = T)
   Dat1[d,5] = mean((res$judgeX-gp1$P)^2)
   
   ini=HSC(gp2$A,k,k,k,sym=T)
-  res =tbmClustering(gp2$A,k,k,k,Cs.init=ini$Cs,Ds.init=ini$Cs,Es.init=ini$Cs,sym = T, diagP = F)
+  res =tbmClustering(gp2$A,k,k,k,Cs.init=ini$Cs,Ds.init=ini$Cs,Es.init=ini$Cs,sym = T, diagP = T)
   Dat2[d,5] = mean((res$judgeX-gp2$P)^2)
   
   ini=HSC(gp3$A,k,k,k,sym=T)
-  res =tbmClustering(gp3$A,k,k,k,Cs.init=ini$Cs,Ds.init=ini$Cs,Es.init=ini$Cs,sym = T, diagP = F)
+  res =tbmClustering(gp3$A,k,k,k,Cs.init=ini$Cs,Ds.init=ini$Cs,Es.init=ini$Cs,sym = T, diagP = T)
   Dat3[d,5] = mean((res$judgeX-gp3$P)^2)
   
   ini=HSC(gp4$A,k,k,k,sym=T)
-  res =tbmClustering(gp4$A,k,k,k,Cs.init=ini$Cs,Ds.init=ini$Cs,Es.init=ini$Cs,sym = T, diagP = F)
+  res =tbmClustering(gp4$A,k,k,k,Cs.init=ini$Cs,Ds.init=ini$Cs,Es.init=ini$Cs,sym = T, diagP = T)
   Dat4[d,5] = mean((res$judgeX-gp4$P)^2)
+  
+  Dat1[d,6] = mean((gp1$P-Hspectral2(gp1$A))^2)
+  Dat2[d,6] = mean((gp2$P-Hspectral2(gp2$A))^2)
+  Dat3[d,6] = mean((gp3$P-Hspectral2(gp3$A))^2)
+  Dat4[d,6] = mean((gp4$P-Hspectral2(gp4$A))^2)
+  
   print(paste(d,"-th iteration ended",sep = ""))
 }
 
 
 
 
-dat1 = dat2 = dat3 = dat4 = as.data.frame(matrix(nrow = 40,ncol = 4))
+dat1 = dat2 = dat3 = dat4 = as.data.frame(matrix(nrow = 50,ncol = 4))
 colnames(dat1) = colnames(dat2) = colnames(dat3) = colnames(dat4) = c("dim","method","MSE","graphon")
-dat1[,1] = rep(Dat1[,1],4)
-dat1[,2] = rep(c("SAS","Spectral","Hspectral","SBM"),each = 10)
-dat1[,3] = c(Dat1[,2],Dat1[,3],Dat1[,4],Dat1[,5])
+dat1[,1] = rep(Dat1[,1],5)
+dat1[,2] = rep(c("SAS","Spectral","Hspectral","SBM","Hspectral2"),each = 10)
+dat1[,3] = c(Dat1[,2],Dat1[,3],Dat1[,4],Dat1[,5],Dat1[,6])
 dat1[,4] = "Graphon1"
 
-dat2[,1] = rep(Dat2[,1],4)
-dat2[,2] = rep(c("SAS","Spectral","Hspectral","SBM"),each = 10)
-dat2[,3] = c(Dat2[,2],Dat2[,3],Dat2[,4],Dat2[,5])
+dat2[,1] = rep(Dat2[,1],5)
+dat2[,2] = rep(c("SAS","Spectral","Hspectral","SBM","Hspectral2"),each = 10)
+dat2[,3] = c(Dat2[,2],Dat2[,3],Dat2[,4],Dat2[,5],Dat2[,6])
 dat2[,4] = "Graphon2"
 
-dat3[,1] = rep(Dat3[,1],4)
-dat3[,2] = rep(c("SAS","Spectral","Hspectral","SBM"),each = 10)
-dat3[,3] = c(Dat3[,2],Dat3[,3],Dat3[,4],Dat3[,5])
+dat3[,1] = rep(Dat3[,1],5)
+dat3[,2] = rep(c("SAS","Spectral","Hspectral","SBM","Hspectral2"),each = 10)
+dat3[,3] = c(Dat3[,2],Dat3[,3],Dat3[,4],Dat3[,5],Dat3[,6])
 dat3[,4] = "Graphon3"
 
-dat4[,1] = rep(Dat4[,1],4)
-dat4[,2] = rep(c("SAS","Spectral","Hspectral","SBM"),each = 10)
-dat4[,3] = c(Dat4[,2],Dat4[,3],Dat4[,4],Dat4[,5])
+dat4[,1] = rep(Dat4[,1],5)
+dat4[,2] = rep(c("SAS","Spectral","Hspectral","SBM","Hspectral2"),each = 10)
+dat4[,3] = c(Dat4[,2],Dat4[,3],Dat4[,4],Dat4[,5],Dat4[,6])
 dat4[,4] = "Graphon4"
 
 
@@ -328,7 +334,7 @@ dat[,2] = as.factor(dat[,2])
 dat[,4] = as.factor(dat[,4])
 
 
-ggplot(data = dat,aes(x = dim, y = MSE, color = method))+geom_point()+geom_line()+facet_wrap(~graphon,ncol = 2)
+ggplot(data = dat,aes(x = dim, y = MSE, color = method))+geom_point(size = .5)+geom_line()+facet_wrap(~graphon,ncol = 2)
 
 
 ############################ grapon analysis ############################################
@@ -399,3 +405,5 @@ dat[,4] = as.factor(dat[,4])
 
 
 ggplot(data = dat,aes(x = dim, y = MSE, color = method))+geom_point()+geom_line()+facet_wrap(~graphon,ncol = 2)
+
+

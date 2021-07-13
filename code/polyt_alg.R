@@ -80,7 +80,7 @@ Spectral = function(A,row_idx,col_idx){
 
 
 
-# High-order spectral method with threshold.
+# High-order spectral method without threshold.
 Hspectral = function(A,rk){
   m = length(dim(A))
   if(m==2){
@@ -88,7 +88,7 @@ Hspectral = function(A,rk){
     u1 = svd(A)$u[,1:k]
     u2 = svd(t(A))$u[,1:k]
     hu1 = svd(A%*%u2)$u[,1:k]
-    hu2 = svd(A%*%u1)$u[,1:k]
+    hu2 = svd(t(A)%*%u1)$u[,1:k]
     Theta = hu1%*%t(hu1)%*%A%*%hu2%*%t(hu2)
   }else if(m==3){
     k = rk[1]; l = rk[2]; r = rk[3]
@@ -108,6 +108,44 @@ Hspectral = function(A,rk){
   return(Theta)
 }
 
+
+## High-order spectral method combining rank and threshold techniques
+Hspectral2 = function(A){
+  m = length(dim(A)); 
+  if(m==2){
+    d = max(dim(A))
+    k1 = sqrt(d)
+    k2 = sum(svd(A)$d>= sqrt(d))
+    k = min(k1,k2)
+    
+    u1 = svd(A)$u[,1:k]
+    u2 = svd(t(A))$u[,1:k]
+    hu1 = svd(A%*%u2)$u[,1:k]
+    hu2 = svd(t(A)%*%u1)$u[,1:k]
+    Theta = hu1%*%t(hu1)%*%A%*%hu2%*%t(hu2)
+  }else if(m==3){
+    d = dim(A)
+    k1 = sqrt(d[1]); l1 = sqrt(d[2]); r1 = sqrt(d[3])
+    k2 = sum(svd(tensor_unfold(A,1))$d>= d[1]^(3/4))
+    l2 = sum(svd(tensor_unfold(A,2))$d>= d[2]^(3/4))
+    r2 = sum(svd(tensor_unfold(A,3))$d>= d[3]^(3/4))
+    k = min(k1,k2); l = min(l1,l2); r = min(r1,r2)
+    
+    u1 = svd(tensor_unfold(A,1))$u[,1:k]
+    u2 = svd(tensor_unfold(A,2))$u[,1:l]
+    u3 = svd(tensor_unfold(A,3))$u[,1:r]
+    hu1 = svd(tensor_unfold(ttl(as.tensor(A),list(t(u2),t(u3)),ms = c(2,3))@data,1))$u[,1:k]
+    hu2 = svd(tensor_unfold(ttl(as.tensor(A),list(t(u1),t(u3)),ms = c(1,3))@data,2))$u[,1:l]
+    hu3 = svd(tensor_unfold(ttl(as.tensor(A),list(t(u1),t(u2)),ms = c(1,2))@data,3))$u[,1:r]
+    
+    Theta = ttl(as.tensor(A),list(hu1%*%t(hu1),hu2%*%t(hu2),hu3%*%t(hu3)),ms = c(1,2,3))@data
+  }else{
+    stop("* Input array should be matrix or 3-order tensor")
+  }
+  
+  
+  return(Theta)
+}
 
 ##################### simple test #####################
 
@@ -134,6 +172,8 @@ source("functions_sbm.R")
 ini=HSC(A,k,k,k,sym=T)
 res =tbmClustering(A,k,k,k,Cs.init=ini$Cs,Ds.init=ini$Cs,Es.init=ini$Cs,sym = T, diagP = F)
 mean((res$judgeX-P)^2)
+
+
 
 
 ##################### Smooth graphon #####################

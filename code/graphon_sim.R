@@ -271,6 +271,7 @@ for(d in 1:10){
   Dat4[d,3] = mean((gp4$P-Spectral(gp4$A,1,c(2,3)))^2)
   
   ## Hspectral method
+  k = sqrt(n)
   Dat1[d,4] = mean((gp1$P-Hspectral(gp1$A,c(k,k,k)))^2)
   Dat2[d,4] = mean((gp2$P-Hspectral(gp2$A,c(k,k,k)))^2)
   Dat3[d,4] = mean((gp3$P-Hspectral(gp3$A,c(k,k,k)))^2)
@@ -335,6 +336,7 @@ dat[,4] = as.factor(dat[,4])
 
 
 ggplot(data = dat,aes(x = dim, y = MSE, color = method))+geom_point(size = .5)+geom_line()+facet_wrap(~graphon,ncol = 2)
+ggplot(data = dat[dat$method=="Hspectral"|dat$method=="Hspectral2",],aes(x = dim, y = MSE, color = method))+geom_point()+geom_line()+facet_wrap(~graphon,ncol = 2)
 
 
 ############################ grapon analysis ############################################
@@ -364,6 +366,7 @@ for(d in 1:10){
   Dat4[d,3] = mean((gp4$P-Spectral(gp4$A,1,2))^2)
   
   ## Hspectral method
+  k = sqrt(n)
   Dat1[d,4] = mean((gp1$P-Hspectral(gp1$A,c(k,k)))^2)
   Dat2[d,4] = mean((gp2$P-Hspectral(gp2$A,c(k,k)))^2)
   Dat3[d,4] = mean((gp3$P-Hspectral(gp3$A,c(k,k)))^2)

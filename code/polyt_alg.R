@@ -147,6 +147,10 @@ Hspectral2 = function(A){
   return(Theta)
 }
 
+
+
+
+
 ##################### simple test #####################
 
 hgm = hgmodel.smooth(10)

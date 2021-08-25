@@ -204,7 +204,7 @@ f5=function(a){
 }
 
 
-simulation = function(d, mode = 1,sigma = 0.5,signal_level=5){
+simulation = function(d, mode = 1,sigma = 0.5,signal_level=10){
   tensor=array(dim=c(d,d,d))
   X1=c(slice.index(tensor,1))/d
   X2=c(slice.index(tensor,2))/d

@@ -221,7 +221,7 @@ simulation = function(d, mode = 1,sigma = 0.5){
     signal = array(apply(cbind(X1,X2,X3),1,f5),dim=rep(d,3))
   }
   ### edited by Miaoyan
-  signal=signal/sqrt(mean(signal^2)) ## normalize signal tensor to have norm-1
+  signal=signal/sqrt(mean(signal^2)) ## normalize signal tensor to have F-norm = 1
   observe = signal+rnorm(d^3,0,sigma/sqrt(d)) ## normalize noise tensor to have spectral norm ~ sigma
 
   return(list(signal= signal,observe=observe))

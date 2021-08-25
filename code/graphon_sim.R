@@ -134,8 +134,8 @@ graphon4 = function(n,m = 2){
 }
 
 
-n = 50
-m = 2
+n = 30
+m = 3
 gp1 = graphon1(n,m)
 gp2 = graphon2(n,m)
 gp3 = graphon3(n,m)
@@ -148,6 +148,7 @@ A1 = gp1$A; A2 = gp2$A; A3 = gp3$A; A4 = gp4$A
 P1 = gp1$P; P2 = gp2$P; P3 = gp3$P; P4 = gp4$P
 par(mar=c(5.1, 4.1, 4.1, 4.1)) 
 library(RColorBrewer)
+library(plot.matrix)
 plot(P1,border = NA,col =brewer.pal(n =9, name = "Blues"),breaks=0.11*(0:9))
 plot(P2,border = NA,col =brewer.pal(n =9, name = "Blues"),breaks=0.11*(0:9))
 plot(P3,border = NA,col =brewer.pal(n =9, name = "Blues"),breaks=0.11*(0:9))

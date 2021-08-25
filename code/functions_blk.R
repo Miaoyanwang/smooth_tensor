@@ -204,7 +204,7 @@ f5=function(a){
 }
 
 
-simulation = function(d, mode = 1,sigma = 0.5){
+simulation = function(d, mode = 1,sigma = 0.5,signal_level=5){
   tensor=array(dim=c(d,d,d))
   X1=c(slice.index(tensor,1))/d
   X2=c(slice.index(tensor,2))/d
@@ -221,7 +221,7 @@ simulation = function(d, mode = 1,sigma = 0.5){
     signal = array(apply(cbind(X1,X2,X3),1,f5),dim=rep(d,3))
   }
   ### edited by Miaoyan
-  signal=10*signal/sqrt(mean(signal^2)) ## normalize signal tensor to have F-norm = 10
+  signal=signal_level*signal/sqrt(mean(signal^2)) ## normalize signal tensor to have averaged magnitude = signal_level
   observe = signal+rnorm(d^3,0,sigma)
 
   return(list(signal= signal,observe=observe))

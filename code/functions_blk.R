@@ -105,10 +105,11 @@ Borda2 = function(A,l,k){
 
 
 # Spectral method with threshold.
-Spectral = function(A,row_idx,col_idx){
+Spectral = function(A,row_idx,col_idx,threshold = NULL){
   A_unfolded = unfold(as.tensor(A),row_idx = row_idx,col_idx = col_idx)@data
-  
-  threshold = sqrt(max(dim(A_unfolded)))
+  if(is.null(threshold)){
+    threshold = sqrt(max(dim(A_unfolded))) 
+  }
   Decomp = svd(A_unfolded)
   
   s = max(length(which(ifelse(Decomp$d>threshold,Decomp$d,0)>0)),1)

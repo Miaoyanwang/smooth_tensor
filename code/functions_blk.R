@@ -157,11 +157,24 @@ UpdateMus_tensor = function (x, Cs, Ds, Es) {
   return(mus)
 }
 
+ReNumber = function (Cs,sort = T){
+  newCs <- rep(NA, length(Cs))
+  if(sort==T){
+    uniq <- unique(Cs)
+  }else{
+    uniq <- sort(unique(Cs)) 
+  }
+  for (i in 1:length(uniq)) {
+    newCs[Cs == uniq[i]] <- i
+  }
+  return(newCs)
+}
+
 
 LSE = function(A,k,max_iter = 100,threshold = 1 ){
   n = dim(A)[1]
   
-  z = kmeans(tensor_unfold(A,1),k)$cluster
+  z = kmeans(tensor_unfold(A,1),k,nstart = 100)$cluster
   E = matrix(nrow = n,ncol = k)
   xi = vector(length=k)
   iter = 0; improvement = n
@@ -173,15 +186,18 @@ LSE = function(A,k,max_iter = 100,threshold = 1 ){
         E[i,a] = sum(A[i,which(z==a),])
       }
     }
-    for(i in 1:k){
-      xi[i] = 1/(eta[i]*(n-eta[i])+eta[i]*(eta[i]-1))
+    for(a in 1:k){
+      xi[a] = 1/(eta[a]*(n-1))
     }
     nz = apply(E%*%diag(xi),1,which.max)
     improvement =  sum(abs(nz-z)>0);improvement
     z = nz
   }
-
+   
+  z = ReNumber(z)
   mu.array = UpdateMus_tensor(A,z,z,z)
+  # this is for the technical error
+  
   Theta = mu.array[z,z,z, drop=FALSE]
   return(Theta)
 }
@@ -192,7 +208,7 @@ f1 = function(a){
   return(a[1]*a[2]*a[3])
 }
 f2 = function(a){
-  return(mean(a[1]+a[2]+a[3]))
+  return(mean(a))
 }
 f3 = function(a){
   return((a[1]^2+a[2]^2+a[3]^2)/(exp(cos(1/(a[1]^2+a[2]^2+a[3]^2)))))
@@ -226,6 +242,45 @@ simulation = function(d, mode = 1,sigma = 0.5,signal_level=10){
   observe = signal+rnorm(d^3,0,sigma)
 
   return(list(signal= signal,observe=observe))
+}
+
+
+
+Observe_A = function(P){
+  n = dim(P)[1]; m = length(dim(P))
+  U=array(rnorm(length(P),0,1),dim(P)) 
+  tempA=1*(U<qnorm(P,0,1))
+  A = array(0,dim(P))
+  for (i in 1:n){
+    for (j in i:n){
+      for(k in j:n){
+        A[i,j,k] = A[i,k,j] = A[j,i,k]  = A[j,k,i] = A[k,i,j] = A[k,j,i]= tempA[i,j,k]
+      }
+    }
+  }
+  return(A)
+}
+
+
+simulation_bin = function(d,mode = 1){
+  tensor=array(dim=c(d,d,d))
+  X1=c(slice.index(tensor,1))/d
+  X2=c(slice.index(tensor,2))/d
+  X3=c(slice.index(tensor,3))/d
+  if(mode==1){
+    signal = array(apply(cbind(X1,X2,X3),1,f1),dim=rep(d,3))
+  }else if(mode==2){
+    signal = array(apply(cbind(X1,X2,X3),1,f2),dim=rep(d,3))
+  }else if(mode==3){
+    signal = pmin(array(apply(cbind(X1,X2,X3),1,f3),dim=rep(d,3)),1)
+  }else if(mode==4){
+    signal = array(apply(cbind(X1,X2,X3),1,f4),dim=rep(d,3))
+  }else if(mode==5){
+    signal = array(apply(cbind(X1,X2,X3),1,f5),dim=rep(d,3))
+  }
+  
+  observe = Observe_A(signal)
+  return(list(signal = signal, observe = observe))
 }
 
 

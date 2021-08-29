@@ -157,44 +157,76 @@ UpdateMus_tensor = function (x, Cs, Ds, Es) {
   return(mus)
 }
 
-ReNumber = function (Cs,sort = T){
-  newCs <- rep(NA, length(Cs))
-  if(sort==T){
-    uniq <- unique(Cs)
+
+
+HSC = function(x,k,l,r,nstart = 40,sym = F){
+  result = list()
+  u1 = svd(tensor_unfold(x,1))$u[,1:k]
+  u2 = svd(tensor_unfold(x,2))$u[,1:l]
+  u3 = svd(tensor_unfold(x,3))$u[,1:r]
+  hu1 = svd(tensor_unfold(ttl(as.tensor(x),list(t(u2),t(u3)),ms = c(2,3))@data,1))$u[,1:k]
+  hu2 = svd(tensor_unfold(ttl(as.tensor(x),list(t(u1),t(u3)),ms = c(1,3))@data,2))$u[,1:l]
+  hu3 = svd(tensor_unfold(ttl(as.tensor(x),list(t(u1),t(u2)),ms = c(1,2))@data,3))$u[,1:r]
+  Y1 = hu1%*%t(hu1)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu2),t(hu3)),ms = c(2,3))@data,1)
+  Y2 = hu2%*%t(hu2)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu1),t(hu3)),ms = c(1,3))@data,2)
+  Y3 = hu3%*%t(hu3)%*%tensor_unfold(ttl(as.tensor(x),list(t(hu1),t(hu2)),ms = c(1,2))@data,3)
+  if(sym ==F){
+    result$Cs  = kmeans(Y1,k,nstart = nstart)$cluster
+    result$Ds  = kmeans(Y2,r,nstart = nstart)$cluster
+    result$Es  = kmeans(Y3,l,nstart = nstart)$cluster  
   }else{
-    uniq <- sort(unique(Cs)) 
+    result$Ds =result$Es =result$Cs = kmeans(Y1,k,nstart = nstart)$cluster
   }
-  for (i in 1:length(uniq)) {
-    newCs[Cs == uniq[i]] <- i
-  }
-  return(newCs)
+  return(result)
 }
 
 
-LSE = function(A,k,max_iter = 100,threshold = 1 ){
+
+
+Bal = function(A,k,max_iter = 100,threshold = 1,rep = 5){
   n = dim(A)[1]
-  
-  z = kmeans(tensor_unfold(A,1),k,nstart = 100)$cluster
-  E = matrix(nrow = n,ncol = k)
-  xi = vector(length=k)
-  iter = 0; improvement = n
-  while((iter<=max_iter)&(improvement > threshold)){
-    iter = iter+1
-    eta = as.numeric(table(z))
-    for(i in 1:n){
-      for(a in 1:k){
-        E[i,a] = sum(A[i,which(z==a),])
+  zlist = list()
+  for(r in 1:rep){
+    z = kmeans(tensor_unfold(A,1),k)$cluster
+    E = matrix(nrow = n,ncol = k)
+    xi = vector(length=k)
+    iter = 0; improvement = n
+    while((iter<=max_iter)&(improvement > threshold)){
+      iter = iter+1
+      eta = as.numeric(table(z))
+      for(i in 1:n){
+        for(a in 1:k){
+          E[i,a] = sum(A[i,which(z==a),])
+        }
       }
+      for(a in 1:k){
+        xi[a] = eta[a]*(n-eta[a])+eta[a]*(eta[a]-1)
+      }
+      nz = apply(E%*%diag(1/xi),1,which.max);nz
+      improvement =  sum(abs(nz-z)>0);improvement
+      z = nz
     }
-    for(a in 1:k){
-      xi[a] = 1/(eta[a]*(n-1))
-    }
-    nz = apply(E%*%diag(xi),1,which.max)
-    improvement =  sum(abs(nz-z)>0);improvement
-    z = nz
+    zlist[[r]]  = ReNumber(z)
+    z = zlist[[which.max(unlist(lapply(zlist,function(x) length(unique(x)))))]]
   }
-   
+  return(z)
+}
+
+
+LSE = function(A,k,mode = 2,max_iter = 100,threshold = 1,rep = 5){
+  n = dim(A)[1]
+  if(mode==1){
+    #Spectral membership estimation
+    z = kmeans(tensor_unfold(A,1),k,nstart = 100)$cluster
+  }else if (mode==2){
+    # Balasubramanian estimation
+    z = Bal(A,k,max_iter,threshold, rep)
+  }else if (mode==3){
+    # HSC membership estimation
+    z = HSC(A,k,k,k,sym= T)$Cs
+  }
   z = ReNumber(z)
+  
   mu.array = UpdateMus_tensor(A,z,z,z)
   # this is for the technical error
   
@@ -204,6 +236,10 @@ LSE = function(A,k,max_iter = 100,threshold = 1 ){
 
 
 
+
+
+######### Simulation functions ############################################
+
 f1 = function(a){
   return(a[1]*a[2]*a[3])
 }
@@ -211,15 +247,21 @@ f2 = function(a){
   return(mean(a))
 }
 f3 = function(a){
+  return(1/(1+exp(-3*sum(a^2))))
+}
+
+fb3 = function(a){
   return((a[1]^2+a[2]^2+a[3]^2)/(exp(cos(1/(a[1]^2+a[2]^2+a[3]^2)))))
 }
 f4 = function(a){
-  return(log(1+max(a[1],a[2],a[3])))
+  return(log(1+max(a)))
 }
 f5=function(a){
-  return(exp(-min(a)^2-sqrt(a[1])-sqrt(a[2])-sqrt(a[3])))
+  return(min(a)/exp(-max(a)-sqrt(a[1])-sqrt(a[2])-sqrt(a[3])))
 }
-
+fb5=function(a){
+  return(exp(-min(a)-sqrt(a[1])-sqrt(a[2])-sqrt(a[3])))
+}
 
 simulation = function(d, mode = 1,sigma = 0.5,signal_level=10){
   tensor=array(dim=c(d,d,d))
@@ -276,7 +318,7 @@ simulation_bin = function(d,mode = 1){
   }else if(mode==4){
     signal = array(apply(cbind(X1,X2,X3),1,f4),dim=rep(d,3))
   }else if(mode==5){
-    signal = array(apply(cbind(X1,X2,X3),1,f5),dim=rep(d,3))
+    signal = array(apply(cbind(X1,X2,X3),1,fb5),dim=rep(d,3))
   }
   
   observe = Observe_A(signal)

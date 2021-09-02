@@ -11,7 +11,6 @@ plot_tensor(Spectral(s1$observe,1,c(2,3)));mean((Spectral(s1$observe,1,c(2,3))-s
 plot_tensor(tucker(as.tensor(s1$observe),c(k,k,k))$est@data);mean((tucker(as.tensor(s1$observe),c(k,k,k))$est@data-s1$signal)^2)
 
 
-
 s2 = simulation(30,mode = 2)
 plot_tensor(s2$signal)
 plot_tensor(s2$observe)
@@ -235,6 +234,97 @@ ggplot(datsummaryc[datsummaryc$model =="model5",], aes(x=dim, y=MSE, colour=meth
 # signal
 # est = tucker(as.tensor(s1$observe),c(k,k,k))
 # mean((tucker(as.tensor(s1$observe),c(k,k,k))$est@data-s1$signal)^2)
+
+############################## Tensor completion  ##############################
+############################## continuous  ##############################
+
+missing = as.data.frame(matrix(nrow = 400,ncol = 5))
+names(missing) = c("fraction","sim","model","method","MSE")
+fraction = c(0.4,0.6,0.8,1)
+missing$fraction = rep(fraction,each = 100)
+missing$sim = rep(rep(1:10,each = 10),4)
+missing$model = rep(rep(c("model1","model2","model3","model4","model5"),each = 2),40)
+missing$method = rep(c("Borda","Spectral"),200)
+
+
+MSE = NULL
+for(rho in fraction){
+  for(s in 1:10){
+    set.seed(s)
+    for(m in 1:5){
+      d = 60
+      s1 = simulation(d,mode = m)
+      A = s1$observe
+      obs=rbinom(d^3,1,rho)
+      A[obs ==0] = NA
+      k = ceiling(d^(1/3))
+      MSE = c(MSE,mean((Borda2(A,2,k)-s1$signal)^2))
+      MSE = c(MSE,mean((Spectral(A,1,c(2,3),lambda = 10)-s1$signal)^2))
+      print(paste(rho,"_",s,"_",m,"_ended",sep = ""))
+    }
+    
+  }
+}
+
+missing$MSE = MSE
+
+missing$model = as.factor(missing$model)
+missing$method = as.factor(missing$method)
+
+
+datsummaryc = summarySE(missing, measurevar="MSE", groupvars=c("model","method","fraction"))
+
+
+library(ggplot2)
+ggplot(datsummaryc[datsummaryc$model =="model1",], aes(x=fraction, y=MSE, colour=method)) + facet_wrap(~model, nrow=1) + geom_line() + geom_point()+ geom_errorbar(aes(ymin=MSE-se, ymax=MSE+se), width=.05)
+
+
+############################## binary  ##############################
+
+missing2 = as.data.frame(matrix(nrow = 400,ncol = 5))
+names(missing2) = c("fraction","sim","model","method","MSE")
+fraction = c(0.4,0.6,0.8,1)
+missing2$fraction = rep(fraction,each = 100)
+missing2$sim = rep(rep(1:10,each = 10),4)
+missing2$model = rep(rep(c("model1","model2","model3","model4","model5"),each = 2),40)
+missing2$method = rep(c("Borda","Spectral"),200)
+
+
+MSE = NULL
+for(rho in fraction){
+  for(s in 1:10){
+    set.seed(s)
+    for(m in 1:5){
+      d = 40
+      s1 = simulation_bin(d,mode = m)
+      A = s1$observe
+      obs=rbinom(d^3,1,rho)
+      A[obs ==0] = NA
+      k = ceiling(d^(1/3))
+      MSE = c(MSE,mean((Borda2(A,2,k)-s1$signal)^2))
+      MSE = c(MSE,mean((Spectral(A,1,c(2,3),lambda = 10)-s1$signal)^2))
+      print(paste(rho,"_",s,"_",m,"_ended",sep = ""))
+    }
+    
+  }
+}
+
+missing2$MSE = MSE
+
+missing2$model = as.factor(missing2$model)
+missing2$method = as.factor(missing2$method)
+
+
+datsummaryc = summarySE(missing2, measurevar="MSE", groupvars=c("model","method","fraction"))
+
+
+library(ggplot2)
+ggplot(datsummaryc[datsummaryc$model =="model2",], aes(x=fraction, y=MSE, colour=method)) + facet_wrap(~model, nrow=1) + geom_line() + geom_point()+ geom_errorbar(aes(ymin=MSE-se, ymax=MSE+se), width=.05)
+
+
+
+
+
 
 
 

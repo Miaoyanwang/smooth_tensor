@@ -13,13 +13,13 @@ block = function(A,kvec){
   if(length(dim(A))==2){
 
     fmat = ftor[g[[1]],g[[2]]]
-    Avg_mat = array(aggregate(c(A),by = list(as.factor(fmat)),mean)[,-1],dim = kvec)
+    Avg_mat = array(aggregate(c(A),by = list(as.factor(fmat)),function(x) mean(x,na.rm = T))[,-1],dim = kvec)
     Blk_mat = Avg_mat[g[[1]],g[[2]]]
 
   }else if(length(dim(A))==3){
 
     fmat = ftor[g[[1]],g[[2]],g[[3]]]
-    Avg_mat = array(aggregate(c(A),by = list(as.factor(fmat)),mean)[,-1],dim = kvec)
+    Avg_mat = array(aggregate(c(A),by = list(as.factor(fmat)),function(x) mean(x,na.rm = T))[,-1],dim = kvec)
     Blk_mat = Avg_mat[g[[1]],g[[2]],g[[3]]]
 
   }else{
@@ -58,6 +58,21 @@ Borda = function(A,kvec){
   return(Theta)
 }
 
+## This works really bad
+Borda_m = function(A,k){
+  d = dim(A)[1]
+  A_unfolded = unfold(as.tensor(A),row_idx = 1,col_idx = c(2,3))@data
+  o1 = order(sapply(1:d, function(x) sum(A_unfolded[x,],na.rm = T)))
+  o2 = order(sapply(1:d^2, function(x) sum(A_unfolded[,x],na.rm = T)))
+  A_unfolded_s = A_unfolded[o1,o2]
+  Blk = block(A_unfolded_s,c(k,k^2))
+  
+  #sorting back
+  Theta_unfolded = Blk$Blk_mat[o1,o2]
+  Theta = fold(Theta_unfolded,row_idx = 1,col_idx = c(2,3),dim(A))@data
+  return(Theta)
+}
+
 
 ## fit blockwise polynomial tensor
 ## polynomial degree l; block size k;
@@ -78,7 +93,7 @@ polytensor=function(tensor, l, k){
           fit=lm(c(subtensor)~1)
         else
           fit=lm(c(subtensor)~polym(X1,X2,X3,degree=l,raw=TRUE))
-        est[which(z==i),which(z==j),which(z==q)]=fit$fitted.value
+        est[which(z==i),which(z==j),which(z==q)]=predict(fit,polym(X1,X2,X3,degree=l,raw=TRUE))
       }
     }
   }
@@ -90,7 +105,7 @@ polytensor=function(tensor, l, k){
 Borda2 = function(A,l,k){
     d = dim(A)[1]
     #sorting
-    o1 = order(sapply(1:d, function(x) sum(A[x,,])))
+    o1 = order(sapply(1:d, function(x) sum(A[x,,],na.rm = T)))
     As = A[o1,,]
     
     #polynomial block approximation
@@ -105,12 +120,21 @@ Borda2 = function(A,l,k){
 
 
 # Spectral method with threshold.
-Spectral = function(A,row_idx,col_idx,threshold = NULL){
+# use the soft impute
+library(softImpute)
+Spectral = function(A,row_idx,col_idx,threshold = NULL,lambda = 1){
+  d = dim(A)[1]
   A_unfolded = unfold(as.tensor(A),row_idx = row_idx,col_idx = col_idx)@data
   if(is.null(threshold)){
     threshold = sqrt(max(dim(A_unfolded))) 
   }
-  Decomp = svd(A_unfolded)
+  if(any(is.na(A))==T){
+    # made the hardimpute
+    Decomp = softImpute(A_unfolded,rank.max = d-1,lambda = lambda)
+  }else{
+    Decomp = svd(A_unfolded)  
+  }
+  
   
   s = max(length(which(ifelse(Decomp$d>threshold,Decomp$d,0)>0)),1)
   D = diag(Decomp$d,s)
@@ -118,6 +142,12 @@ Spectral = function(A,row_idx,col_idx,threshold = NULL){
   Theta = fold(Theta,row_idx = row_idx,col_idx = col_idx,dim(A))@data
   return(Theta)
 }
+
+
+
+
+
+
 
 # Least square estimation
 library(rTensor)
@@ -234,9 +264,39 @@ LSE = function(A,k,mode = 2,max_iter = 100,threshold = 1,rep = 5){
   return(Theta)
 }
 
+# Make biclusteinrg algorithm tomorrow
+# This works almost same with LSE with mode =1
+Bicluster = function(A,k,max_iter =100,threshold = 1){
+  d = dim(A)[1]
+  if(any(is.na(A))==T){
+    soft = softImpute(tensor_unfold(A,1),rank.max = d-1,lambda = 1)
+    z = kmeans(soft$u%*%diag(soft$d)%*%t(soft$v),k,nstart = 100)$cluster
+  }else{
+    z = kmeans(tensor_unfold(A,1),k,nstart = 100)$cluster 
+  }
+  while((iter<=max_iter)&(improvement > threshold)){
+    Q = UpdateMus_tensor(A,z,z,z)
+    E = matrix(nrow = d, ncol = k)
+    for(i in 1:d){
+      for(a in 1:k){
+        E[i,a] = sum((Q[a,z,z]-A[i,,])^2,na.rm = T) 
+      }
+    }
+    nz = apply(E,1,which.min)
+    improvement =  sum(abs(nz-z)>0);improvement
+    z = nz
+  }
+  z = ReNumber(z)
+  
+  mu.array = UpdateMus_tensor(A,z,z,z)
+  # this is for the technical error
+  
+  Theta = mu.array[z,z,z, drop=FALSE]
+  return(Theta)
+  
+}
 
-
-
+mean((Bicluster(A,2*d^(1/3))-s1$signal)^2)
 
 ######### Simulation functions ############################################
 
@@ -263,7 +323,22 @@ fb5=function(a){
   return(exp(-min(a)-sqrt(a[1])-sqrt(a[2])-sqrt(a[3])))
 }
 
-simulation = function(d, mode = 1,sigma = 0.5,signal_level=10){
+
+symnoise = function(d,sigma=0.5){
+  noise = array(NA,dim = c(d,d,d))
+  for (i in 1:d){
+    for (j in i:d){
+      for(k in j:d){
+        noise[i,j,k] = noise[i,k,j] = noise[j,i,k]  = noise[j,k,i] = noise[k,i,j] = noise[k,j,i]=rnorm(1,0,sigma)
+      }
+    }
+  }
+  return(noise)
+}
+
+
+
+simulation = function(d, mode = 1,sigma = 0.5,signal_level=10,symnoise = T){
   tensor=array(dim=c(d,d,d))
   X1=c(slice.index(tensor,1))/d
   X2=c(slice.index(tensor,2))/d
@@ -281,7 +356,12 @@ simulation = function(d, mode = 1,sigma = 0.5,signal_level=10){
   }
   ### edited by Miaoyan
   signal=signal_level*signal/sqrt(mean(signal^2)) ## normalize signal tensor to have averaged magnitude = signal_level
-  observe = signal+rnorm(d^3,0,sigma)
+  if(symnoise ==T){
+    observe = signal+symnoise(d,sigma = sigma)
+  }else{
+    observe = signal+rnorm(d^3,0,sigma)
+  }
+  
 
   return(list(signal= signal,observe=observe))
 }

@@ -1,4 +1,4 @@
-# The followings are old files
+# Old R-code 
 
 *functions_sbm.R*: functions from the sparsetensor package
 

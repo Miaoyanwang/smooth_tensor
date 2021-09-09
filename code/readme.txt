@@ -15,7 +15,7 @@ tensor_visualization.R: Tensor visualization function from Miaoyan.
 
 AISTATsim.R: Local simulation file including tensor visualization
 
-issues.R: Rcode that I tried to replicate the hypergraphon paper and simulation code for incomplete observation setting.
+issues.R: Rcode including  replication of the hypergraphon paper and simulation code for incomplete observation setting.
 
 simAISTAT.R: Simulation Rcode for the relationship between the group size and MSE of Borda count estimation.
 

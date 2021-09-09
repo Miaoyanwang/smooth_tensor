@@ -11,51 +11,69 @@ library(rTensor)
 
 
 sim = 1:20
-k = 3:20
+dim  = (1:10)*10
 
-ind = matrix(nrow = 360,ncol = 2)
+ind = matrix(nrow = 200,ncol = 2)
 r = 0
 for(i in sim){
-  for(j in k){
+  for(j in dim){
     r = r+1
     ind[r,] = c(i,j)
   }
 }
 s = ind[BATCH,1]
-k = ind[BATCH,2]
+d = ind[BATCH,2]
 
 set.seed(s)
 
-result = as.data.frame(matrix(nrow =40 ,ncol = 6))
-names(result) =  c("sim","groupsize","type","model","deg","MSE")
+result = as.data.frame(matrix(nrow =70 ,ncol = 6))
+names(result) =  c("sim","dim","type","model","method","MSE")
 
 result$sim = s
-result$groupsize = k
-result$type = rep(c("conti","binary"),each = 20)
-result$model = rep(rep(c("model1","model2","model3","model4","model5"),each = 4),2)
-result$deg = rep(0:3,10)
+result$dim = d
+result$type = rep(c("conti","binary"),each = 35)
+result$model = rep(rep(c("model1","model2","model3","model4","model5"),each = 7),2)
+result$method = rep(c("Borda0","Borda1","Borda2","Borda3","LSE","Bicluster","Spectral"),10)
+
 
 
 MSE = NULL
 for(m in 1:5){
-  s1 = simulation(100,mode = m,signal_level = 5)
+  s1 = simulation(d,mode = m,signal_level = 5)
+  k = ceiling(d^(3/5))
   MSE = c(MSE,mean((Borda2(s1$observe,0,k)-s1$signal)^2))
   MSE = c(MSE,mean((Borda2(s1$observe,1,k)-s1$signal)^2))
+  k = ceiling(d^(1/3))
   MSE = c(MSE,mean((Borda2(s1$observe,2,k)-s1$signal)^2))
+  k = ceiling(d^(3/11))
   MSE = c(MSE,mean((Borda2(s1$observe,3,k)-s1$signal)^2))
+  k = ceiling(d^(3/5))
+  MSE = c(MSE,mean((LSE(s1$observe,k,mode = 3)-s1$signal)^2))
+  MSE = c(MSE,mean((Bicluster(s1$observe,k)-s1$signal)^2))
+  MSE = c(MSE,mean((Spectral(s1$observe,1,c(2,3))-s1$signal)^2))
+  
 }
 for(m in 1:5){
-  s1 = simulation_bin(100,mode = m)
+  s1 = simulation_bin(d,mode = m)
+  k = ceiling(d^(3/5))
   MSE = c(MSE,mean((Borda2(s1$observe,0,k)-s1$signal)^2))
   MSE = c(MSE,mean((Borda2(s1$observe,1,k)-s1$signal)^2))
+  k = ceiling(d^(1/3))
   MSE = c(MSE,mean((Borda2(s1$observe,2,k)-s1$signal)^2))
+  k = ceiling(d^(3/11))
   MSE = c(MSE,mean((Borda2(s1$observe,3,k)-s1$signal)^2))
+  k = ceiling(d^(3/5))
+  MSE = c(MSE,mean((LSE(s1$observe,k,mode = 3)-s1$signal)^2))
+  MSE = c(MSE,mean((Bicluster(s1$observe,k)-s1$signal)^2))
+  MSE = c(MSE,mean((Spectral(s1$observe,1,c(2,3))-s1$signal)^2))
 }
 
 
 result$MSE = MSE
 
-save(result,file = paste("sim_",s,"_gsize_",k,".RData",sep =""))
+save(result,file = paste("nsim_",s,"_dim_",d,".RData",sep =""))
+
+
 # 
 # setwd("/Users/chanwoolee/Desktop/Research projects/Hypergraphon/code/AISTATSIM")
 # tot= NULL

@@ -2,91 +2,154 @@ source("functions_blk.R")
 ### Tensor visualization #########################################
 ##### signal tensor estimation ###################################
 source("tensor_visualization.R")
-s1 = simulation(30,mode = 1)
+setwd("simulation_fig/")
+s1 = simulation(40,mode = 1,signal_level = 5)
 plot_tensor(s1$signal)
+rgl.postscript('cons1.pdf', fmt = 'pdf')
 plot_tensor(s1$observe)
-k = ceiling(30^(1/3))
+rgl.postscript('cons1o.pdf', fmt = 'pdf')
+
+k = ceiling(40^(1/3))
 plot_tensor(Borda2(s1$observe,2,k));mean((Borda2(s1$observe,2,k)-s1$signal)^2)
+rgl.postscript('b1.pdf', fmt = 'pdf')
+
 plot_tensor(Spectral(s1$observe,1,c(2,3)));mean((Spectral(s1$observe,1,c(2,3))-s1$signal)^2)
-plot_tensor(tucker(as.tensor(s1$observe),c(k,k,k))$est@data);mean((tucker(as.tensor(s1$observe),c(k,k,k))$est@data-s1$signal)^2)
+rgl.postscript('s1.pdf', fmt = 'pdf')
 
+k = ceiling(40^(3/5))
+plot_tensor(LSE(s1$observe,k,mode  =3))
+rgl.postscript('l1.pdf', fmt = 'pdf')
 
-s2 = simulation(30,mode = 2)
+s2 = simulation(40,mode = 2,signal_level = 5)
 plot_tensor(s2$signal)
+rgl.postscript('cons2.pdf', fmt = 'pdf')
 plot_tensor(s2$observe)
+rgl.postscript('cons2o.pdf', fmt = 'pdf')
+k = ceiling(40^(1/3))
 plot_tensor(Borda2(s2$observe,2,k));mean((Borda2(s2$observe,2,k)-s2$signal)^2)
+rgl.postscript('b2.pdf', fmt = 'pdf')
+
 plot_tensor(Spectral(s2$observe,1,c(2,3)));mean((Spectral(s2$observe,1,c(2,3))-s2$signal)^2)
-plot_tensor(tucker(as.tensor(s2$observe),c(k,k,k))$est@data);mean((tucker(as.tensor(s2$observe),c(k,k,k))$est@data-s2$signal)^2)
+rgl.postscript('s2.pdf', fmt = 'pdf')
+
+k = ceiling(40^(3/5))
+plot_tensor(LSE(s2$observe,k,mode  =3))
+rgl.postscript('l2.pdf', fmt = 'pdf')
 
 
-s3 = simulation(30,mode = 3)
+s3 = simulation(40,mode = 3,signal_level = 5)
 plot_tensor(s3$signal)
+rgl.postscript('cons3.pdf', fmt = 'pdf')
 plot_tensor(s3$observe)
+rgl.postscript('cons3o.pdf', fmt = 'pdf')
+k = ceiling(40^(1/3))
 plot_tensor(Borda2(s3$observe,2,k));mean((Borda2(s3$observe,2,k)-s3$signal)^2)
+rgl.postscript('b3.pdf', fmt = 'pdf')
+
 plot_tensor(Spectral(s3$observe,1,c(2,3)));mean((Spectral(s3$observe,1,c(2,3))-s3$signal)^2)
-plot_tensor(tucker(as.tensor(s3$observe),c(k,k,k))$est@data);mean((tucker(as.tensor(s3$observe),c(k,k,k))$est@data-s3$signal)^2)
+rgl.postscript('s3.pdf', fmt = 'pdf')
+
+k = ceiling(40^(3/5))
+plot_tensor(LSE(s3$observe,k,mode  =3))
+rgl.postscript('l3.pdf', fmt = 'pdf')
 
 
-s4 = simulation(30,mode = 4)
+s4 = simulation(40,mode = 4,signal_level = 5)
 plot_tensor(s4$signal)
+rgl.postscript('cons4.pdf', fmt = 'pdf')
 plot_tensor(s4$observe)
+rgl.postscript('cons4o.pdf', fmt = 'pdf')
+k = ceiling(40^(1/3))
 plot_tensor(Borda2(s4$observe,2,k));mean((Borda2(s4$observe,2,k)-s4$signal)^2)
+rgl.postscript('b4.pdf', fmt = 'pdf')
+
 plot_tensor(Spectral(s4$observe,1,c(2,3)));mean((Spectral(s4$observe,1,c(2,3))-s4$signal)^2)
-plot_tensor(tucker(as.tensor(s4$observe),c(k,k,k))$est@data);mean((tucker(as.tensor(s4$observe),c(k,k,k))$est@data-s4$signal)^2)
+rgl.postscript('s4.pdf', fmt = 'pdf')
+
+k = ceiling(40^(3/5))
+plot_tensor(LSE(s4$observe,k,mode  =3))
+rgl.postscript('l4.pdf', fmt = 'pdf')
 
 
 
-s5 = simulation(30,mode = 5)
+s5 = simulation(40,mode = 5,signal_level = 5)
 plot_tensor(s5$signal)
+rgl.postscript('cons5.pdf', fmt = 'pdf')
 plot_tensor(s5$observe)
+rgl.postscript('cons5o.pdf', fmt = 'pdf')
+k = ceiling(40^(1/3))
 plot_tensor(Borda2(s5$observe,2,k));mean((Borda2(s5$observe,2,k)-s5$signal)^2)
+rgl.postscript('b5.pdf', fmt = 'pdf')
 plot_tensor(Spectral(s5$observe,1,c(2,3)));mean((Spectral(s5$observe,1,c(2,3))-s5$signal)^2)
-plot_tensor(tucker(as.tensor(s5$observe),c(k,k,k))$est@data);mean((tucker(as.tensor(s5$observe),c(k,k,k))$est@data-s5$signal)^2)
+rgl.postscript('s5.pdf', fmt = 'pdf')
+
+k = ceiling(40^(3/5))
+plot_tensor(LSE(s5$observe,k,mode  =3))
+rgl.postscript('l5.pdf', fmt = 'pdf')
 
 
 ##### Probability tensor estimation visualization ################################
-s1 = simulation_bin(30,mode = 1)
+s1 = simulation_bin(40,mode = 1)
 plot_tensor(s1$signal)
+rgl.postscript('bin1.pdf', fmt = 'pdf')
 plot_tensor(s1$observe)
-k = ceiling(30^(1/3))
+rgl.postscript('bin1o.pdf', fmt = 'pdf')
+k = ceiling(40^(1/3))
 plot_tensor(Borda2(s1$observe,2,k));mean((Borda2(s1$observe,2,k)-s1$signal)^2)
 plot_tensor(Spectral(s1$observe,1,c(2,3)));mean((Spectral(s1$observe,1,c(2,3))-s1$signal)^2)
-k = ceiling(0.6*30^(3/5))
+k = ceiling(40^(3/5))
 plot_tensor(LSE(s1$observe,k,mode = 1));mean((LSE(s1$observe,k,mode = 1)-s1$signal)^2)
 plot_tensor(LSE(s1$observe,k,mode = 2));mean((LSE(s1$observe,k,mode = 2)-s1$signal)^2)
 plot_tensor(LSE(s1$observe,k,mode = 3));mean((LSE(s1$observe,k,mode = 3)-s1$signal)^2)
 
 
 
-s2 = simulation_bin(30,mode = 2)
+s2 = simulation_bin(40,mode = 2)
 plot_tensor(s2$signal)
+rgl.postscript('bin2.pdf', fmt = 'pdf')
 plot_tensor(s2$observe)
+rgl.postscript('bin2o.pdf', fmt = 'pdf')
+
+k = ceiling(40^(1/3))
 plot_tensor(Borda2(s2$observe,2,k));mean((Borda2(s2$observe,2,k)-s2$signal)^2)
 plot_tensor(Spectral(s2$observe,1,c(2,3)));mean((Spectral(s2$observe,1,c(2,3))-s2$signal)^2)
-plot_tensor(LSE(s2$observe,k));mean((LSE(s2$observe,k,rep = 100)-s2$signal)^2)
+k = ceiling(40^(3/5))
+plot_tensor(LSE(s2$observe,k,mode = 3));mean((LSE(s2$observe,k,rep = 100)-s2$signal)^2)
 
 
-s3 = simulation_bin(30,mode = 3)
+s3 = simulation_bin(40,mode = 3)
 plot_tensor(s3$signal)
+rgl.postscript('bin3.pdf', fmt = 'pdf')
 plot_tensor(s3$observe)
+rgl.postscript('bin3o.pdf', fmt = 'pdf')
+k = ceiling(40^(1/3))
 plot_tensor(Borda2(s3$observe,2,k));mean((Borda2(s3$observe,2,k)-s3$signal)^2)
 plot_tensor(Spectral(s3$observe,1,c(2,3)));mean((Spectral(s3$observe,1,c(2,3))-s3$signal)^2)
-plot_tensor(LSE(s3$observe,k));mean((LSE(s3$observe,k,rep = 10)-s3$signal)^2)
+k = ceiling(40^(3/5))
+plot_tensor(LSE(s3$observe,k,mode =3));mean((LSE(s3$observe,k,rep = 10)-s3$signal)^2)
 
-s4 = simulation_bin(30,mode = 4)
+s4 = simulation_bin(40,mode = 4)
 plot_tensor(s4$signal)
+rgl.postscript('bin4.pdf', fmt = 'pdf')
 plot_tensor(s4$observe)
+rgl.postscript('bin4o.pdf', fmt = 'pdf')
+k = ceiling(40^(1/3))
 plot_tensor(Borda2(s4$observe,2,k));mean((Borda2(s4$observe,2,k)-s4$signal)^2)
 plot_tensor(Spectral(s4$observe,1,c(2,3)));mean((Spectral(s4$observe,1,c(2,3))-s4$signal)^2)
-plot_tensor(LSE(s4$observe,k));mean((LSE(s4$observe,k,rep = 10)-s4$signal)^2)
+k = ceiling(40^(3/5))
+plot_tensor(LSE(s4$observe,k,mode =3));mean((LSE(s4$observe,k,rep = 10)-s4$signal)^2)
 
 
-s5 = simulation_bin(30,mode = 5)
+s5 = simulation_bin(40,mode = 5)
 plot_tensor(s5$signal)
+rgl.postscript('bin5.pdf', fmt = 'pdf')
 plot_tensor(s5$observe)
+rgl.postscript('bin5o.pdf', fmt = 'pdf')
+k = ceiling(40^(1/3))
 plot_tensor(Borda2(s5$observe,2,k));mean((Borda2(s5$observe,2,k)-s5$signal)^2)
 plot_tensor(Spectral(s5$observe,1,c(2,3)));mean((Spectral(s5$observe,1,c(2,3))-s5$signal)^2)
-plot_tensor(LSE(s5$observe,k));mean((LSE(s5$observe,k,rep = 10)-s5$signal)^2)
+k = ceiling(40^(3/5))
+plot_tensor(LSE(s5$observe,k,mode  =3));mean((LSE(s5$observe,k,rep = 10)-s5$signal)^2)
 
 
 
@@ -319,10 +382,14 @@ datsummaryc = summarySE(missing2, measurevar="MSE", groupvars=c("model","method"
 
 
 library(ggplot2)
-ggplot(datsummaryc[datsummaryc$model =="model2",], aes(x=fraction, y=MSE, colour=method)) + facet_wrap(~model, nrow=1) + geom_line() + geom_point()+ geom_errorbar(aes(ymin=MSE-se, ymax=MSE+se), width=.05)
+g1 = ggplot(datsummaryc[datsummaryc$model =="model1",], aes(x=fraction, y=MSE, colour=method)) + facet_wrap(~model, nrow=1) + geom_line() + geom_point()+ geom_errorbar(aes(ymin=MSE-se, ymax=MSE+se), width=.05)
+g2 = ggplot(datsummaryc[datsummaryc$model =="model2",], aes(x=fraction, y=MSE, colour=method)) + facet_wrap(~model, nrow=1) + geom_line() + geom_point()+ geom_errorbar(aes(ymin=MSE-se, ymax=MSE+se), width=.05)
+g3 = ggplot(datsummaryc[datsummaryc$model =="model3",], aes(x=fraction, y=MSE, colour=method)) + facet_wrap(~model, nrow=1) + geom_line() + geom_point()+ geom_errorbar(aes(ymin=MSE-se, ymax=MSE+se), width=.05)
+g4 = ggplot(datsummaryc[datsummaryc$model =="model4",], aes(x=fraction, y=MSE, colour=method)) + facet_wrap(~model, nrow=1) + geom_line() + geom_point()+ geom_errorbar(aes(ymin=MSE-se, ymax=MSE+se), width=.05)
+g5 = ggplot(datsummaryc[datsummaryc$model =="model5",], aes(x=fraction, y=MSE, colour=method)) + facet_wrap(~model, nrow=1) + geom_line() + geom_point()+ geom_errorbar(aes(ymin=MSE-se, ymax=MSE+se), width=.05)
 
-
-
+library(ggpubr)
+ggarrange(g1,g2,g3,g4,g5 ,nrow = 2,ncol = 3)
 
 
 

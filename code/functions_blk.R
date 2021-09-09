@@ -89,11 +89,13 @@ polytensor=function(tensor, l, k){
         X1=c(slice.index(subtensor,1))
         X2=c(slice.index(subtensor,2))
         X3=c(slice.index(subtensor,3))
-        if(l==0)
+        if(l==0){
           fit=lm(c(subtensor)~1)
-        else
-          fit=lm(c(subtensor)~polym(X1,X2,X3,degree=l,raw=TRUE))
-        est[which(z==i),which(z==j),which(z==q)]=predict(fit,polym(X1,X2,X3,degree=l,raw=TRUE))
+          est[which(z==i),which(z==j),which(z==q)]=predict(fit,as.data.frame(cbind(X1,X2,X3)))
+        }else{
+          fit=lm(c(subtensor)~polym(X1,X2,X3,degree=l,raw=TRUE)) 
+          est[which(z==i),which(z==j),which(z==q)]=predict(fit,polym(X1,X2,X3,degree=l,raw=TRUE))
+        }
       }
     }
   }
@@ -238,6 +240,7 @@ Bal = function(A,k,max_iter = 100,threshold = 1,rep = 5){
     }
     zlist[[r]]  = ReNumber(z)
     z = zlist[[which.max(unlist(lapply(zlist,function(x) length(unique(x)))))]]
+    iter = iter+1
   }
   return(z)
 }
@@ -274,6 +277,7 @@ Bicluster = function(A,k,max_iter =100,threshold = 1){
   }else{
     z = kmeans(tensor_unfold(A,1),k,nstart = 100)$cluster 
   }
+  iter = 0;improvement = d
   while((iter<=max_iter)&(improvement > threshold)){
     Q = UpdateMus_tensor(A,z,z,z)
     E = matrix(nrow = d, ncol = k)
@@ -285,6 +289,7 @@ Bicluster = function(A,k,max_iter =100,threshold = 1){
     nz = apply(E,1,which.min)
     improvement =  sum(abs(nz-z)>0);improvement
     z = nz
+    iter = iter+1
   }
   z = ReNumber(z)
   
@@ -296,7 +301,6 @@ Bicluster = function(A,k,max_iter =100,threshold = 1){
   
 }
 
-mean((Bicluster(A,2*d^(1/3))-s1$signal)^2)
 
 ######### Simulation functions ############################################
 

@@ -274,7 +274,7 @@ LSE = function(A,k,mode = 2,max_iter = 100,threshold = 1,rep = 5){
     z = kmeans(tensor_unfold(A,1),k,nstart = 100)$cluster
   }else if (mode==2){
     # Balasubramanian estimation
-    z = Bal(A,k)
+    z = Bal_correct(A,k)
   }else if (mode==3){
     # HSC membership estimation
     z = HSC(A,k,k,k,sym= T)$Cs

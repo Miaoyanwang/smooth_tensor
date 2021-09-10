@@ -212,36 +212,57 @@ HSC = function(x,k,l,r,nstart = 40,sym = F){
   return(result)
 }
 
-
-
-
 Bal = function(A,k,max_iter = 100,threshold = 1,rep = 5){
-  n = dim(A)[1]
-  zlist = list()
-  for(r in 1:rep){
-    z = kmeans(tensor_unfold(A,1),k)$cluster
-    E = matrix(nrow = n,ncol = k)
-    xi = vector(length=k)
-    iter = 0; improvement = n
-    while((iter<=max_iter)&(improvement > threshold)){
-      iter = iter+1
-      eta = as.numeric(table(z))
-      for(i in 1:n){
-        for(a in 1:k){
-          E[i,a] = sum(A[i,which(z==a),])
+    n = dim(A)[1]
+    zlist = list()
+    for(r in 1:rep){
+        z = kmeans(tensor_unfold(A,1),k)$cluster
+        E = matrix(nrow = n,ncol = k)
+        xi = vector(length=k)
+        iter = 0; improvement = n
+        while((iter<=max_iter)&(improvement > threshold)){
+            iter = iter+1
+            eta = as.numeric(table(z))
+            for(i in 1:n){
+                for(a in 1:k){
+                    E[i,a] = sum(A[i,which(z==a),])
+                }
+            }
+            for(a in 1:k){
+                xi[a] = eta[a]*(n-eta[a])+eta[a]*(eta[a]-1)
+            }
+            nz = apply(E%*%diag(1/xi),1,which.max);nz
+            improvement =  sum(abs(nz-z)>0);improvement
+            z = nz
         }
-      }
-      for(a in 1:k){
-        xi[a] = eta[a]*(n-eta[a])+eta[a]*(eta[a]-1)
-      }
-      nz = apply(E%*%diag(1/xi),1,which.max);nz
-      improvement =  sum(abs(nz-z)>0);improvement
-      z = nz
+        zlist[[r]]  = ReNumber(z)
+        z = zlist[[which.max(unlist(lapply(zlist,function(x) length(unique(x)))))]]
+        iter = iter+1
     }
-    zlist[[r]]  = ReNumber(z)
-    z = zlist[[which.max(unlist(lapply(zlist,function(x) length(unique(x)))))]]
-    iter = iter+1
-  }
+    return(z)
+}
+    
+    
+Bal_correct = function(A,k){
+n = dim(A)[1]
+z = kmeans(tensor_unfold(A,1),k)$cluster
+E = matrix(nrow = n,ncol = k)
+prob=array(0,dim=rep(k,3))
+      for(a in 1:k){
+          for(b in 1:k){
+              for(c in 1:k){
+              prob[a,b,c]=mean(A[which(z==a),which(z==b),which(z==c)])
+          }
+      }
+      }
+      
+      for(i in 1:n){
+          for(a in 1:k){
+              E[i,a]=sum(dbinom(A[i,,],1, prob[a,z,z],log=TRUE))
+          }
+      }
+      z=apply(E,1,which.max)
+      
   return(z)
 }
 
@@ -253,7 +274,7 @@ LSE = function(A,k,mode = 2,max_iter = 100,threshold = 1,rep = 5){
     z = kmeans(tensor_unfold(A,1),k,nstart = 100)$cluster
   }else if (mode==2){
     # Balasubramanian estimation
-    z = Bal(A,k,max_iter,threshold, rep)
+    z = Bal(A,k)
   }else if (mode==3){
     # HSC membership estimation
     z = HSC(A,k,k,k,sym= T)$Cs
@@ -369,7 +390,6 @@ simulation = function(d, mode = 1,sigma = 0.5,signal_level=10,symnoise = T){
 
   return(list(signal= signal,observe=observe))
 }
-
 
 
 Observe_A = function(P){

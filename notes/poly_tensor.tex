@@ -1,0 +1,285 @@
+\documentclass[11pt]{article}
+\usepackage{lscape}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{bm}
+\usepackage{gensymb}
+\allowdisplaybreaks[4]
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{setspace}
+\usepackage{siunitx}
+\usepackage{enumitem}
+\usepackage{dsfont}
+\usepackage{arydshln}
+\usepackage{natbib}
+
+\newcommand*{\vertbar}{\rule[-1ex]{0.5pt}{2.5ex}}
+\newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
+
+
+\usepackage{graphics}
+\allowdisplaybreaks
+
+\usepackage[utf8x]{inputenc}
+\usepackage{bm}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    citecolor = blue,
+    linkcolor=blue,
+    filecolor=magenta,           
+    urlcolor=cyan,
+}
+
+
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{pro}[thm]{Property}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{ass}{Assumption}
+\newtheorem{prob}{Problem}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{defn}{Definition}
+\newtheorem{exmp}{Example}
+\newtheorem{rmk}{Remark}
+
+\usepackage{algpseudocode,algorithm}
+\algnewcommand\algorithmicinput{\textbf{Input:}}
+\algnewcommand\algorithmicoutput{\textbf{Output:}}
+\algnewcommand\INPUT{\item[\algorithmicinput]}
+\algnewcommand\OUTPUT{\item[\algorithmicoutput]}
+
+
+\def\sign{\textup{sgn}}
+\def\srank{\textup{srank}}
+\def\rank{\textup{rank}}
+\def\caliP{\mathscr{P}_{\textup{sgn}}}
+\def\risk{\textup{Risk}}
+
+
+\usepackage[labelfont=bf]{caption}
+
+\setcounter{table}{1}
+\usepackage{multirow}
+\usepackage{tabularx}
+
+\def\fixme#1#2{\textbf{[FIXME (#1): #2]}}
+
+\def\Holder{\text{H\"{o}lder }}
+
+\newcommand*{\KeepStyleUnderBrace}[1]{%f
+  \mathop{%
+    \mathchoice
+    {\underbrace{\displaystyle#1}}%
+    {\underbrace{\textstyle#1}}%
+    {\underbrace{\scriptstyle#1}}%
+    {\underbrace{\scriptscriptstyle#1}}%
+  }\limits
+}
+\usepackage{mathtools}
+\mathtoolsset{showonlyrefs=true}
+
+\begingroup
+\makeatletter
+\@for\theoremstyle:=definition,remark,plain\do{%
+\expandafter\g@addto@macro\csname th@\theoremstyle\endcsname{%
+\addtolength\thm@preskip\parskip
+}%
+}
+\endgroup
+
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=true}
+\usepackage[parfill]{parskip}
+\usepackage{bm}
+\onehalfspacing
+
+\newcommand{\maxnorm}[1]{\left\lVert#1\right\rVert_{\infty}}
+\newcommand{\Hnorm}[1]{\left\lVert#1\right\rVert_{\tH_\alpha}}
+\newcommand{\nullnorm}[1]{\left\lVert#1\right\rVert}
+\def\trueB{\mB^{\text{true}}}
+\def\newX{\mX_{\textup{new}}}
+\def\newy{y_{\textup{new}}}
+\def\sign{\textup{sign}}
+\def\bayesf{f_{\textup{bayes}}}
+\usepackage{mathrsfs}
+\def\caliB{\mathscr{B}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%             Math Symbols
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%               Bold Math
+\input macros.tex
+\def\refer#1{\emph{\color{blue}#1}}
+\begin{document}
+
+\begin{center}
+{\bf \large Blockwise polynomial approximation to permutation-equivalence tensor model}\\
+Miaoyan Wang, Aug 23, 2021\\
+\end{center}
+
+
+%Let $z\colon[d]\to[k]$ denote the clustering function. For notational convenience, we use the shorthand $\mz(i_1,\ldots,i_m):=(z(i_1),\ldots,z(i_m))^T\in[k]^m$ to denote the block membership by applying $z$ to $m$ modes in a coordinate-wise manner. Similarly, for a permutation function $\pi\colon[d]\to[d]$, we use $\boldsymbol{\pi}(i_1,\ldots,i_m):=(\pi(i_1),\ldots,\pi(i_m))^T\in[d]^m$ to denote the permuted indices by applying $\pi$ in a coordinate-wise manner. 
+\section{Results}
+For notational convenience, we make the convention that blockwise constant tensor is of degree 1 (not 0 as in classical conventions). We use $z\colon[d]\to[k]$ to denote the canonical clustering function that partitions $[d]$ into $k$ equal-sized clusters; i.e.,
+\begin{align}
+z\colon[d]&\to[k] \\
+i&\mapsto z(i)=\lceil ki/d\rceil.
+\end{align}
+By construction, the inverse images $\{z^{-1}(j)\colon j\in[k]\}$ is a collection of disjoint, equal-sized subsets satisfying $\cup_{j\in[k]} z^{-1}(j)=[d]$. We use $\tE_k$ to denote the $m$-way partition that collects $k^m$ disjoint, equal-sized blocks in $[d]^m$; i.e.,
+\[
+\tE_k= \{z^{-1}(j_1) \times \cdots \times z^{-1}(j_m)\colon (j_1,\ldots,j_m)\in[k]^m\}. 
+\]
+
+ 
+\begin{itemize}
+\item blockwise degree-$1$ (constant) tensor:
+\begin{align}
+\caliB(k,1)
+%&=\left\{\tB\in(\mathbb{R}^{d})^{\otimes m}\colon \tB(\omega)=\tC(\mz(\omega)) \text{ for some tensor $\tC\in(\mathbb{R}^k)^{\otimes m}$}\right\}\\
+&=\left\{\tB\in(\mathbb{R}^{d})^{\otimes m}\colon \tB(\omega)= \sum_{\Delta \in\tE_k}c_{\Delta}\mathds{1}\{\omega\in \Delta\} \right\}\\
+&\cong \mathbb{R}^{k^m},
+\end{align}
+where, for each block $\Delta\in\tE_k$, the coefficients $c_{\Delta}\in\mathbb{R}$ represent the block means. Note that there are in total $k^m$ free parameters in $\caliB(k,1)$, so the parameter space $\caliB(k,1)$ is isomorphic to the linear space $\mathbb{R}^{k^m}$.
+
+\item blockwise degree-$2$ linear tensor:
+\begin{align}
+\caliB(k,2)&=\left\{\tB\in (\mathbb{R}^d)^{\otimes m}\colon \tB(\omega)=\sum_{\Delta \in \tE_k} \left[c_{\Delta}+\langle \boldsymbol{\beta}_{\Delta}, \omega\rangle\right] \mathds{1}\{\omega\in \Delta\}\text{ for all indices $\omega\in[d]^m$}\right\}\\
+&\cong\mathbb{R}^{(1+m)k^m}, 
+\end{align}
+where, for each block $\Delta\in \tE_k$, the coefficients $(c_{\Delta}, \boldsymbol{\beta}_{\Delta}) \in \mathbb{R}\times \mathbb{R}^d$ represent the means and coordinate-wise slopes within blocks. Note that there are in total $k^m$ blocks in $\tE_k$, each of which is associated with $R^{1+d}$ free coefficients. By the same argument as before, the parameter space $\caliB(k,2)$ is isomorphic to the linear space $\mathbb{R}^{(1+m) k^m}$.
+
+
+\item blockwise degree-$(\ell+1)$ polynomial tensor:
+\begin{align}
+\caliB(k,\ell+1)&=\left\{\tB\in(\mathbb{R}^{d})^{\otimes m}\colon \tB(\omega)=\sum_{\Delta \in \tE_k} \text{Poly}_{\ell,\Delta}(\omega) \mathds{1}\{\omega\in\Delta \}\text{ for all indices $\omega\in[d]^m$}\right\}\\
+&\subset \mathbb{R}^{(\ell+m)^\ell k^m},
+\end{align}
+where, for each block $\Delta\in\tE_k$, the polynomial function $\text{Poly}_{\ell,\Delta}(\cdot)$ has at most $(\ell+m)^{\ell}$ free coefficients. By the same argument as before, the parameter space $\caliB(k,\ell+1)$ is embedded in the linear space $\mathbb{R}^{(\ell+m)^\ell k^m}$.
+\end{itemize}
+
+{\bf Model.} Suppose the data tensor $\tY$ is generated from the model
+\begin{align}\label{eq:model}
+\tY=\Theta\circ \pi+\tE,\quad \text{where}\quad \Theta(i_1,\ldots,i_m)&=f\left({i_1\over d}, \ldots,{i_m\over d}\right)\ \text{for all }(i_1,\ldots,i_d)\in[d]^m,
+\end{align}
+where $\pi\colon[d]\to[d]$ is an \emph{unknown} permutation, $f\colon \mathbb{R}^m\to\mathbb{R}$ is an \emph{unknown} $\alpha$-H\"older smooth function with $\alpha\in(0,\infty)$, and $\tE$ is a noise tensor with i.i.d.\ sub-Gaussian entries. We use $\tP(\alpha)$ to denote the collection of signal tensors from model~\eqref{eq:model}. The goal is to estimate signal $\Theta\in\tP(\alpha)$ from data $\tY$. 
+
+
+The parameters $(\Theta, \pi)$ are not separately identifiable from model~\eqref{eq:model}. However, the tensor $\Theta\circ \pi$ is always identifiable as a composite parameter. We impose the following marginal monotonicity assumption to ensure the separate identifiability. 
+\begin{thm}[Identifiability] Suppose $f\in \tM(\beta)$ with $\beta\in(0,\infty)$. Then, the parameters $(\Theta,\pi)$ are separately identifiable from model~\eqref{eq:model}. 
+\end{thm}
+
+\begin{thm}(Blockwise polynomial tensor approximation)\label{thm:approx} Suppose the function $f\colon[0,1]^m\to \mathbb{R}$ generating the signal tensor $\Theta$ is $\alpha$-H\"older smooth with $\alpha\in(0,\infty)$. Then, for every block size $k\leq d$ and degree $\ell\in\mathbb{N}_{+}$, we have the approximation error
+\[
+\inf_{\tB\in \caliB(k,\ell)}{1\over d^m}\FnormSize{}{\Theta-\tB}^2 \lesssim {m^2\over k^{2\min(\alpha, \ell)}}.
+\]
+\end{thm}
+
+We propose a least-square estimate based on the blockwise polynomial tensor approximation,
+\[
+(\hat \Theta^\textup{LSE},\hat \pi^\textup{LSE})=\argmin_{\substack{\Theta\in \caliB(k,\ell)\\ \pi\colon[d]\to[d]}}\FnormSize{}{\tY-\Theta\circ \pi}^2.
+\]
+Although not reflected in the notation, the least-square estimate $\hat \Theta^\textup{LSE}$ depends on the tuning parameters $(k,\ell)$. We provide the optimal choice of $(k,\ell)$ in the following theorem.  We focus on the asymptotic error rates as $d\to\infty$ while treating $(m,\alpha)$ as constants. 
+
+\begin{thm}[Least-square estimator]\label{thm:3} Let $(\hat \Theta^\textup{LSE}, \hat \pi^\textup{LSE})$ denote the least-square estimate with degree $\ell^*= \min(\lceil \alpha \rceil, {m(m-1)\over 2})$ with block size $k^*=\lceil  d^{m\over m+2\ell^*} \rceil $. Then, $(\hat \Theta^\textup{LSE}, \hat \pi^\textup{LSE})$ obeys the error bound
+\begin{equation}
+\begin{aligned}
+{1\over d^m}\FnormSize{}{\hat \Theta^\textup{LSE}\circ \hat \pi^\textup{LSE} -\Theta\circ \pi}^2&\lesssim 
+\inf_{(k,\ell)\in[d]\times \mathbb{N}_{+}}\left\{{m^2\over k^{2\min(\alpha,\ell)}}+{k^m(\ell+m)^\ell \over d^{m}}+{\log d\over d^{m-1}}\right\}\notag \\
+&\asymp
+\begin{cases}
+d^{-{2m\alpha \over m+2\alpha}} & \text{when }\alpha<m(m-1)/2,\\
+ d^{-(m-1)}\log d & \text{when }\alpha\geq m(m-1)/2.\\
+\end{cases}
+\end{aligned}
+\end{equation}
+\end{thm}
+\begin{rmk}[Comparison with block tensor approximation] 
+For matrices (i.e., $m=2$), the optimal polynomial is obtained by block matrix approximation. For order-3 $\alpha$-smooth tensors the optimal degree and block size are $(\ell^*, k^*)=(3,\lceil  d^{1/3}\rceil  )$ for all $\alpha\geq 3$. In other words, blockwise quadratic tensors suffice for estimating sufficiently smooth tensors. Further increment of polynomial degree $\ell$ is of no help for smooth signal estimation. 
+\end{rmk}
+
+
+\begin{thm}[Polynomial-time estimator] Suppose that the signal tensor $\Theta$ is generated from model~\eqref{eq:model} with $f\in \tH(\alpha)\cap \tM(\beta)$. Let $\hat \Theta^\textup{BC}$ be the estimator in with degree $\ell^*= \min(\lceil \alpha\rceil, {m(m-1)\over 2})$ and block size $k^*=\lceil d^{m\over m+2\ell^*}\rceil$. Then the estimator $\hat \Theta^\textup{BC} $ satisfies
+\[
+{1\over d^m}\FnormSize{}{\hat \Theta^\textup{BC}\circ \hat \pi^\textup{BC} -\Theta\circ \pi}^2\lesssim d^{-\beta(m-1)}+
+\begin{cases}
+d^{-{2m\alpha \over m+2\alpha}} & \text{when }\alpha < m(m-1)/2,\\
+ d^{-(m-1)}\log d & \text{when }\alpha \geq m(m-1)/2.\\
+\end{cases}
+\]
+with very high probability. 
+\end{thm}
+
+
+
+\begin{thm}[Minimax lower bound]\label{thm:minimax}For any given $\alpha\in(0,\infty)$, the estimation problem based on model~\eqref{eq:model} obeys the minimax lower bound 
+\[
+\inf_{(\hat \Theta,\hat \pi)}\sup_{\substack{\Theta\in \tP(\alpha)\\ \pi\colon[d]\to[d]}} \mathbb{P}\left(\FnormSize{}{\Theta\circ \pi-\hat \Theta\circ \hat \pi}^2 \geq d^{-{2m\alpha\over m+2\alpha}}+d^{-(m-1)}\log d \right) >0.8.
+\]
+\end{thm}
+\begin{rmk} By comparing Theorems~\ref{thm:3} and~\ref{thm:minimax}, we find that the constrained least-square estimator achieves the minimax optimal rate. 
+\end{rmk}
+
+\section{Proofs}
+\begin{proof}[Proof of Theorem~\ref{thm:3}] The proof is similar to theorem 2.1 on note 030721. By Theorem~\ref{thm:approx}, there exists a blockwise polynomial tensor $\tB\in\caliB(k,\ell)$ such that
+\begin{equation}\label{eq:approx}
+\FnormSize{}{\tB-\Theta}^2\lesssim {d^mm^2\over k^{2\min(\alpha,\ell)}}.
+\end{equation}
+By the triangle inequality,
+\begin{equation}\label{eq:tri}
+\FnormSize{}{\hat\Theta^\textup{LSE}\circ\hat\pi^\textup{LSE} -\Theta\circ \pi}^2\leq 2\FnormSize{}{\hat\Theta^\textup{LSE}\circ\hat\pi^\textup{LSE} -\tB\circ \pi}^2+2\KeepStyleUnderBrace{\FnormSize{}{\tB\circ \pi-\Theta\circ \pi}^2}_{\textup{Theorem~\ref{thm:approx}}}.
+\end{equation}
+Therefore, it suffices to bound $\FnormSize{}{\hat\Theta^\textup{LSE}\circ\hat\pi^\textup{LSE} -\tB\circ \pi}^2$. By the global optimality of least-square estimator, we have
+\begin{align}
+\FnormSize{}{\hat\Theta^\textup{LSE}\circ\hat\pi^\textup{LSE} -\tB\circ \pi}&\leq \left\langle {\hat \Theta^\textup{LSE}\circ \hat \pi^\textup{LSE}-\tB\circ \pi \over \FnormSize{}{ \hat \Theta^\textup{LSE}\circ \hat \pi^\textup{LSE}-\tB\circ \pi}},\ \tE+(\tB\circ \pi-\Theta\circ \pi) \right \rangle \\
+&\leq \sup_{\pi, \pi'\colon[d]\to[d]}\sup_{\tB, \tB'\in \caliB(k,\ell)} \left\langle {\tB'\circ \pi'-\tB\circ \pi \over \FnormSize{}{\tB'\circ \pi'-\tB\circ \pi}}, \tE \right \rangle+\KeepStyleUnderBrace{\FnormSize{}{\tB\circ \pi-\Theta\circ \pi}}_{\textup{Theorem~\ref{thm:approx}}}.
+\end{align}
+Now, for fixed $\pi,\pi'$, the space embedding $\caliB(k,\ell)\subset \mathbb{R}^{(\ell+m)^\ell k^m}$ implies the space embedding $\{(\tB'\circ \pi'-\tB\circ \pi)\colon \tB, \tB'\in\caliB(k,\ell)\} \subset\mathbb{R}^{2(\ell+m)^\ell k^m}$. Therefore, with very high probability, 
+\[
+\sup_{\tB, \tB'\in \caliB(k,\ell)} \left\langle {\tB'\circ \pi'-\tB\circ \pi \over \FnormSize{}{\tB'\circ \pi'-\tB\circ \pi}}, \tE \right \rangle \lesssim \sup_{\mx\in \mathbb{R}^{2(\ell+m)^\ell k^m} }\left\langle {\mx\over \vnormSize{}{\mx}},\ e \right\rangle \lesssim \sqrt{(\ell+m)^\ell k^m},
+\]
+where $e$ is a vector of consistent length that consists of i.i.d.\ sub-Gaussian entries. By the union bound of Gaussian maxima over countable set $\{\pi,\pi'\colon [d]\to[d]\}$, we obtain
+\begin{equation}\label{eq:union}
+\mathbb{E}\FnormSize{}{\hat\Theta^\textup{LSE}\circ\hat\pi^\textup{LSE} -\tB\circ \pi}^2\lesssim (\ell+m)^\ell k^m+d\log d.
+\end{equation}
+Combining the inequalities~\eqref{eq:approx}, \eqref{eq:tri} and \eqref{eq:union} yields the desired conclusion
+\[
+\mathbb{E}\FnormSize{}{\hat\Theta^\textup{LSE}\circ\hat\pi^\textup{LSE} -\Theta\circ \pi}^2\lesssim  {d^m m^2\over k^{2\min(\alpha, \ell)}}+(\ell+m)^\ell k^m+d\log d.
+\]
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:minimax}] By the definition of the tensor space, we seek the minimax rate $\varepsilon^2$ in the following expression
+\[
+\inf_{(\hat \Theta,\hat \pi)}\sup_{\Theta\in \tP(\alpha)}\sup_{\pi\colon [d]\to[d]} \mathbb{P}\left(\FnormSize{}{\Theta\circ \pi-\hat \Theta\circ \hat \pi}^2 \geq \varepsilon^2 \right).
+\]
+On one hand, if we fix permutation $\pi\colon[d]\to[d]$, the problem can be viewed as a classical $m$-dimensional $\alpha$-smooth nonparametric regression with $d^m$ sample points. The minimax lower bound is known to be $\varepsilon^2=d^{-{2m\alpha\over m+2\alpha}}$. On the other hand, if we fix $\Theta\in\tP(\alpha)$, the problem become a new type of convergence rate due to the unknown permutation. We refer it to the permutation rate, and will prove that $\varepsilon^2=d^{-(m-1)}\log d$. Since our target is the sum of the two rate, it suffice to prove the two different rates separately. In the following arguments, we will proceed by this strategy. 
+
+\paragraph{Nonparametric rate.} The nonparametric rate for $\alpha$-smooth function is readily available in the literature; see \citet[Example 16]{Wassermantext}~and \citet[Section 2]{stone1982optimal}. We state the results here for self-completeness. 
+
+\begin{lem}[Minimax rate for $\alpha$-smooth function estimation]\label{lem:non} Consider data $(\mx_1,Y_1), \ldots, (\mx_N,Y_N)$, where $\mx_n=({i_1\over d},\ldots,{i_m\over d})\in[0,1]^d$ is the $m$-dimensional predictor and $Y_n\in\mathbb{R}$ is the scalar response. Consider the observation model
+\[
+Y_n=f(\mx_n)+\varepsilon_n,\quad \text{with}\ \varepsilon_n \sim \text{i.i.d. }  N(0,1), \quad\text{ for all }n\in[N].
+\]
+Assume $f$ is in the $\alpha$-Holder smooth function class, denoted by $\tF(\alpha)$. Then,
+\[
+\inf_{\hat f}\sup_{f\in \tF(\alpha)}\vnormSize{}{f-\hat f}\geq N^{-{2\alpha\over m+2\alpha}}.
+\]
+\end{lem}
+Our conclusion readily follows from Lemma~\ref{lem:non} by taking sample size $N=d^m$ and function norm $\vnormSize{}{f-\hat f}={1\over d^m}\FnormSize{}{\Theta-\hat \Theta}^2$.
+
+\paragraph{Permutation rate.} The permutation rate is obtained by the following two steps. We first show that estimating the unknown permutation for a $\alpha$-smooth ($\alpha\geq 1$) function is at least as difficult as that for a block tensor ($\alpha=0$). Then, we prove the permutation rate for the tensor block problem is lower bounded by $d\log d$. For $\alpha\in(0,1)$, the permutation rate is dominated by the nonparametric rate, therefore, we 
+\end{proof}
+
+\bibliographystyle{unsrtnat}
+\bibliography{tensor_wang}
+
+\end{document}

@@ -123,7 +123,7 @@
 \begin{document}
 
 \begin{center}
-{\bf \large Blockwise polynomial approximation to permutation-equivalence tensor model}\\
+{\bf \large Blockwise Polynomial Approximation to Smooth Tensor Model}\\
 Miaoyan Wang, Aug 23, 2021\\
 \end{center}
 
@@ -276,9 +276,45 @@ Assume $f$ is in the $\alpha$-Holder smooth function class, denoted by $\tF(\alp
 \end{lem}
 Our conclusion readily follows from Lemma~\ref{lem:non} by taking sample size $N=d^m$ and function norm $\vnormSize{}{f-\hat f}={1\over d^m}\FnormSize{}{\Theta-\hat \Theta}^2$.
 
-\paragraph{Permutation rate.} The permutation rate is obtained by the following two steps. We first show that estimating the unknown permutation for a $\alpha$-smooth ($\alpha\geq 1$) function is at least as difficult as that for a block tensor ($\alpha=0$). Then, we prove the permutation rate for the tensor block problem is lower bounded by $d\log d$. For $\alpha\in(0,1)$, the permutation rate is dominated by the nonparametric rate, therefore, we 
+\paragraph{Permutation rate.} The permutation rate is obtained by the following two steps. We first construct an $\alpha$-smooth tensor with a subtensor is a block tensor. 
+
+
+We first show that estimating the unknown permutation for an $\alpha$-smooth ($\alpha\geq 1$) function is no easier than that for a block tensor. Then, we prove the permutation rate for the tensor block problem is lower bounded by $d\log d$. 
+
+
+We construct an $\alpha$-smooth tensor $\Theta$ whose subtensor is a $k$-block tensor with $k=n^\alpha$. Let $\bar \Theta=\Theta[I,\ldots,I]$ denote the subtensor 
+\[
+\tG=\{\Theta=\entry{f\circ \pi} \big|  \pi\colon[d]\to[d]\}
+\]
+\begin{align}
+&\inf_{\hat \Theta}\sup_{\pi\in \Pi(d,d)}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta-\Theta\circ \pi}^2\geq \varepsilon^2\right)\\
+%\geq & \ \inf_{\hat \Theta}\sup_{\pi_{\text{sub}}\in\Pi_\ell}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta(\tI,\ldots,\tI)-\Theta(\tI,\ldots,\tI)\circ \pi_{\text{sub}}}^2
+%\sum_{i\in[I]} \left(\hat \Theta(i_1,\ldots,i_m)-\Theta(\pi(i_1),\ldots,\pi(i_m))\right)^2
+%\geq \varepsilon^2\right)\\
+%\geq & \ \inf_{\hat \Theta}\sup_{\pi \in\Pi(d,d)}\mathbb{P}\left({1\over d^m}\normSize{}{\hat \Theta-\Theta\circ \pi}^2_{\tI,F}\geq \varepsilon^2\right)\\
+\geq & \ \inf_{\hat  \Theta_{\text{sub}}}\sup_{\pi_{\text{sub}}\in\Pi(n,n)}\mathbb{P}\left({1\over n^m}\FnormSize{}{{\hat \Theta_\text{sub}}-\Theta_{\text{sub}}\circ \pi_{\text{sub}}}^2\geq {d^m\over n^m }\varepsilon^2\right)\\
+= & \ \inf_{\hat  \Theta_{\text{sub}}}z\in\Pi(n,K)}\mathbb{P}\left({1\over n^m}\sum_{(i_1,\ldots,i_m)\in[n]^m}\left(\hat \Theta_\text{sub}(i_1,\ldots,i_m)-\tC^*(z(i_1),\ldots,z(i_m)\right)^2\geq \varepsilon^2\right)
+\end{align}
+Note that $\Theta_{\text{sub}}\in\mathbb{R}^{n\times \cdots \times n}$ is a $K$-block tensor, and 
 \end{proof}
 
+\begin{lem}[Minimax permutation rate for tensor block model] %For any given $K\in\mathbb{N}_{+}$, consider the block-$K$ tensor model 
+%\[
+%\tY=\Theta+\tE, 
+%\]
+%where $\Theta$ is the unknown signal tensor of $(K,\ldots,K)$ blocks, and $\tE$ consists of i.i.d.\ sub-Gaussian noises. 
+
+For any given $K\in\mathbb{N}_{+}$, consider the estimation problem based on $K$-block tensor model with i.i.d.\ sub-Gaussian noises. 
+%\[
+%\tY=\Theta+\tE, 
+%\]
+%where $\Theta=\entry{\tC(\pi(i_1),\ldots,\pi(i_m)}\in\mathbb{R}^{d\times\cdots\times d}$ denotes the signal tensor of interest, $\tC\in\mathbb{R}^{K\times \cdots\times K}$ denotes the core tensor, $\pi\in \Pi(d,K)=\{\pi\colon [d]\to[K]\}$ denotes the collections of partitions on $[d]$ into $K$ blocks, and $\tE\in\mathbb{R}^{d\times \cdots\times d}$ denotes the noise tensor consisting of i.i.d.\ sub-Gaussian noises. 
+In the family of $K$-block signal tensors, there exists a core tensor $\tC^*\in\mathbb{R}^{K\times \cdots \times K}$ such that
+\[
+\inf_{\hat \Theta}\sup_{z\in \Pi(d,K)}\mathbb{P}\left\{{1\over n^m} \sum_{(i_1,\ldots,i_m)\in[n]^m}\left[\hat \Theta(i_1,\ldots,i_m)-\tC^*\left(z(i_1),\ldots,z(i_m)\right)\right]^2\geq {\log K\over n}\right\}\geq 0.9,
+\]
+where $\pi\in \Pi(n,K)=\{\pi\colon [n]\to[K]\}$ denotes the clustering functions by mapping $[n]$ to $[K]$. 
+\end{lem}
 \bibliographystyle{unsrtnat}
 \bibliography{tensor_wang}
 

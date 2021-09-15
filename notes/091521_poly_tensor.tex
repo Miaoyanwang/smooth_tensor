@@ -124,7 +124,7 @@
 
 \begin{center}
 {\bf \large Blockwise Polynomial Approximation to Smooth Tensor Model}\\
-Miaoyan Wang, Aug 23, 2021\\
+Miaoyan Wang, Sep 15, 2021\\
 \end{center}
 
 
@@ -223,7 +223,7 @@ with very high probability.
 
 \begin{thm}[Minimax lower bound]\label{thm:minimax}For any given $\alpha\in(0,\infty)$, the estimation problem based on model~\eqref{eq:model} obeys the minimax lower bound 
 \[
-\inf_{(\hat \Theta,\hat \pi)}\sup_{\substack{\Theta\in \tP(\alpha)\\ \pi\colon[d]\to[d]}} \mathbb{P}\left(\FnormSize{}{\Theta\circ \pi-\hat \Theta\circ \hat \pi}^2 \geq d^{-{2m\alpha\over m+2\alpha}}+d^{-(m-1)}\log d \right) >0.8.
+\inf_{(\hat \Theta,\hat \pi)}\sup_{\substack{\Theta\in \tP(\alpha)\\ \pi\colon[d]\to[d]}} \mathbb{P}\left({1\over d^m}\FnormSize{}{\Theta\circ \pi-\hat \Theta\circ \hat \pi}^2 \geq d^{-{2m\alpha\over m+2\alpha}}+d^{-(m-1)}\log d \right) \geq 0.9.
 \]
 \end{thm}
 \begin{rmk} By comparing Theorems~\ref{thm:3} and~\ref{thm:minimax}, we find that the constrained least-square estimator achieves the minimax optimal rate. 
@@ -259,7 +259,7 @@ Combining the inequalities~\eqref{eq:approx}, \eqref{eq:tri} and \eqref{eq:union
 
 \begin{proof}[Proof of Theorem~\ref{thm:minimax}] By the definition of the tensor space, we seek the minimax rate $\varepsilon^2$ in the following expression
 \[
-\inf_{(\hat \Theta,\hat \pi)}\sup_{\Theta\in \tP(\alpha)}\sup_{\pi\colon [d]\to[d]} \mathbb{P}\left(\FnormSize{}{\Theta\circ \pi-\hat \Theta\circ \hat \pi}^2 \geq \varepsilon^2 \right).
+\inf_{(\hat \Theta,\hat \pi)}\sup_{\Theta\in \tP(\alpha)}\sup_{\pi\colon [d]\to[d]} \mathbb{P}\left({1\over d^m}\FnormSize{}{\Theta\circ \pi-\hat \Theta\circ \hat \pi}^2 \geq \varepsilon^2 \right).
 \]
 On one hand, if we fix permutation $\pi\colon[d]\to[d]$, the problem can be viewed as a classical $m$-dimensional $\alpha$-smooth nonparametric regression with $d^m$ sample points. The minimax lower bound is known to be $\varepsilon^2=d^{-{2m\alpha\over m+2\alpha}}$. On the other hand, if we fix $\Theta\in\tP(\alpha)$, the problem become a new type of convergence rate due to the unknown permutation. We refer it to the permutation rate, and will prove that $\varepsilon^2=d^{-(m-1)}\log d$. Since our target is the sum of the two rate, it suffice to prove the two different rates separately. In the following arguments, we will proceed by this strategy. 
 
@@ -276,45 +276,99 @@ Assume $f$ is in the $\alpha$-Holder smooth function class, denoted by $\tF(\alp
 \end{lem}
 Our conclusion readily follows from Lemma~\ref{lem:non} by taking sample size $N=d^m$ and function norm $\vnormSize{}{f-\hat f}={1\over d^m}\FnormSize{}{\Theta-\hat \Theta}^2$.
 
-\paragraph{Permutation rate.} The permutation rate is obtained by the following two steps. We first construct an $\alpha$-smooth tensor with a subtensor is a block tensor. 
-
-
-We first show that estimating the unknown permutation for an $\alpha$-smooth ($\alpha\geq 1$) function is no easier than that for a block tensor. Then, we prove the permutation rate for the tensor block problem is lower bounded by $d\log d$. 
-
-
-We construct an $\alpha$-smooth tensor $\Theta$ whose subtensor is a $k$-block tensor with $k=n^\alpha$. Let $\bar \Theta=\Theta[I,\ldots,I]$ denote the subtensor 
-\[
-\tG=\{\Theta=\entry{f\circ \pi} \big|  \pi\colon[d]\to[d]\}
-\]
+\paragraph{Permutation rate.} Let $\Pi(n,k)$ denote the collection of all possible onto mappings from $[n]$ to $[k]$. Because our main focus in the unknown permutation, we define the following two (conditional) tensor families by fixing the generative function and the core tensor, respectively. 
+\begin{itemize} 
+\item $d$-dimensional, $\alpha$-smooth tensor family with a given $\alpha$-smooth function $f$:
 \begin{align}
-&\inf_{\hat \Theta}\sup_{\pi\in \Pi(d,d)}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta-\Theta\circ \pi}^2\geq \varepsilon^2\right)\\
-%\geq & \ \inf_{\hat \Theta}\sup_{\pi_{\text{sub}}\in\Pi_\ell}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta(\tI,\ldots,\tI)-\Theta(\tI,\ldots,\tI)\circ \pi_{\text{sub}}}^2
-%\sum_{i\in[I]} \left(\hat \Theta(i_1,\ldots,i_m)-\Theta(\pi(i_1),\ldots,\pi(i_m))\right)^2
-%\geq \varepsilon^2\right)\\
-%\geq & \ \inf_{\hat \Theta}\sup_{\pi \in\Pi(d,d)}\mathbb{P}\left({1\over d^m}\normSize{}{\hat \Theta-\Theta\circ \pi}^2_{\tI,F}\geq \varepsilon^2\right)\\
-\geq & \ \inf_{\hat  \Theta_{\text{sub}}}\sup_{\pi_{\text{sub}}\in\Pi(n,n)}\mathbb{P}\left({1\over n^m}\FnormSize{}{{\hat \Theta_\text{sub}}-\Theta_{\text{sub}}\circ \pi_{\text{sub}}}^2\geq {d^m\over n^m }\varepsilon^2\right)\\
-= & \ \inf_{\hat  \Theta_{\text{sub}}}z\in\Pi(n,K)}\mathbb{P}\left({1\over n^m}\sum_{(i_1,\ldots,i_m)\in[n]^m}\left(\hat \Theta_\text{sub}(i_1,\ldots,i_m)-\tC^*(z(i_1),\ldots,z(i_m)\right)^2\geq \varepsilon^2\right)
+\tQ(d, \alpha | f)=\bigg\{\Theta\colon \Theta(i_1,\ldots,i_m)=f\left({\pi(i_1)\over d},\ldots,{\pi(i_m)\over d}\right) 
+\text{for some onto mapping } \pi\in \Pi(d,d) \bigg\}.
 \end{align}
-Note that $\Theta_{\text{sub}}\in\mathbb{R}^{n\times \cdots \times n}$ is a $K$-block tensor, and 
+\item $n$-dimensional, $k$-block tensor family with a given block mean tensor $\tC$:
+\begin{align}
+\tZ(n,k | \tC)&=\bigg \{\Theta\colon \Theta(i_1,\ldots,i_m)=\tC(\pi(i_1),\ldots,\pi(i_m))
+\text{ and some onto mapping }\pi\in \Pi(n,k)\bigg\}.
+\end{align}
+\end{itemize} 
+The permutation rate is obtained by the two steps. We first show that the permutation rate for the tensor block problem is $\tilde \tO(d)$. Then, we show that the problem of permutation estimation for smooth tensors is no easier than that for block tensors. Taken together, we establish the permutation rate for smooth tensor models. We provide two key lemmas to show the above two steps respectively; their proofs are deferred to Appendix. 
+
+
+
+Lemma~\ref{lem:permutation} shows the permutation rate over parameter space $\tZ(n,k\ |\ \tC)$ is $n^{-(m-1)}\log k$. 
+\begin{lem}[Permutation error for tensor block model]\label{lem:permutation}
+Consider the problem of estimating $n$-dimensional, $k$-block signal tensors from sub-Gaussian tensor block models.
+For every given integer $k\in[n]$, there exists a core tensor $\tC\in\mathbb{R}^{k\times \cdots \times k}$ satisfying
+\begin{equation}\label{eq:givenC}
+\inf_{\hat \Theta}\sup_{\pi \in \Pi(n,k)}\mathbb{P}\left\{{1\over n^m}\sum_{(i_1,\ldots,i_m)\in[n]^m}\left[\hat \Theta(i_1,\ldots,i_m)-\tC\left(\pi(i_1),\ldots,\pi(i_m)\right)\right]^2\gtrsim n^{-(m-1)}\log k\right\}\geq 0.9.
+\end{equation}
+\end{lem}
+
+The proof of Lemma~\ref{lem:permutation} is constructive. We will write $\{\tC_k\in\mathbb{R}^{k\times \cdots \times k}\}_{k\geq 1}$ the collection of block mean tensors satisfying~\eqref{eq:givenC}, and use them to construct the smooth tensors. 
+
+ \begin{defn}[Reduciblility] A tensor $\Theta\in\mathbb{R}^{d\times \cdots \times d}$ is called \emph{reducible to} a tensor $\Theta_{\text{sub}}\in\mathbb{R}^{n\times \cdots \times n}$, if and only if, there exists a subset of indices $\tI\subset [d]$ with $n=|\tI|$, such that
+\[
+\Theta_{\text{sub}} = \Theta(\tI,\ldots,\tI).
+\]
+\end{defn}
+
+Lemma~\ref{lem:expand} constructs a smooth tensor $\Theta\in \tQ(d, \alpha \ |\ f)$ such that its subtensor is $\Theta_{\text{sub}}\in \tZ(n,k\ |\ \tC)$. 
+\begin{lem}[Reducing smooth tensors to block tensors with given block means]\label{lem:expand} Let $\{\tC_k\}_{k\geq 1}$ denote a collection of tensors, where $\tC_k\in\mathbb{R}^{k\times \cdots \times k}$ is an arbitrarily given tensor of dimension $k$. 
+For every dimension $d\in\mathbb{N}_{+}$ and smoothness index $\alpha>0$, there exist an $\alpha$-smooth function $f$ and a signal tensor $\Theta\in \tQ(d,\alpha\ |\ f)$, such that $\Theta$ is reducible to $\Theta_{\text{sub}}\in \tZ(n,k\ | \ \tC_k)$. Here $(n,k)$ are two integers satisfying
+ $(n,k)=(\gamma_1 d, d^{\gamma_2})$ for two constants $(\gamma_1,\gamma_2)\in(0,1)^2$. 
+ \end{lem}
+
+
+Note that the Lemma~\ref{lem:expand} is different from the block tensor approximation in Theorem~\ref{thm:approx}. While both results relate a smooth tensor to a block tensor, the construction in Lemma~\ref{lem:expand} requires the block mean to be an \emph{arbitrarily given} tensor $\tC$. We address this constraint by constructing a smooth tensor of a slightly larger dimension $d=n/\gamma_1$ with $\gamma_1>0$. The asymptotical equivalence $d\asymp n$ suffices for our purpose. 
+
+
+
+
+Now, we are ready to prove the permutation rate. Let $\{\tC_k\}_{k\geq 1}$ denote the tensors satisfying~\eqref{eq:givenC} in Lemma~\ref{lem:permutation}. By Lemma~\ref{lem:expand}, we can construct an $\alpha$-smooth tensor $\Theta$ and its subtensor $\Theta_{\text{sub}}$ that satisfy
+\[
+\Theta_{\text{sub}}\in \tZ(n,k\ | \ \tC_k) \text{ for some $n\asymp d$ and $k\asymp d^{\gamma_2}$ with $\gamma_2>0$}. 
+\]
+
+
+Based on this particular smooth tensor $\Theta$, we have
+\begin{align}\label{eq:lower}
+&\inf_{\hat \Theta}\sup_{\pi\in \Pi(d,d)}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta-\Theta\circ \pi}^2\geq \varepsilon^2\right)\notag \\
+\geq & \ \inf_{\hat  \Theta_{\text{sub}}}\sup_{\pi_{\text{sub}}\in\Pi(n,n)}\mathbb{P}\left({1\over n^m}\FnormSize{}{\hat \Theta_\text{sub}-\Theta_{\text{sub}}\circ \pi_{\text{sub}}}^2\geq {d^m\over n^m} \varepsilon^2\right)\notag \\
+\gtrsim & \ \inf_{\hat  \Theta_{\text{sub}}}\sup_{\bar \pi_{\text{sub}}\in\Pi(n,k)}\mathbb{P}\left({1\over n^m}\sum_{(i_1,\ldots,i_m)\in[n]^m}\left[\hat \Theta_\text{sub}(i_1,\ldots,i_m)-\tC(\bar \pi_{\text{sub}}(i_1),\ldots,\bar \pi_{\text{sub}}(i_m)\right]^2\gtrsim \varepsilon^2\right),
+\end{align}
+where the first inequality follows from the reducibility of $\Theta$ to $\Theta_{\text{sub}}$, and the second inequality follows from the properties $\Theta_{\text{sub}}\in \tZ(n,k\ |\ \tC)$ and $n\asymp d$. 
+We conclude the desired probability lower bound by taking $\varepsilon^2={d\log k }$ in combinaion with Lemma~\ref{lem:permutation} and the property $k\asymp d^{\gamma_2}$.
 \end{proof}
 
-\begin{lem}[Minimax permutation rate for tensor block model] %For any given $K\in\mathbb{N}_{+}$, consider the block-$K$ tensor model 
-%\[
-%\tY=\Theta+\tE, 
-%\]
-%where $\Theta$ is the unknown signal tensor of $(K,\ldots,K)$ blocks, and $\tE$ consists of i.i.d.\ sub-Gaussian noises. 
+\appendix 
+We provide the proof for $m=3$ only. The extension to higher orders are similar and omitted. 
 
-For any given $K\in\mathbb{N}_{+}$, consider the estimation problem based on $K$-block tensor model with i.i.d.\ sub-Gaussian noises. 
+\begin{proof}[Proof sketch of Lemma~\ref{lem:permutation}]
+The proof extends \citet[Theorem 2.2, page 26]{gao2015rate} from matrices to tensors. 
+%Define an order-$m$ dimensional-$2$ symmetric tensor
 %\[
-%\tY=\Theta+\tE, 
+%\tS(2,1,1)=\tS(1,2,1)=\tS(1,1,2)=1, \quad \tS(i,j,k)=0 \text{ otherwise}.
 %\]
-%where $\Theta=\entry{\tC(\pi(i_1),\ldots,\pi(i_m)}\in\mathbb{R}^{d\times\cdots\times d}$ denotes the signal tensor of interest, $\tC\in\mathbb{R}^{K\times \cdots\times K}$ denotes the core tensor, $\pi\in \Pi(d,K)=\{\pi\colon [d]\to[K]\}$ denotes the collections of partitions on $[d]$ into $K$ blocks, and $\tE\in\mathbb{R}^{d\times \cdots\times d}$ denotes the noise tensor consisting of i.i.d.\ sub-Gaussian noises. 
-In the family of $K$-block signal tensors, there exists a core tensor $\tC^*\in\mathbb{R}^{K\times \cdots \times K}$ such that
+For the matrix $\mB\in\mathbb{R}^{k/2\times k/2}$ defined in \citet[Theorem 2.2, page]{gao2015rate}, we define an order-3 symmetric tensor $\tC\in\mathbb{R}^{k\times k\times k}$ by
 \[
-\inf_{\hat \Theta}\sup_{z\in \Pi(d,K)}\mathbb{P}\left\{{1\over n^m} \sum_{(i_1,\ldots,i_m)\in[n]^m}\left[\hat \Theta(i_1,\ldots,i_m)-\tC^*\left(z(i_1),\ldots,z(i_m)\right)\right]^2\geq {\log K\over n}\right\}\geq 0.9,
+\tC(\colon,\colon,1)=\tC(\colon,1,\colon)=\tC(1,\colon,\colon)=
+\begin{bmatrix}
+0&\mB\\
+\mB^T&0
+\end{bmatrix}.
 \]
-where $\pi\in \Pi(n,K)=\{\pi\colon [n]\to[K]\}$ denotes the clustering functions by mapping $[n]$ to $[K]$. 
-\end{lem}
+Following the same calculation as in~\cite{gao2015rate}, we can verify the tensor $\tC$ satisfies~\eqref{eq:givenC}.
+\end{proof}
+
+\begin{proof}[Proof sketch of Lemma~\ref{lem:expand}]
+The construction follows the same line as in \citet[Supplement, page 3]{gao2015rate}. For the same $\phi$ function defined in~\cite{gao2015rate}, we define a 3-variable function
+\[
+f(x,y,z)=\sum_{a,b,c\in[k]}\left(\tC(a,b,c)-{1\over 2}\right)\phi\left(kx-a+{1\over 2}\right)\phi\left(kx-b+{1\over 2}\right)+\phi\left(kx-c+{1\over 2}\right)+{1\over 2}.
+\]
+Then, it is easy to verify that (1) $f$ is an $\alpha$-smooth tensor when $k=d^{\gamma_2}$, (2) $f$ has piecewise-constant shape when restricted to a sub-domain,
+\[
+f(x,y,z)=\tC(a,b,c),\quad \text{when}\quad (x,y,z)\in I\times I\times I,
+\]
+for some $I\subset[0,1]$ and $|I|\geq \gamma_1>0$. Therefore, the proof is complete. 
+\end{proof}
 \bibliographystyle{unsrtnat}
 \bibliography{tensor_wang}
 

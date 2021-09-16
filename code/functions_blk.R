@@ -94,13 +94,13 @@ Borda2 = function(A,l,k){
     d = dim(A)[1]
     #sorting
     o1 = order(sapply(1:d, function(x) sum(A[x,,],na.rm = T)))
-    As = A[o1,,]
+    As = A[o1,o1,o1]
     
     #polynomial block approximation
     est = polytensor(As,l,k)
     
     #sorting back
-    Theta = est[o1,,]
+    Theta = est[o1,o1,o1]
     
   return(Theta)
 }

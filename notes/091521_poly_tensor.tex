@@ -218,9 +218,9 @@ with very high probability.
 
 
 \begin{thm}[Minimax lower bound]\label{thm:minimax}For any given $\alpha\in(0,\infty)$, the estimation problem based on model~\eqref{eq:model} obeys the minimax lower bound 
-\[
+\begin{equation}\label{eq:minimax}
 \inf_{(\hat \Theta,\hat \pi)}\sup_{\substack{\Theta\in \tP(\alpha)\\ \pi\colon[d]\to[d]}} \mathbb{P}\left({1\over d^m}\FnormSize{}{\Theta\circ \pi-\hat \Theta\circ \hat \pi}^2 \geq d^{-{2m\alpha\over m+2\alpha}}+d^{-(m-1)}\log d \right) \geq 0.9.
-\]
+\end{equation}
 \end{thm}
 \begin{rmk} By comparing Theorems~\ref{thm:3} and~\ref{thm:minimax}, we find that the constrained least-square estimator achieves the minimax optimal rate. 
 \end{rmk}
@@ -254,9 +254,9 @@ Combining the inequalities~\eqref{eq:approx}, \eqref{eq:tri} and \eqref{eq:union
 \end{proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:minimax}] By the definition of the tensor space, we seek the minimax rate $\varepsilon^2$ in the following expression
-\[
+\begin{equation}\label{eq:final}
 \inf_{(\hat \Theta,\hat \pi)}\sup_{\Theta\in \tP(\alpha)}\sup_{\pi\colon [d]\to[d]} \mathbb{P}\left({1\over d^m}\FnormSize{}{\Theta\circ \pi-\hat \Theta\circ \hat \pi}^2 \geq \varepsilon^2 \right).
-\]
+\end{equation}
 On one hand, if we fix permutation $\pi\colon[d]\to[d]$, the problem can be viewed as a classical $m$-dimensional $\alpha$-smooth nonparametric regression with $d^m$ sample points. The minimax lower bound is known to be $\varepsilon^2=d^{-{2m\alpha\over m+2\alpha}}$. On the other hand, if we fix $\Theta\in\tP(\alpha)$, the problem become a new type of convergence rate due to the unknown permutation. We refer it to the permutation rate, and will prove that $\varepsilon^2=d^{-(m-1)}\log d$. Since our target is the sum of the two rate, it suffice to prove the two different rates separately. In the following arguments, we will proceed by this strategy. 
 
 \paragraph{Nonparametric rate.} The nonparametric rate for $\alpha$-smooth function is readily available in the literature; see \citet[Example 16]{Wassermantext}~and \citet[Section 2]{stone1982optimal}. We state the results here for self-completeness. 
@@ -267,10 +267,15 @@ Y_n=f(\mx_n)+\varepsilon_n,\quad \text{with}\ \varepsilon_n \sim \text{i.i.d. } 
 \]
 Assume $f$ is in the $\alpha$-Holder smooth function class, denoted by $\tF(\alpha)$. Then,
 \begin{equation}\label{eq:non}
-\inf_{\hat f}\sup_{f\in \tF(\alpha)}\vnormSize{}{f-\hat f}\geq N^{-{2\alpha\over m+2\alpha}}.
+\inf_{\hat f}\sup_{f\in \tF(\alpha)}\mathbb{P}\left(\vnormSize{}{f-\hat f}\geq N^{-{2\alpha\over m+2\alpha}}\right)\geq 0.9.
 \end{equation}
 \end{lem}
-Our desired nonparametric rate readily follows from Lemma~\ref{lem:non} by taking sample size $N=d^m$ and function norm $\vnormSize{}{f-\hat f}={1\over d^m}\FnormSize{}{\Theta-\hat \Theta}^2$.
+Our desired nonparametric rate readily follows from Lemma~\ref{lem:non} by taking sample size $N=d^m$ and function norm $\vnormSize{}{f-\hat f}={1\over d^m}\FnormSize{}{\Theta-\hat \Theta}^2$. In summary, for a given permutation $\pi\in[d]\to[d]$, we have
+\[
+\inf_{\hat \Theta}\sup_{\Theta\in \tP(\alpha)}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta\circ \pi-\Theta\circ \pi}^2\geq d^{-{2m\alpha\over m+2\alpha}}\right) \geq 0.9.
+\]
+
+
 
 \paragraph{Permutation rate.} Let $\Pi(n,k)$ denote the collection of all possible onto mappings from $[n]$ to $[k]$. Because our main focus in the unknown permutation, we define the following two (conditional) tensor families by fixing the generative function and the core tensor, respectively. 
 \begin{itemize} 
@@ -326,12 +331,16 @@ Now, we are ready to prove the permutation rate. Let $\{\tC_k\}_{k\geq 1}$ denot
 
 Based on this particular smooth tensor $\Theta$, we have
 \begin{align}\label{eq:lower}
-&\inf_{\hat \Theta}\sup_{\pi\in \Pi(d,d)}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta-\Theta\circ \pi}^2\geq \varepsilon^2\right)\notag \\
+&\inf_{(\hat \Theta,\hat \pi)}\sup_{\pi\in \Pi(d,d)}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta\circ \hat \pi-\Theta\circ \pi}^2\geq \varepsilon^2\right)\notag \\
+=&\ \inf_{\hat \Theta}\sup_{\pi\in \Pi(d,d)}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta-\Theta\circ \pi}^2\geq \varepsilon^2\right)\notag \\
 \geq & \ \inf_{\hat  \Theta_{\text{sub}}}\sup_{\pi_{\text{sub}}\in\Pi(n,n)}\mathbb{P}\left({1\over n^m}\FnormSize{}{\hat \Theta_\text{sub}-\Theta_{\text{sub}}\circ \pi_{\text{sub}}}^2\geq {d^m\over n^m} \varepsilon^2\right)\notag \\
 \gtrsim & \ \inf_{\hat  \Theta_{\text{sub}}}\sup_{\bar \pi_{\text{sub}}\in\Pi(n,k)}\mathbb{P}\left({1\over n^m}\sum_{(i_1,\ldots,i_m)\in[n]^m}\left[\hat \Theta_\text{sub}(i_1,\ldots,i_m)-\tC(\bar \pi_{\text{sub}}(i_1),\ldots,\bar \pi_{\text{sub}}(i_m)\right]^2\gtrsim \varepsilon^2\right),
 \end{align}
 where the first inequality follows from the reducibility of $\Theta$ to $\Theta_{\text{sub}}$, and the second inequality follows from the properties $\Theta_{\text{sub}}\in \tZ(n,k\ |\ \tC)$ and $n\asymp d$. 
-We conclude the desired probability lower bound by taking $\varepsilon^2={d\log k }$ in combination with Lemma~\ref{lem:permutation} and the property $k\asymp d^{\gamma_2}$.
+We conclude the desired probability lower bound by taking $\varepsilon^2={d\log k }$ in combination with Lemma~\ref{lem:permutation} and the property $k\asymp d^{\gamma_2}$. In summary, there exists a smooth tensor $\Theta\in\tP(\alpha)$ such that
+\[
+\inf_{(\hat \Theta,\hat \pi)}\sup_{\pi\in \Pi(d,d)}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta\circ \hat \pi-\Theta\circ \pi}^2\geq d\log d\right) \geq 0.9.
+\]
 
 
 \paragraph{Combining two rates.} Finally, we combine~\eqref{eq:non} and~\eqref{eq:lower} to get the desired lower bound. For any $\Theta, \hat \Theta \in \tP(\alpha)$, by union bound, we have
@@ -341,9 +350,9 @@ We conclude the desired probability lower bound by taking $\varepsilon^2={d\log 
 \end{align}
 Taking sup on both sides and use the fact 
 \[
-\inf_{\hat \Theta}\sup_{(\pi,\tC)}(f(\pi)+g(\tC))=\inf_{\hat \Theta}\sup_{\pi}f(\pi)+\inf_{\hat \Theta}\sup_{\tC}g(\tC)
+\sup_{\substack{\Theta\in \tP(\alpha)\\\pi\in \Pi(d,d)}}(f(\pi)+g(\Theta))=\sup_{\pi\in \Pi(d,d)}f(\pi)+\sup_{\Theta\in \tP(\alpha)}g(\Theta)
 \]
-yields the desired rate. 
+yields the desired rate~\eqref{eq:minimax}. 
 \end{proof}
 
 \section{Proof Skecthes of Lemmas}

@@ -58,20 +58,6 @@ Borda = function(A,kvec){
   return(Theta)
 }
 
-## This works really bad
-Borda_m = function(A,k){
-  d = dim(A)[1]
-  A_unfolded = unfold(as.tensor(A),row_idx = 1,col_idx = c(2,3))@data
-  o1 = order(sapply(1:d, function(x) sum(A_unfolded[x,],na.rm = T)))
-  o2 = order(sapply(1:d^2, function(x) sum(A_unfolded[,x],na.rm = T)))
-  A_unfolded_s = A_unfolded[o1,o2]
-  Blk = block(A_unfolded_s,c(k,k^2))
-  
-  #sorting back
-  Theta_unfolded = Blk$Blk_mat[o1,o2]
-  Theta = fold(Theta_unfolded,row_idx = 1,col_idx = c(2,3),dim(A))@data
-  return(Theta)
-}
 
 
 ## fit blockwise polynomial tensor
@@ -85,7 +71,7 @@ polytensor=function(tensor, l, k){
   for(i in 1:k){
     for(j in 1:k){
       for(q in 1:k){
-        subtensor=tensor[which(z==i),which(z==j),which(z==q)]
+        subtensor=tensor[which(z==i),which(z==j),which(z==q),drop = F]
         X1=c(slice.index(subtensor,1))
         X2=c(slice.index(subtensor,2))
         X3=c(slice.index(subtensor,3))
@@ -123,7 +109,7 @@ Borda2 = function(A,l,k){
 
 # Spectral method with threshold.
 # use the soft impute
-library(softImpute)
+#library(softImpute)
 Spectral = function(A,row_idx,col_idx,threshold = NULL,lambda = 1){
   d = dim(A)[1]
   A_unfolded = unfold(as.tensor(A),row_idx = row_idx,col_idx = col_idx)@data
@@ -133,12 +119,13 @@ Spectral = function(A,row_idx,col_idx,threshold = NULL,lambda = 1){
   if(any(is.na(A))==T){
     # made the hardimpute
     Decomp = softImpute(A_unfolded,rank.max = d-1,lambda = lambda)
+    s = max(length(which(ifelse(Decomp$d>0,Decomp$d,0)>0)),1)
   }else{
     Decomp = svd(A_unfolded)  
+    s = max(length(which(ifelse(Decomp$d>threshold,Decomp$d,0)>0)),1)
   }
   
   
-  s = max(length(which(ifelse(Decomp$d>threshold,Decomp$d,0)>0)),1)
   D = diag(Decomp$d,s)
   Theta = Decomp$u[,1:s,drop = F] %*% D %*% t(Decomp$v[,1:s,drop = F])
   Theta = fold(Theta,row_idx = row_idx,col_idx = col_idx,dim(A))@data
@@ -212,6 +199,32 @@ HSC = function(x,k,l,r,nstart = 40,sym = F){
   return(result)
 }
 
+<<<<<<< HEAD
+
+
+
+
+Bal_correct = function(A,k){
+  n = dim(A)[1]
+  z = kmeans(tensor_unfold(A,1),k)$cluster
+  E = matrix(nrow = n,ncol = k)
+  prob=array(0,dim=rep(k,3))
+  for(a in 1:k){
+    for(b in 1:k){
+      for(c in 1:k){
+        prob[a,b,c]=mean(A[which(z==a),which(z==b),which(z==c)])
+      }
+    }
+  }
+  
+  for(i in 1:n){
+    for(a in 1:k){
+      E[i,a]=sum(dbinom(A[i,,],1, prob[a,z,z],log=TRUE))
+    }
+  }
+  z=apply(E,1,which.max)
+  
+=======
 Bal = function(A,k,max_iter = 100,threshold = 1,rep = 5){
     n = dim(A)[1]
     zlist = list()
@@ -263,8 +276,11 @@ prob=array(0,dim=rep(k,3))
       }
       z=apply(E,1,which.max)
       
+>>>>>>> f1457b4ed728fc1881fdc339297877c57b041c63
   return(z)
 }
+
+
 
 
 LSE = function(A,k,mode = 2,max_iter = 100,threshold = 1,rep = 5){
@@ -334,19 +350,17 @@ f2 = function(a){
 f3 = function(a){
   return(1/(1+exp(-3*sum(a^2))))
 }
-
-fb3 = function(a){
-  return((a[1]^2+a[2]^2+a[3]^2)/(exp(cos(1/(a[1]^2+a[2]^2+a[3]^2)))))
-}
 f4 = function(a){
   return(log(1+max(a)))
 }
+# f5=function(a){
+#   return(min(a)/exp(-max(a)-sqrt(a[1])-sqrt(a[2])-sqrt(a[3])))
+# }
 f5=function(a){
-  return(min(a)/exp(-max(a)-sqrt(a[1])-sqrt(a[2])-sqrt(a[3])))
-}
-fb5=function(a){
   return(exp(-min(a)-sqrt(a[1])-sqrt(a[2])-sqrt(a[3])))
 }
+
+
 
 
 symnoise = function(d,sigma=0.5){
@@ -363,7 +377,7 @@ symnoise = function(d,sigma=0.5){
 
 
 
-simulation = function(d, mode = 1,sigma = 0.5,signal_level=10,symnoise = T){
+simulation = function(d, mode = 1,sigma = 0.5,signal_level=5,symnoise = T){
   tensor=array(dim=c(d,d,d))
   X1=c(slice.index(tensor,1))/d
   X2=c(slice.index(tensor,2))/d
@@ -418,11 +432,11 @@ simulation_bin = function(d,mode = 1){
   }else if(mode==2){
     signal = array(apply(cbind(X1,X2,X3),1,f2),dim=rep(d,3))
   }else if(mode==3){
-    signal = pmin(array(apply(cbind(X1,X2,X3),1,f3),dim=rep(d,3)),1)
+    signal = array(apply(cbind(X1,X2,X3),1,f3),dim=rep(d,3))
   }else if(mode==4){
     signal = array(apply(cbind(X1,X2,X3),1,f4),dim=rep(d,3))
   }else if(mode==5){
-    signal = array(apply(cbind(X1,X2,X3),1,fb5),dim=rep(d,3))
+    signal = array(apply(cbind(X1,X2,X3),1,f5),dim=rep(d,3))
   }
   
   observe = Observe_A(signal)
@@ -430,7 +444,54 @@ simulation_bin = function(d,mode = 1){
 }
 
 
+######### Asymmetric function ##############################
 
+af1 = function(a){
+  return(a[1]*a[2]+a[3])
+}
+af2 = function(a){
+  return(a[1]^2+a[2]+a[2]*a[3]^2)
+}
+af3 = function(a){
+  return(a[1]/(1+exp(-3*sum(a^2))))
+}
+af4 = function(a){
+  return(log(1+max(a)+a[1]^2+a[2]*a[3]))
+}
+af5=function(a){
+  return(exp(-min(a)-sqrt(a[1])-sqrt(a[2])))
+}
+
+
+
+
+simulation_asym = function(d, mode = 1,sigma = 0.5,signal_level=5){
+  tensor=array(dim=c(d,d,d))
+  X1=c(slice.index(tensor,1))/d
+  X2=c(slice.index(tensor,2))/d
+  X3=c(slice.index(tensor,3))/d
+  if(mode==1){
+    signal = array(apply(cbind(X1,X2,X3),1,af1),dim=rep(d,3))
+  }else if(mode==2){
+    signal = array(apply(cbind(X1,X2,X3),1,af2),dim=rep(d,3))
+  }else if(mode==3){
+    signal = array(apply(cbind(X1,X2,X3),1,af3),dim=rep(d,3))
+  }else if(mode==4){
+    signal = array(apply(cbind(X1,X2,X3),1,af4),dim=rep(d,3))
+  }else if(mode==5){
+    signal = array(apply(cbind(X1,X2,X3),1,af5),dim=rep(d,3))
+  }
+  ### edited by Miaoyan
+  signal=signal_level*signal/sqrt(mean(signal^2)) ## normalize signal tensor to have averaged magnitude = signal_level
+  observe = signal+rnorm(d^3,0,sigma)
+  
+  return(list(signal= signal,observe=observe))
+}
+
+
+
+
+#########  Summary statistics function #############################
 summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
                       conf.interval=.95, .drop=TRUE) {
   library(plyr)

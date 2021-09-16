@@ -266,9 +266,9 @@ On one hand, if we fix permutation $\pi\colon[d]\to[d]$, the problem can be view
 Y_n=f(\mx_n)+\varepsilon_n,\quad \text{with}\ \varepsilon_n \sim \text{i.i.d. }  N(0,1), \quad\text{ for all }n\in[N].
 \]
 Assume $f$ is in the $\alpha$-Holder smooth function class, denoted by $\tF(\alpha)$. Then,
-\[
+\begin{equation}\label{eq:non}
 \inf_{\hat f}\sup_{f\in \tF(\alpha)}\vnormSize{}{f-\hat f}\geq N^{-{2\alpha\over m+2\alpha}}.
-\]
+\end{equation}
 \end{lem}
 Our desired nonparametric rate readily follows from Lemma~\ref{lem:non} by taking sample size $N=d^m$ and function norm $\vnormSize{}{f-\hat f}={1\over d^m}\FnormSize{}{\Theta-\hat \Theta}^2$.
 
@@ -331,7 +331,19 @@ Based on this particular smooth tensor $\Theta$, we have
 \gtrsim & \ \inf_{\hat  \Theta_{\text{sub}}}\sup_{\bar \pi_{\text{sub}}\in\Pi(n,k)}\mathbb{P}\left({1\over n^m}\sum_{(i_1,\ldots,i_m)\in[n]^m}\left[\hat \Theta_\text{sub}(i_1,\ldots,i_m)-\tC(\bar \pi_{\text{sub}}(i_1),\ldots,\bar \pi_{\text{sub}}(i_m)\right]^2\gtrsim \varepsilon^2\right),
 \end{align}
 where the first inequality follows from the reducibility of $\Theta$ to $\Theta_{\text{sub}}$, and the second inequality follows from the properties $\Theta_{\text{sub}}\in \tZ(n,k\ |\ \tC)$ and $n\asymp d$. 
-We conclude the desired probability lower bound by taking $\varepsilon^2={d\log k }$ in combinaion with Lemma~\ref{lem:permutation} and the property $k\asymp d^{\gamma_2}$.
+We conclude the desired probability lower bound by taking $\varepsilon^2={d\log k }$ in combination with Lemma~\ref{lem:permutation} and the property $k\asymp d^{\gamma_2}$.
+
+
+\paragraph{Combining two rates.} Finally, we combine~\eqref{eq:non} and~\eqref{eq:lower} to get the desired lower bound. For any $\Theta, \hat \Theta \in \tP(\alpha)$, by union bound, we have
+\begin{align}
+&\mathbb{P}\left\{ {1\over d^m}\FnormSize{}{\Theta-\hat \Theta}^2\gtrsim d^{-{2m\alpha\over m+2\alpha}}+d^{-(m-1)}\log d\right\}\\
+\geq &\quad \mathbb{P}\left\{ {1\over d^m}\FnormSize{}{\Theta-\hat \Theta}^2\gtrsim d^{-{2m\alpha\over m+2\alpha}}\right\} +\mathbb{P}\left\{ {1\over d^m}\FnormSize{}{\Theta-\hat \Theta}^2\gtrsim d^{-(m-1)}\log d\right\}-1.
+\end{align}
+Taking sup on both sides and use the fact 
+\[
+\inf_{\hat \Theta}\sup_{(\pi,\tC)}(f(\pi)+g(\tC))=\inf_{\hat \Theta}\sup_{\pi}f(\pi)+\inf_{\hat \Theta}\sup_{\tC}g(\tC)
+\]
+yields the desired rate. 
 \end{proof}
 
 \section{Proof Skecthes of Lemmas}

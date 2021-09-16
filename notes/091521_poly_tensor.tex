@@ -332,12 +332,12 @@ Now, we are ready to prove the permutation rate. Let $\{\tC_k\}_{k\geq 1}$ denot
 Based on this particular smooth tensor $\Theta$, we have
 \begin{align}\label{eq:lower}
 &\inf_{(\hat \Theta,\hat \pi)}\sup_{\pi\in \Pi(d,d)}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta\circ \hat \pi-\Theta\circ \pi}^2\geq \varepsilon^2\right)\notag \\
-=&\ \inf_{\hat \Theta}\sup_{\pi\in \Pi(d,d)}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta-\Theta\circ \pi}^2\geq \varepsilon^2\right)\notag \\
-\geq & \ \inf_{\hat  \Theta_{\text{sub}}}\sup_{\pi_{\text{sub}}\in\Pi(n,n)}\mathbb{P}\left({1\over n^m}\FnormSize{}{\hat \Theta_\text{sub}-\Theta_{\text{sub}}\circ \pi_{\text{sub}}}^2\geq {d^m\over n^m} \varepsilon^2\right)\notag \\
-\gtrsim & \ \inf_{\hat  \Theta_{\text{sub}}}\sup_{\bar \pi_{\text{sub}}\in\Pi(n,k)}\mathbb{P}\left({1\over n^m}\sum_{(i_1,\ldots,i_m)\in[n]^m}\left[\hat \Theta_\text{sub}(i_1,\ldots,i_m)-\tC(\bar \pi_{\text{sub}}(i_1),\ldots,\bar \pi_{\text{sub}}(i_m)\right]^2\gtrsim \varepsilon^2\right),
+\stackrel{(1)}{=}&\ \inf_{\hat \Theta}\sup_{\pi\in \Pi(d,d)}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta-\Theta\circ \pi}^2\geq \varepsilon^2\right)\notag \\
+\stackrel{(2)}{\geq}& \ \inf_{\hat  \Theta_{\text{sub}}}\sup_{\pi_{\text{sub}}\in\Pi(n,n)}\mathbb{P}\left({1\over n^m}\FnormSize{}{\hat \Theta_\text{sub}-\Theta_{\text{sub}}\circ \pi_{\text{sub}}}^2\geq {d^m\over n^m} \varepsilon^2\right)\notag \\
+\stackrel{(3)}{\gtrsim} & \ \inf_{\hat  \Theta_{\text{sub}}}\sup_{\bar \pi_{\text{sub}}\in\Pi(n,k)}\mathbb{P}\left({1\over n^m}\sum_{(i_1,\ldots,i_m)\in[n]^m}\left[\hat \Theta_\text{sub}(i_1,\ldots,i_m)-\tC(\bar \pi_{\text{sub}}(i_1),\ldots,\bar \pi_{\text{sub}}(i_m)\right]^2\gtrsim \varepsilon^2\right),
 \end{align}
-where the first inequality follows from the reducibility of $\Theta$ to $\Theta_{\text{sub}}$, and the second inequality follows from the properties $\Theta_{\text{sub}}\in \tZ(n,k\ |\ \tC)$ and $n\asymp d$. 
-We conclude the desired probability lower bound by taking $\varepsilon^2={d\log k }$ in combination with Lemma~\ref{lem:permutation} and the property $k\asymp d^{\gamma_2}$. In summary, there exists a smooth tensor $\Theta\in\tP(\alpha)$ such that
+where (1) absorbs the estimate $\hat \pi$ into the estimate $\hat \Theta$, (2) follows from the reducibility of $\Theta$ to $\Theta_{\text{sub}}$, and (3) follows from the properties $\Theta_{\text{sub}}\in \tZ(n,k\ |\ \tC)$ and $n\asymp d$. 
+We conclude the desired probability lower bound by taking $\varepsilon^2={d\log k }$ in combination with Lemma~\ref{lem:permutation} and the property $k\asymp d^{\gamma_2}$. In summary, we construct a smooth tensor $\Theta\in\tP(\alpha)$ such that
 \[
 \inf_{(\hat \Theta,\hat \pi)}\sup_{\pi\in \Pi(d,d)}\mathbb{P}\left({1\over d^m}\FnormSize{}{\hat \Theta\circ \hat \pi-\Theta\circ \pi}^2\geq d\log d\right) \geq 0.9.
 \]
@@ -345,10 +345,10 @@ We conclude the desired probability lower bound by taking $\varepsilon^2={d\log 
 
 \paragraph{Combining two rates.} Finally, we combine~\eqref{eq:non} and~\eqref{eq:lower} to get the desired lower bound. For any $\Theta, \hat \Theta \in \tP(\alpha)$, by union bound, we have
 \begin{align}
-&\mathbb{P}\left\{ {1\over d^m}\FnormSize{}{\Theta-\hat \Theta}^2\gtrsim d^{-{2m\alpha\over m+2\alpha}}+d^{-(m-1)}\log d\right\}\\
-\geq &\quad \mathbb{P}\left\{ {1\over d^m}\FnormSize{}{\Theta-\hat \Theta}^2\gtrsim d^{-{2m\alpha\over m+2\alpha}}\right\} +\mathbb{P}\left\{ {1\over d^m}\FnormSize{}{\Theta-\hat \Theta}^2\gtrsim d^{-(m-1)}\log d\right\}-1.
+&\mathbb{P}\left\{ {1\over d^m}\FnormSize{}{\hat \Theta- \Theta}^2\gtrsim d^{-{2m\alpha\over m+2\alpha}}+d^{-(m-1)}\log d\right\}\\
+\geq &\quad \mathbb{P}\left\{ {1\over d^m}\FnormSize{}{\hat \Theta-\Theta}^2\gtrsim d^{-{2m\alpha\over m+2\alpha}}\right\} +\mathbb{P}\left\{ {1\over d^m}\FnormSize{}{\hat \Theta- \Theta}^2\gtrsim d^{-(m-1)}\log d\right\}-1.
 \end{align}
-Taking sup on both sides with the fact 
+Taking sup on both sides with the property
 \[
 \sup_{\substack{\Theta\in \tP(\alpha)\\\pi\in \Pi(d,d)}}(f(\pi)+g(\Theta))=\sup_{\pi\in \Pi(d,d)}f(\pi)+\sup_{\Theta\in \tP(\alpha)}g(\Theta)
 \]

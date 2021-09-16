@@ -17,6 +17,7 @@
 \usepackage{dsfont}
 \usepackage{arydshln}
 \usepackage{natbib}
+\allowdisplaybreaks
 
 \newcommand*{\vertbar}{\rule[-1ex]{0.5pt}{2.5ex}}
 \newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
@@ -130,12 +131,7 @@ Miaoyan Wang, Sep 15, 2021\\
 
 %Let $z\colon[d]\to[k]$ denote the clustering function. For notational convenience, we use the shorthand $\mz(i_1,\ldots,i_m):=(z(i_1),\ldots,z(i_m))^T\in[k]^m$ to denote the block membership by applying $z$ to $m$ modes in a coordinate-wise manner. Similarly, for a permutation function $\pi\colon[d]\to[d]$, we use $\boldsymbol{\pi}(i_1,\ldots,i_m):=(\pi(i_1),\ldots,\pi(i_m))^T\in[d]^m$ to denote the permuted indices by applying $\pi$ in a coordinate-wise manner. 
 \section{Results}
-For notational convenience, we make the convention that blockwise constant tensor is of degree 1 (not 0 as in classical conventions). We use $z\colon[d]\to[k]$ to denote the canonical clustering function that partitions $[d]$ into $k$ equal-sized clusters; i.e.,
-\begin{align}
-z\colon[d]&\to[k] \\
-i&\mapsto z(i)=\lceil ki/d\rceil.
-\end{align}
-By construction, the inverse images $\{z^{-1}(j)\colon j\in[k]\}$ is a collection of disjoint, equal-sized subsets satisfying $\cup_{j\in[k]} z^{-1}(j)=[d]$. We use $\tE_k$ to denote the $m$-way partition that collects $k^m$ disjoint, equal-sized blocks in $[d]^m$; i.e.,
+For notational convenience, we make the convention that blockwise constant tensor is of degree 1 (not 0 as in classical conventions). We use $z\colon[d]\to[k]$ to denote the canonical clustering function that partitions $[d]$ into $k$ equal-sized clusters such that $z(i)=\lceil ki/d\rceil$. By construction, the inverse images $\{z^{-1}(j)\colon j\in[k]\}$ is a collection of disjoint, equal-sized subsets satisfying $\cup_{j\in[k]} z^{-1}(j)=[d]$. We use $\tE_k$ to denote the $m$-way partition that collects $k^m$ disjoint, equal-sized blocks in $[d]^m$; i.e.,
 \[
 \tE_k= \{z^{-1}(j_1) \times \cdots \times z^{-1}(j_m)\colon (j_1,\ldots,j_m)\in[k]^m\}. 
 \]
@@ -178,7 +174,7 @@ The parameters $(\Theta, \pi)$ are not separately identifiable from model~\eqref
 \begin{thm}[Identifiability] Suppose $f\in \tM(\beta)$ with $\beta\in(0,\infty)$. Then, the parameters $(\Theta,\pi)$ are separately identifiable from model~\eqref{eq:model}. 
 \end{thm}
 
-\begin{thm}(Blockwise polynomial tensor approximation)\label{thm:approx} Suppose the function $f\colon[0,1]^m\to \mathbb{R}$ generating the signal tensor $\Theta$ is $\alpha$-H\"older smooth with $\alpha\in(0,\infty)$. Then, for every block size $k\leq d$ and degree $\ell\in\mathbb{N}_{+}$, we have the approximation error
+\begin{thm}[Blockwise polynomial tensor approximation]\label{thm:approx} Suppose the function $f\colon[0,1]^m\to \mathbb{R}$ generating the signal tensor $\Theta$ is $\alpha$-H\"older smooth with $\alpha\in(0,\infty)$. Then, for every block size $k\leq d$ and degree $\ell\in\mathbb{N}_{+}$, we have the approximation error
 \[
 \inf_{\tB\in \caliB(k,\ell)}{1\over d^m}\FnormSize{}{\Theta-\tB}^2 \lesssim {m^2\over k^{2\min(\alpha, \ell)}}.
 \]
@@ -190,7 +186,7 @@ We propose a least-square estimate based on the blockwise polynomial tensor appr
 \]
 Although not reflected in the notation, the least-square estimate $\hat \Theta^\textup{LSE}$ depends on the tuning parameters $(k,\ell)$. We provide the optimal choice of $(k,\ell)$ in the following theorem.  We focus on the asymptotic error rates as $d\to\infty$ while treating $(m,\alpha)$ as constants. 
 
-\begin{thm}[Least-square estimator]\label{thm:3} Let $(\hat \Theta^\textup{LSE}, \hat \pi^\textup{LSE})$ denote the least-square estimate with degree $\ell^*= \min(\lceil \alpha \rceil, {m(m-1)\over 2})$ with block size $k^*=\lceil  d^{m\over m+2\ell^*} \rceil $. Then, $(\hat \Theta^\textup{LSE}, \hat \pi^\textup{LSE})$ obeys the error bound
+\begin{thm}[Least-square estimator]\label{thm:3} Let $(\hat \Theta^\textup{LSE}, \hat \pi^\textup{LSE})$ denote the least-square estimate with degree $\ell^*= \min(\lceil \alpha \rceil, {m(m-1)\over 2})$ with block size $k^*=\lceil  d^{m\over m+2\ell^*} \rceil $. Then, $(\hat \Theta^\textup{LSE}, \hat \pi^\textup{LSE})$ obeys
 \begin{equation}
 \begin{aligned}
 {1\over d^m}\FnormSize{}{\hat \Theta^\textup{LSE}\circ \hat \pi^\textup{LSE} -\Theta\circ \pi}^2&\lesssim 
@@ -229,7 +225,7 @@ with very high probability.
 \begin{rmk} By comparing Theorems~\ref{thm:3} and~\ref{thm:minimax}, we find that the constrained least-square estimator achieves the minimax optimal rate. 
 \end{rmk}
 
-\section{Proofs}
+\section{Proofs of Main Theorems}
 \begin{proof}[Proof of Theorem~\ref{thm:3}] The proof is similar to theorem 2.1 on note 030721. By Theorem~\ref{thm:approx}, there exists a blockwise polynomial tensor $\tB\in\caliB(k,\ell)$ such that
 \begin{equation}\label{eq:approx}
 \FnormSize{}{\tB-\Theta}^2\lesssim {d^mm^2\over k^{2\min(\alpha,\ell)}}.
@@ -338,7 +334,7 @@ where the first inequality follows from the reducibility of $\Theta$ to $\Theta_
 We conclude the desired probability lower bound by taking $\varepsilon^2={d\log k }$ in combinaion with Lemma~\ref{lem:permutation} and the property $k\asymp d^{\gamma_2}$.
 \end{proof}
 
-\appendix 
+\section{Proof Skecthes of Lemmas}
 We provide the proof for $m=3$ only. The extension to higher orders are similar and omitted. 
 
 \begin{proof}[Proof sketch of Lemma~\ref{lem:permutation}]

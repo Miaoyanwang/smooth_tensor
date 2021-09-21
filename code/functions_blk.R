@@ -1,65 +1,4 @@
 # New smooth tensor estimation algorithms
-
-# Block Average function
-block = function(A,kvec){
-  ouput = list()
-  ftor = array(1:prod(kvec),dim = kvec)
-
-  g = list()
-  for(i in 1:length(dim(A))){
-    g[[i]] = sort(rep(1:kvec[i],ceiling(dim(A)[i]/kvec[i]))[1:dim(A)[i]])
-  }
-
-  if(length(dim(A))==2){
-
-    fmat = ftor[g[[1]],g[[2]]]
-    Avg_mat = array(aggregate(c(A),by = list(as.factor(fmat)),function(x) mean(x,na.rm = T))[,-1],dim = kvec)
-    Blk_mat = Avg_mat[g[[1]],g[[2]]]
-
-  }else if(length(dim(A))==3){
-
-    fmat = ftor[g[[1]],g[[2]],g[[3]]]
-    Avg_mat = array(aggregate(c(A),by = list(as.factor(fmat)),function(x) mean(x,na.rm = T))[,-1],dim = kvec)
-    Blk_mat = Avg_mat[g[[1]],g[[2]],g[[3]]]
-
-  }else{
-    stop("* Input array should be matrix or 3-order tensor")
-  }
-
-  return(list(Avg_mat = Avg_mat,Blk_mat= Blk_mat))
-}
-#Borda count estimation
-Borda = function(A,kvec){
-  d = dim(A)[1]
-  if(length(dim(A))==2){
-    #sorting step
-    o1 = order(sapply(1:d, function(x) sum(A[x,])))
-    As = A[o1,]
-
-    #block approximation
-    Blk = block(As,kvec)
-
-    #sorting back
-    Theta = Blk$Blk_mat[o1,]
-
-  }else if(length(dim(A))==3){
-    #sorting
-    o1 = order(sapply(1:d, function(x) sum(A[x,,])))
-    As = A[o1,,]
-
-    #block approximation
-    Blk = block(As,kvec)
-
-    #sorting back
-    Theta = Blk$Blk_mat[o1,,]
-  }else{
-    stop("* Input array should be matrix or 3-order tensor")
-  }
-  return(Theta)
-}
-
-
-
 ## fit blockwise polynomial tensor
 ## polynomial degree l; block size k;
 
@@ -90,17 +29,20 @@ polytensor=function(tensor, l, k){
 
 
 # Borda count estimation
+library(Matrix)
+
 Borda2 = function(A,l,k){
     d = dim(A)[1]
     #sorting
     o1 = order(sapply(1:d, function(x) sum(A[x,,],na.rm = T)))
     As = A[o1,o1,o1]
-    
+
     #polynomial block approximation
     est = polytensor(As,l,k)
     
     #sorting back
-    Theta = est[o1,o1,o1]
+    invo1 = invPerm(o1)
+    Theta = est[invo1,invo1,invo1]
     
   return(Theta)
 }

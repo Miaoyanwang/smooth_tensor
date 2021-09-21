@@ -28,8 +28,8 @@ polytensor_asym=function(tensor, l, kvec){
   return(est)
 }
 
-
 # Borda count estimation
+library(Matrix)
 Borda2_asym = function(A,l,kvec){
   d = dim(A)
   #sorting
@@ -42,10 +42,14 @@ Borda2_asym = function(A,l,kvec){
   est = polytensor_asym(As,l,kvec)
   
   #sorting back
-  Theta = est[o1,o2,o3]
+  invo1 = invPerm(o1);invo2 = invPerm(o2);invo3 = invPerm(o3)
   
-  return(Theta)
+  Theta = est[invo1,invo2,invo3]
+  o = list(o1,o2,o3)
+  result = list(Theta = Theta,order = o)
+  return(result)
 }
+
 
 
 

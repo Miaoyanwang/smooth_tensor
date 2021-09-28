@@ -40,7 +40,8 @@ load("Chicago.RData")
 
 result = Borda2_asym(ltns,2,c(6,4,10))
 result3 = Borda2_asym(ltns,0,c(6,4,10))
-
+kvec = c(6,4,10)
+d = dim(ltns)
 df1 = 9*prod(kvec)
 df2 = prod(d)-10*prod(kvec)
 Fstat = ((sum((result3$Theta-ltns)^2)-sum((result$Theta-ltns)^2))/df1)/(sum((result$Theta-ltns)^2)/df2)

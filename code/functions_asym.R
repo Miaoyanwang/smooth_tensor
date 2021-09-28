@@ -52,7 +52,6 @@ Borda2_asym = function(A,l,kvec){
 
 
 
-
 # Spectral method with threshold.
 # use the soft impute
 library(softImpute)

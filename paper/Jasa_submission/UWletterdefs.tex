@@ -1,0 +1,113 @@
+% Define official colors
+\usepackage[dvinames]{xcolor}
+%\definecolor{UWcrimson}{RGB}{152,30,50}
+\definecolor{UWgray}{HTML}{5e6a71}
+
+\usepackage{svg}
+% Measurements
+\usepackage[top=2in,left=1.5in,bottom=0.5in,right=0.625in]{geometry}
+\usepackage{graphicx}
+\usepackage[colorlinks=false,
+            pdfborder={0 0 0},
+            ]{hyperref}
+\usepackage[absolute]{textpos}
+\usepackage{ifthen}
+\usepackage{soul}
+
+
+% --- For placement of the horizontal line
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+% --- A nice serif font (palatino), but not the prescribed nonfree ITC stone
+\usepackage[sc,osf]{mathpazo}
+\linespread{1.05}
+
+% Remove paragraph indentation
+\parindent0pt
+\setlength{\parskip}{1\baselineskip}
+\raggedright
+\pagestyle{empty}
+% Ensure consistency in the footer
+\urlstyle{sf}
+
+\providecommand\UWfromname{Miaoyan Wang}
+\providecommand\UWtitle{Assistant Professor of Statistics}
+\providecommand\UWinstitution{University of Wisconsin--Madison}
+\providecommand\UWfromdept{Department of Statistics}
+\providecommand\UWfromaddress{Department of Statistics, Medical Sciences Center, 1300 University Ave Room 1205B, Madison, WI 53706.}
+\providecommand\UWfromemail{\href{mailto:miaoyan.wang@wisc.edu}{miaoyan.wang@wisc.edu}}
+\providecommand\UWtoname{Editors}
+\providecommand\UWtoaddress{Department of XXX
+                            USA}
+\providecommand\UWdate{\today}
+\providecommand\UWopening{Dear \UWtoname,}
+\providecommand\UWclosing{Sincerely}
+% Update this and the next line to the correct path
+%\providecommand\UWsignaturefile{kbroman_sig}
+\providecommand\UWlogofile{UWlogo}
+\providecommand\UWenclosure{}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\setlength{\TPHorizModule}{\paperwidth}\setlength{\TPVertModule}{\paperheight}
+\renewcommand{\footrulewidth}{0pt}
+\fancyfoot{}
+\fancyfoot[L]{%
+    {\footnotesize\color{UWgray}\sffamily
+    \UWfromaddress\\[-0.1\baselineskip]
+   }\color{black}}
+
+\fancypagestyle{firstpagestyle}
+{
+
+\fancyhead{}
+\fancyhead[CO,CE]{%
+  % %\begin{textblock*}{2in}[0.3066,0.39](1.5in,1.33in)
+  % \centering \includegraphics[width=2in]{\UWlogofile}
+  % % \end{textblock*}
+  \begin{textblock}{1}[0.5,0.5](0.5,0.08)
+    \includegraphics[width=2in]{\UWlogofile}
+  \end{textblock}
+  }
+}
+\renewcommand{\headrulewidth}{0pt}
+
+\hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
+
+% reformat date as 15 Jan 2015
+\usepackage[UKenglish]{datetime}
+\newdateformat{UKvardate}{%
+\THEDAY\ \shortmonthname[\THEMONTH] \THEYEAR}
+\UKvardate
+
+
+\AtBeginDocument{
+    % Text lines should be less than 6in long
+    \newgeometry{top=.8in,left=1in,bottom=1.2in,right=1in}
+    \vspace*{1.2in}
+
+    \thispagestyle{firstpagestyle}
+
+    \UWdate
+    \bigskip
+
+   % \UWtoname\ifthenelse{\equal{\UWtoname}{}}{}{\\}
+   % \UWtoaddress
+   % \bigskip
+
+    \UWopening\par
+    }
+
+\AtEndDocument{
+    \par\vspace{2ex}
+    \UWclosing,
+
+   \vspace{2ex}
+    \UWfromname \\
+      \UWtitle\\
+    \UWinstitution\\
+    \UWfromemail
+    \UWenclosure
+}

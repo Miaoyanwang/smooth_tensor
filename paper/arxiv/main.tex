@@ -4,7 +4,7 @@
 \usepackage{multirow}
 \usepackage{enumerate}
 \usepackage[authoryear]{natbib}
-\usepackage{url} % not crucial - just used below for the URL 
+\usepackage{url}
 \usepackage[margin=1in]{geometry}
 
 
@@ -27,10 +27,11 @@
 \newtheorem{rmk}{Remark}
 
 
+\usepackage[parfill]{parskip}
 \input macros.tex
 \usepackage{mathrsfs}  
 \def\caliB{\mathscr{B}}
-\usepackage{microtype}
+%\usepackage{microtype}
 \usepackage{wrapfig}
 \newcommand*{\KeepStyleUnderBrace}[1]{%f
   \mathop{%
@@ -43,7 +44,7 @@
 }
 
 
-
+\allowdisplaybreaks
 \usepackage[colorlinks,citecolor=blue]{hyperref}
 
 
@@ -115,7 +116,7 @@ First, we develop a general permuted $\alpha$-smooth tensor model of arbitrary s
     \centering
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{c|@{\hskip4pt}c@{\hskip5pt}c@{\hskip4pt}c@{\hskip5pt}c@{\hskip4pt}c@{\hskip5pt}c@{\hskip4pt}c@{\hskip5pt}c}
-    & \citet{pananjady2020isotonic}&  \citet{balasubramanian2021nonparametric}&  \citet{li2019nearest}&\textbf{Ours}\\
+    & \cite{pananjady2020isotonic}&  \citet{balasubramanian2021nonparametric}&  \citet{li2019nearest}&\textbf{Ours}\\
     \hline
        Model structure& monotonic & Lipschitz & Lipschitz &  $\alpha$-smoothness  \\
      Error rate for order-$m$ tensor$^*$ & \multirow{2}{*}{$d^{-1}$} & $d^{-{2m/(m+2)}}$ & $d^{-\lfloor m/3\rfloor }$ & $d^{-(m-1)}$ \\
@@ -147,15 +148,13 @@ Application to Chicago crime data is presented to showcase the usefulness of our
 
 \subsection{Notation and organization}
 We use $\bbN_{+}$ to denote the set of positive integers, and $\bbN_{\geq 0}=\bbN_{+}\cup\{0\}$.
-We use $[d]=\{1,\ldots,d\}$ for $d$-set with $d\in\mathbb{N}_{+}$. For a set $S$, $|S|$ denotes its cardinality and $\mathds{1}_S$ denotes the indicator function. For two positive sequences $\{a_d\},\{b_d\}$,  we denote $a_d\lesssim b_d$ if $\lim_{d\to\infty} a_d/b_d\leq c$ for some constant $c>0$, and $a_d\asymp b_d$ if $c_1\leq \lim_{d\to \infty} a_d/b_d\leq c_2$ for some constants $c_1,c_2>0$. Given a number $a\in\bbR$, the floor function $\lfloor a\rfloor$ is the largest integer no greater than $a$, and the ceiling function $\lceil a\rceil$ is the smallest integer no less than $a$.
-We use $\tO(\cdot)$ to denote big-O notation hiding logarithmic factors, and $\circ$ the function composition. 
+We use $[d]=\{1,\ldots,d\}$ for $d$-set with $d\in\mathbb{N}_{+}$. For a set $S$, $|S|$ denotes its cardinality and $\mathds{1}_S$ denotes the indicator function. For two positive sequences $\{a_d\},\{b_d\}$,  we denote $a_d\lesssim b_d$ if $\lim_{d\to\infty} a_d/b_d\leq c$ for some constant $c>0$, and $a_d\asymp b_d$ if $c_1\leq \lim_{d\to \infty} a_d/b_d\leq c_2$ for some constants $c_1,c_2>0$. Given a number $a\in\bbR$, the floor function $\lfloor a\rfloor$ is the largest integer no greater than $a$, and the ceiling function $\lceil a\rceil$ is the smallest integer no less than $a$. We use $\tO(\cdot)$ to denote big-O notation hiding logarithmic factors, and $\circ$ the function composition. 
+
 Let $\Theta\in\bbR^{d\times \cdots \times d}$ be an order-$m$ $d$-dimensional tensor, $\pi\colon[d]\rightarrow[d]$ be an index permutation, and $\Theta(i_1,\ldots,i_m)$ the tensor entry indexed by $(i_1,\ldots,i_m)$. We use $\Theta\circ\pi$ to denote the permuted tensor such that $(\Theta\circ\pi)(i_1,\ldots,i_m) = \Theta(\pi(i_1),\ldots,\pi(i_m))$ for all $(i_1,\ldots,i_m)\in[d]^m$. We sometimes also use shorthand notation $\Theta(\omega)$ for tensor entries with indices $\omega=(i_1,\ldots,i_w)$. We call a tensor \emph{a binary-valued tensor} if its entries take value on $\{0,1\}$-labels, and \emph{a continues-valued tensor} if its entries take values on a continuous scale. We define the Frobounis norm $\FnormSize{}{\Theta}^2=\sum_{\omega\in[d]^m}|\Theta(\omega)|^2$ for a tensor $\Theta$, and the $\infty$-norm $\mnorm{\mx}=\max_{i}|x_i|$ for a vector $\mx=(x_1,\ldots,x_d)^T$.
 We use $\Pi(d,d)=\{\pi\colon [d]\to[d]\}$ to denote all permutations on $[d]$, while $\Pi(d,k)=\{\pi\colon [d]\to[k]\}$ the collection of all onto mappings from $[d]$ to $[k]$. An event $A$ is said to occur \emph{with high probability} if $\mathbb{P}(A)$ tends to 1 as the tensor dimension $d\to\infty$. 
 
 
-The rest of the paper is organized as follows. Section~\ref{sec:model} presents the permuted smooth tensor model and its connection to smooth function representation. In Section~\ref{sec:tba}, we establish the approximation error based on block-wise polynomial approximation. Then, we develop two estimation algorithms with accuracy guarantees: the least-squares estimation and Borda count estimation. Section~\ref{sec:lse} presents a statistically optimal but computationally challenging least-squares estimator. Section~\ref{sec:borda} presents a polynomial-time Borda count algorithm with a provably same optimal rate under monotonicity assumptions. Simulations and data analyses are presented in Section~\ref{sec:sim}. We conclude the paper with a discussion in Section~\ref{sec:discussion}. All proofs and extensions are deferred to Supplementary Materials.
-
-
+The rest of the paper is organized as follows. Section~\ref{sec:model} presents the permuted smooth tensor model and its connection to smooth function representation. In Section~\ref{sec:tba}, we establish the approximation error based on block-wise polynomial approximation. Then, we develop two estimation algorithms with accuracy guarantees: the least-squares estimation and Borda count estimation. Section~\ref{sec:lse} presents a statistically optimal but computationally challenging least-squares estimator. Section~\ref{sec:borda} presents a polynomial-time Borda count algorithm with a provably same optimal rate under monotonicity assumptions. Simulations and data analyses are presented in Section~\ref{sec:sim}. The proofs for the main theorems are provided in Section~\ref{app:theorem}. We conclude the paper with a discussion in Section~\ref{sec:discussion}. Extra simulation results and technical lemmas are deferred to Appendix. 
 
 
 \section{Smooth tensor model with unknown permutation}\label{sec:model}
@@ -218,7 +217,7 @@ Specifically, suppose that there are $k$ clusters among $d$ entities, and the cl
 \end{align}
 Here, the core tensor $\tS$ collects the entry values of $m$-way blocks; the core tensor $\tS$ and clustering function $z\in \Pi(d,k)$ are parameters of interest. A tensor $\Theta$ satisfying~\eqref{eq:block} is called a block-$k$ tensor, where $k$ is often assumed much smaller than $d$. Tensor block models allow various data types, as shown below. 
 
-\begin{example}[Gaussian tensor block model] Let $\tY$ be a continuous-valued tensor. The Gaussian tensor block model draws independent normal entries according to $\tY(i_1,\ldots,i_m)\stackrel{\text{ind}}{\sim} N(\tS(z(i_1),\ldots,z(i_m)),\sigma^2)$. The mean model belongs to~\eqref{eq:block}, and the noise has subGaussian parameter $\sigma^2$. The Gaussian tensor block model has served as the statistical foundation for many tensor clustering algorithms \citep{wang2019multiway,han2020exact}.
+\begin{example}[Gaussian tensor block model] Let $\tY$ be a continuous-valued tensor. The Gaussian tensor block model draws independent entries according to $\tY(i_1,\ldots,i_m)\stackrel{\text{ind}}{\sim} N(\tS(z(i_1),\ldots,z(i_m)),\sigma^2)$. The mean model belongs to~\eqref{eq:block}, and the noise has subGaussian parameter $\sigma^2$. The Gaussian tensor block model has served as the statistical foundation for many tensor clustering algorithms \citep{wang2019multiway,han2020exact}.
 \end{example}
 
 \begin{example}[Stochastic tensor block model] Let $\tY$ be a binary-valued tensor. The stochastic tensor block model draws independent Bernoulli entries according to $\mathbb{P}(\tY(i_1,\ldots,i_m)=1)=\tS(z(i_1),\ldots,z(i_m))$. The mean model also belongs to \eqref{eq:block}, and the noise has subGaussianity parameter $\sigma$ bounded by $1/4$.  
@@ -278,7 +277,7 @@ yields the optimized error rate
      c_3 d^{-(m-1)}\log d, &\text{ when } \alpha \geq m(m-1)/2.
     \end{cases}
 \end{align}
-Here, the constants $c_1,c_2,c_3>0$ depend on the model configuration $(m,\sigma, L,\alpha)$ but not on the tensor dimension $d$. The closed-form expressions are provided in Appendix~\ref{sec:proofLSE}.
+Here, the constants $c_1,c_2,c_3>0$ depend on the model configuration $(m,\sigma, L,\alpha)$ but not on the tensor dimension $d$. The closed-form expressions are provided in Section~\ref{sec:proofLSE}.
 \end{thm}
 
 We discuss the asymptotic error rate as $d\rightarrow \infty$ while treating other model configurations fixed. The final least-squares estimation rate~\eqref{eq:rates} has two sources of error: the nonparametric error $d^{-{2m\alpha\over m+2\alpha}}$ and the permutation error $d^{-(m-1)}\log d$. Intuitively, in the tensor data analysis problem, we can view each tensor entry as a data point, so sample size is the total number of entries, $d^m$. The unknown permutation results in $\log(d!)\approx d\log d$ complexity, whereas the unknown generative function results in $d^{-2m\alpha/(m+2\alpha)}$ nonparametric complexity. When the function $f$ is smooth enough, estimating the function $f$ becomes relatively easier compared to estimating the permutation $\pi$. This intuition coincides with the fact that the permutation error dominates the nonparametric error when  $\alpha\geq m(m-1)/2$. 
@@ -569,130 +568,10 @@ errors in parentheses. Block number is set to achieve the best prediction perfor
 
 Finally, we compare the prediction performance based on constant block model and our permuted smooth tensor model. Notice that constant block model uses $\ell=0$ approximation, whereas our permuted smooth tensor model uses $\ell=2$ approximation. Table~\ref{tab:MSE} shows the mean squared error over five runs of cross-validation, with 20\% entries for testing and 80\% for training. We find that the permuted smooth tensor model substantially outperforms the classical constant block models. We emphasize that our method does not necessarily assume the block structure. The comparison supports our premises that permuted smooth tensor model with polynomial approximation performs better than common constant block models in this application. 
 
-
-\section{Conclusion and Discussions}\label{sec:discussion}
-We have presented a suite of statistical theory, estimation methods, and data applications for permuted smooth tensor models. Two estimation algorithms are proposed with accuracy guarantees: the (statistically optimal) least-squares estimation and the (computationally tractable) Borda count estimation. In particular, we establish an interesting phase transition phenomenon with respect to the critical smoothness level. We demonstrate that a block-wise polynomial of order $(m-2)(m+1)/2$ is sufficient and necessary for accurate recovery of order-$m$ tensors, in contrast to earlier beliefs on constant block approximation. Experiments demonstrate the effectiveness of both theoretical findings and algorithms. 
-
-There are several possible extensions from our work. The theory in this paper assumes symmetry on the signal tensor $\Theta$ for simplicity of exposition. In fact, all our results naturally extend to non-symmetric signal tensors. A non-symmetric tensor $\Theta\in\bbR^{d_1\times \cdots\times d_m}$ can be represented by $\Theta(i_1,\ldots,i_m) = f\left({\pi_1(i_1)\over d_1},\ldots,{\pi_m(i_m)\over d_m}\right)$, where $\pi_\ell\colon [d_\ell]\rightarrow [d_\ell]$ is the latent permutation for each mode $\ell\in[m]$, and the function $f$ is a smooth but non-symmetric function. Under the condition that $d_1,\ldots, d_m$ are asymptotically of the same order, similar estimation algorithms and theoretical accuracy guarantees still hold true.  
-
-Our framework of block-wise polynomial approximation can be extended to allow other nonparametric techniques, including B splines, smoothing splines, kernel regression, wavelets, etc. We choose to use polynomial basis because of its simplicity. The parsimony allows us to establish the insights on critical smoothness level $ (m-2)(m+1)/2$. For example, our result suggests that quadratic splines are enough for accurate estimation of order-3 tensors. One can combine our approach with the modern trend filtering techniques~\citep{tibshirani2014adaptive,ortelli2019prediction},
-\[
-\hat f =\argmin_{f}\sum_{(i_1,i_2,i_3)}\left(\tY(\hat \pi(i_1),\hat \pi(i_2),\hat \pi(i_3))-f\left({i_1\over d},{i_2\over d},{i_3\over d}\right)\right)^2+\lambda \norm{{\boldsymbol \nabla}_2 f},
-\]
-where $\norm{{\boldsymbol \nabla}_2 f}$ represents total variation of second order difference. The case of $m=2$ (matrix) reduces to the total variation smoothing in graphons~\citep{chan2014consistent}. For general order-$m$ tensors, our theory provides a principle of guidance for the order of smoothness needed. Exploiting the benefits and properties of various nonparametric fitting techniques for general tensor models warrants future research.
-
-Finally, our current approach assumes no randomness in the signal tensor $\Theta$. One can also extend the generative model to allow random designs, where the signal tensor is represented by $\Theta(i_1,\ldots,i_m)=f(x_{i_1},\ldots,x_{i_m})$ with $(x_i)_{i=1}^d$ i.i.d.\ randomly drawn from certain distribution. Similar techniques have been developed for graphons and hypergraphons~\citep{chan2014consistent,gao2015rate,klopp2017oracle,balasubramanian2021nonparametric}. The two choices of designs lead to different analysis in the same spirit as random- vs. fixed-designs in nonparametric regression. Extending our theory to random design is an interesting question for future research.
-
-\bibliographystyle{Chicago.bst}
-\bibliography{tensor_wang}
-
-\clearpage
-\bigskip
-\begin{center}
-{\large\bf SUPPLEMENTARY MATERIALS}
-\end{center}
-
-\begin{description}
-
-\item[Appendix:] The appendix includes the proofs and extra simulation results. 
-
-\item[Software and data:] R-package contains code to perform the methods described in the article. The package also contains all datasets used as examples in the article.
-\end{description}
-
-\appendix
-
-
-\renewcommand{\thefigure}{S\arabic{figure}}
-\setcounter{figure}{0}   
-\renewcommand{\thetable}{S\arabic{table}}
-\setcounter{table}{0}   
-
-\section{Extra numerical results}
-\subsection{Results for Models 2 and 4 in Table~\ref{tab:comp}}\label{sec:extra}
-We first present simulation results for Models 2 and 4 omitted in Section~\ref{sec:sim}. Figure~\ref{fig:extrav} compares the estimation performance among the {\bf \small Borda count, LSE}, and {\bf \small Spectral methods}. We find that our Borda count algorithm outperforms others in both models. The first two columns in Figure~\ref{fig:extrasim1} show the impact of the number of blocks $k$ and degree of polynomial $\ell$ for the approximation with fixed dimension $d = 100$. Similar to results for Models 1, 3 and 5 in the main paper, we find the optimal $k$ balances the trade-off between approximation error and signal tensor estimation error within each block. The last two columns compare our {\bf \small Borda count} with other alternative methods. We find that our method still outperforms {\bf \small LSE} and {\bf \small Spectral} in all scenarios under Models 2 and 4.
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{\textwidth}
-    \vspace{0.5cm}
-    
-    \includegraphics[width = \textwidth]{figure/deg_dim_c.pdf} 
-    \vspace{0cm}
-    \end{subfigure}
-    \begin{subfigure}[b]{\textwidth}
-    \includegraphics[width =\textwidth]{figure/deg_dim_b.pdf}    
-    \end{subfigure}
-    \caption{MSE versus the tensor dimension based on different polynomial approximations. Columns 1-5 consider the Models 1-5 in Table~\ref{tb:md} respectively. Panel (a) is for continuous tensors, whereas (b) is for the binary tensors.}
-    \label{fig:degdim}
-\end{figure}
-
-
-\begin{figure}[htp!]
-    \centering
-    \includegraphics[width =0.9\textwidth]{figure/extravfinal.pdf}
-    \caption{Performance comparison between different methods. The observed data tensors, true signal tensors, and estimated signal tensors are plotted for Models 2 and 4 in Table~\ref{tb:md} with fixed dimension $d = 80$. Numbers in parenthesis indicate the mean squared error.}
-    \label{fig:extrav}
-\end{figure}
-
-
-\begin{figure}[htp!]
-    \centering
-    \begin{subfigure}[b]{\textwidth}
-    \includegraphics[width = \textwidth]{figure/extra_conti.pdf}  
-        \vspace{0cm}
-    \end{subfigure}
-    \begin{subfigure}[b]{\textwidth}
-    \includegraphics[width = \textwidth]{figure/extra_binary.pdf}    
-    \end{subfigure}
-    \caption{Simulation results for Models 2 and 4 in Table~\ref{tb:md}. Columns 1-2 plots MSE versus the number of blocks for different polynomial approximation, while Columns 3-4 shows the MSE versus the tensor dimension according to estimation methods. Panel (a) is for continuous tensors, whereas (b) is for the binary tensors.}
-    \label{fig:extrasim1}
-\end{figure}
-
-
-
-\subsection{Investigation of non-symmetric tensors}\label{subsec:asym}
-Here we describe the simulation set-up for non-symmetric tensors. We simulate order-3 tensors based on the non-symmetric functions in Table~\ref{tb:md2}. 
-
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{c|c}
-        Model ID  &  $f(x,y,z)$  \\\hline
-        1 &    $xy+z$ \\
-        2&  $x^2+y +yz^2$\\
-        3 & $x(1+\exp(-3(x^2+y^2+z^2)))^{-1}$\\
-        4 & $\log(1+\max(x,y,z)+x^2+yz)$ \\
-        5 &  $\exp\left(-x-\sqrt{y}-z^3\right)$
-    \end{tabular}
-    \caption{List of non-symmetric smooth functions in simulation.}
-    \label{tb:md2}
-\end{table}
-
-
-We fix the tensor dimension ${30\times40\times 50}$ and assume that the noise tensors are from Gaussian distribution. Similar to other simulations, we evaluate the accuracy of the estimation by MSE and report the summary statistics across $n_{\text{sim}} = 20$ replicates. The hyperparameters are chosen via cross-validation that give the best accuracy for each method. Table~\ref{tb:hyper} summarizes the choice of hyperparameters.
-
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{c|c|c|c|c|c}
-        Method &  Model 1 & Model 2 & Model 3& Model 4 & Model 5  \\\hline
-        Borda count &   (2,1,2)&(1,2,2)& (1,3,3) &(2,1,2)&(1,4,4)\\
-        LSE &(6,2,3)&(8,5,8)&(6,9,6)&(9,5,6)&(7,9,3)\\
-        Spectral & (1,24)&(3,48)&(1,48)&(1,28)&(1,22)
-    \end{tabular}
-    \caption{Hyperparameters for the methods under Models 1-5 in Table~\ref{tb:md2}. For {\bf \small Borda count} and {\bf \small LSE} methods, the values in the table indicate the number of blocks. For {\bf \small Spectral} method, the first value indicates the tensor unfolding mode, while the second one represents the singular value threshold.}
-    \label{tb:hyper}
-\end{table}
-
-\subsection{Extra results on Chicago crime data analysis}\label{subsec:chicago}
-We investigate the ten groups of crime types clustered by our method. Table~\ref{tb:crimetb} shows that the clustering captures the similar type of crimes. For example, group 2 consists of misdemeanors such as public indecency, non-criminal, and concealed carry license violation, while group 6 represents sex-related offenses such as prostitution, sex offense, and crime sexual assault.
-
-\begin{table}[ht!]
-    \centering
-    \includegraphics[width = \textwidth]{figure/crimetable.pdf}
-    \caption{Groups of crime types learned based on the Borda count estimation.}
-    \label{tb:crimetb}
-\end{table}
-
 \section{Proofs of main theorems}\label{app:theorem}
+
+Here, we provide proofs of the theoretical results presented in Sections~\ref{sec:tba}-\ref{sec:borda}. 
+
 \subsection{Proof of Lemma~\ref{lem:approx}}
 \begin{proof}
 Recall that we denote $\tE_k$ as the $m$-way partition
@@ -826,7 +705,7 @@ For every given integer $k\in[d]$, there exists a core tensor $\tS\in\bbR^{k\tim
 \inf_{\hat \Theta}\sup_{z \in \Pi(d,k)}\mathbb{P}\left\{{1\over d^m}\sum_{(i_1,\ldots,i_m)\in[d]^m}\left[\hat \Theta(i_1,\ldots,i_m)-\tS\left(z(i_1),\ldots,z(i_m)\right)\right]^2\gtrsim \frac{\sigma^2\log k} {d^{m-1}}\right\}\geq 0.9.
 \end{equation}
 \end{lem}
-The proof of Lemma~\ref{lem:permutation} is constructive and deferred to next subsection. We fix a core tensor $\tS\in\bbR^{k\times \cdots \times k}$ satisfying~\eqref{eq:givenC}, and use it to construct the smooth tensors. 
+The proof of Lemma~\ref{lem:permutation} is constructive and deferred to Appendix~\ref{sec:tech}. We fix a core tensor $\tS\in\bbR^{k\times \cdots \times k}$ satisfying~\eqref{eq:givenC}, and use it to construct the smooth tensors. 
 
 Now we construct a function $f\in\tH(\alpha,L)$ that mimics the core tensor $\tS$ in block tensor family $\tB(k,0).$  Define $k = d^\delta$ for some $\delta\in(0,1)$, which will be specified later. Consider a smooth function $K(x)$ that is infinitely differentiable,
 \begin{align}
@@ -878,72 +757,6 @@ Taking sup on both sides with the property
 yields the desired rate~\eqref{eq:minimax}. 
 \end{proof}
 
-\subsection{Proof of Lemma~\ref{lem:permutation}}
-\begin{proof}
-We provide the proof for $m=3$ only. The extension to higher orders $(m\geq 4)$ uses exactly the same techniques and thus is omitted. 
-Let us pick $\omega_1,\ldots,\omega_{k/3}\in\{0,1\}^{k^2/9}$ such that $\rho_H(\omega_p,\omega_q)\geq k^2/36$ for all $p\neq q\in [k/3]$. This selection is possible by lemma~\ref{lem:covering}.
-Fixing such $\omega_1,\ldots,\omega_{k/3}$, we define a symmetric core tensor $\tS\in\bbR^{k\times k\times k}$ for $p<q<r$,
-\begin{align}
-    \tS(p,q,r) = \begin{cases}s_{p,q,r} &\text{if }p\in\{1,\ldots,k/3\},q\in\{k/3+1,\ldots,2k/3\}, r\in\{2k/3+1,\ldots,k\},\\0 &\text{Otherwise,}
-    \end{cases}
-\end{align}
-where $\left\{s_{p,q,r}\colon p\in\{1,\ldots,k/3\},q\in\{k/3+1,\ldots,2k/3\}, r\in\{2k/3+1,\ldots,k \}\right\}$ satisfies
-\begin{align}
-\label{eq:structure}
-    \ms(r)&:= \text{vec}\left(\tS\left(1:\frac{k}{3},\ \frac{k}{3}+1:\frac{2k}{3},\ r\right)\right)\\
-    &= \sqrt{c\sigma^2\log k\over d^{2}}\omega_{r-2k/3} \quad \text{ for any } r\in\{2k/3+1,\ldots,k\}.
-\end{align}
-The choice of constant $c>0$ is deferred to a later part of the proof.
-Notice that for any $r_1,r_2\in\{2k/3+1,\ldots,k\}$, we have
-\begin{align}\label{eq:sr}
-    \FnormSize{}{\ms(r_1)-\ms(r_2)}^2\geq \frac{c\sigma^2k^2\log k}{36d^2}.
-\end{align}
-
-Define a subset of permutation set $\Pi(d,k)$ by
-\begin{align}
-    \tZ = \left\{z\in \Pi(d,k)\colon |z^{-1}(p)| = \frac{d}{k} \text{ for } a\in[k], z^{-1}(a) = \left\{\frac{(p-1)d}{k}+1,\ldots,\frac{pd}{k} \text{ for } p\in[2k/3]\right\}\right\}.
-\end{align}
-Each $z\in\tZ$ induces a block tensor in $\tB(k,0)$. We consider the collection of block tensors induced by $\tZ$; i.e.,
-\begin{align}
-    \tB(\tZ) = \{\Theta^z\in\bbR^{d\times d\times d}\colon \Theta^z(i,j,k) = \tS(z(i),z(j),z(k)) \text{ for } z\in\tZ\}.
-\end{align}
-To apply Proposition~\ref{prop:minmax}, we find upper bound $\sup_{\Theta,\Theta'\in\tB(\tZ)}D(\mathbb{P}_\Theta|\mathbb{P}_{\Theta'})$ and lower bound $\log \tM(\epsilon,\tB(\tZ),\rho)$, where $\rho$ is defined by 
-$\rho(\Theta,\Theta') = \frac{1}{n^3}\FnormSize{}{\Theta-\Theta'}^2.$
-For sub-Gaussian signal plus noise model, we have
-\begin{align}\label{eq:kldistance}
-    D(\mathbb{P}_\Theta|\mathbb{P}_{\Theta'})\leq \frac{1}{2\sigma^2}\FnormSize{}{\Theta-\Theta'}\leq \frac{1}{2\sigma^2}d^3 \frac{c\sigma^2\log k}{d^2}=\frac{cd\log k}{2},
-\end{align}where the first inequality holds for any $\Theta,\Theta'\in\tB(\tZ)$ by \citet[Proposition 4.2]{gao2015rate}. Now we provide a lower bound of the packing number $\log \tM(\epsilon,\tB(\tZ),\epsilon)$ with $\epsilon^2 \asymp {\sigma^2\log k \over d^2}$. From the construction of $\tS$ in \eqref{eq:structure}, we have one to one correspondence between $\tZ$ and $\tB(\tZ)$. Thus $\tM(\epsilon,\tB(\tZ),\rho) = \tM(\epsilon,\tZ,\rho')$ for some metric $\rho'$ on $\tZ$ defined by $\rho'(z_1,z_2) = \rho(\Theta^{z_1},\Theta^{z_2})$. Let $P$ be the packing set in $\tZ$ with the same cardinality of $\tM(\epsilon,\tZ,\rho').$ Given any $z\in\tZ$, define its $\epsilon$-neighbor by $\tN(z,\epsilon) = \{z'\in\tZ\colon \rho'(z,z')\leq \epsilon\}.$ Then, we have $\cup_{z\in P} \tN(z,\epsilon) = \tZ$, because the cardinality of $P$ is same as packing number $\tM(\epsilon,\tZ,\rho')$. Therefore, we have
-\begin{align}\label{eq:packing}
-    |\tZ|\leq\sum_{z\in P}|\tN(z,\epsilon)|\leq |P|\max_{z\in P}|\tN(z,\epsilon)|.
-\end{align}
-It remains to find the upper bound of $\max_{z\in P}|\tN(z,\epsilon)|.$ For any $z_1,z_2\in\tZ$, $z_1(i) = z_2(i)$ for $i\in[2d/3]$ and $|z_1^{-1}(p)| = d/k$ for all $p\in[k].$ Therefore,
-\begin{align}
-    \rho'^2(z_1,z_2) &\geq \frac{1}{d^3}\sum_{1\leq i_1\leq d/3<i_2\leq 2d/3\leq i_3\leq d}\left( \tS\left(z_1(i_1),z_1(i_2),z_1(i_3)\right)-\tS\left(z_2(i_1),z_2(i_2),z_2(i_3)\right)\right)^2\\
-    &= \frac{1}{d^3}\sum_{2n/3<i_3\leq n}\sum_{1\leq p \leq k/3< q\leq 2k/3}\sum_{i_1\in z_1^{-1}(p),i_2\in z_1^{-1}(q)}\left( \tS\left(p,q,z_1(i_3)\right)-\tS\left(p,q,z_2(i_3)\right)\right)^2\\&=
-    \frac{1}{d^3}\sum_{2n/3<i_3\leq n}\sum_{1\leq p \leq k/3< q\leq 2k/3}\left(d\over k\right)^2\left( \tS\left(p,q,z_1(i_3)\right)-\tS\left(p,q,z_2(i_3)\right)\right)^2\\&=
-    \frac{1}{d^3}\sum_{2n/3<i_3\leq n}\left(d\over k\right)^2\FnormSize{}{\ms(z_1(i_3)-\ms(z_2(i_3))}^2
-    \\&\geq  \frac{c\sigma^2\log k}{36d^3}|\{j\colon z_1(j)\neq z_2(j)\}|,
-\end{align}where the last inequality is from \eqref{eq:sr}. Hence with the choice of $\epsilon^2 = \frac{c\sigma^2\log k}{288d^2}$, we have $|\{j\colon z(j)\neq z'(j)\}|\leq d/8$ for any $z'\in\tN(z,\epsilon)$.
-This implies
-\begin{align}\label{eq:n}
-    |\tN(z,\epsilon)|\leq {d\choose d/8}k^{d/8}\leq (8e)^{d/8}k^{d/8}\leq \exp\left(\frac{1}{5}d\log k\right),
-\end{align}
-for sufficiently large $k$.
-Now we find the lower bound of $|\tZ|$ based on Stirling's formula,
-\begin{align}\label{eq:z}
-    |\tZ| = \frac{(d/3)!}{[(d/k)!]^{k/3}} = \exp\left(\frac{1}{3}d\log k + o(d\log k)\right)\geq\exp\left(\frac{1}{4}d\log k\right).
-\end{align}
-Plugging \eqref{eq:n} and \eqref{eq:z} into \eqref{eq:packing} yields
-\begin{align}\label{eq:fpacking}
-    \tM(\epsilon,\tB(\tZ),\rho) = |P| \geq\frac{\max_{z\in P}\tN(z,\epsilon)}{|\tZ|}\geq\exp\left(\frac{1}{20}d\log k\right).
-\end{align}
-Finally, applying Proposition~\ref{prop:minmax} based on  \eqref{eq:kldistance} and \eqref{eq:fpacking} gives
-\begin{align}
-    \inf_{\hat\Theta}\sup_{\Theta\in\tB(\tZ)}\mathbb{P}\left(\frac{1}{d^3}\FnormSize{}{\hat\Theta-\Theta}^2\geq \frac{C\sigma^2\log k}{d^2}\right)=\inf_{\hat\Theta}\sup_{z\in\tZ}\mathbb{P}\left(\frac{1}{d^3}\FnormSize{}{\hat\Theta-\Theta}^2\geq \frac{C\sigma^2\log k}{d^2}\right)\geq 0.9,
-\end{align}
-with some constant $C>0$ for sufficiently small $c>0$ in \eqref{eq:structure}.
-\end{proof}
-
 
 \subsection{Proof of Lemma~\ref{lem:permute}}
 \begin{proof}
@@ -969,7 +782,7 @@ For any given index $i$, we examine the error $|i-\hat\pi(i)|$. By \eqref{eq:mon
     i = \underbrace{|\{j\colon g(j)\leq g(i)\}|}_{=:\textup{I}},\quad\text{and}\quad \hat\pi(i) = \underbrace{|\{j\colon \tau(j)\leq \tau(i)\}|}_{=:\textup{II}},
 \end{align}
 where $|\cdot|$ denotes the cardinality of the set. We claim that the sets I and II differ only in at most $d^{(m-1)\beta/2}$ elements. To prove this, we partition the indices in $[d]$ in two cases.
-\begin{enumerate}
+\begin{enumerate}[wide, labelwidth=0pt, labelindent=0pt]
     \item Long-distance indices in $\{j\colon|j-i|\geq 
 C \left(\sigma d^{-(m-1)/2}\sqrt{\log d}\right)^{\beta} \}$ for some sufficient large constant $C>0$. In this case, the ordering of $(i,j)$ remains the same in \eqref{eq:mon1} and \eqref{eq:mon2}, i.e.,
     \begin{align}\label{eq:equiv}
@@ -1066,7 +879,197 @@ where $c(\alpha,\beta,m):= \frac{m(m-1)\beta\min(\alpha,1)}{\max(0,\ 2(m-(m-1)\b
 
 \end{proof}
 
+
+
+\section{Conclusion and Discussions}\label{sec:discussion}
+We have presented a suite of statistical theory, estimation methods, and data applications for permuted smooth tensor models. Two estimation algorithms are proposed with accuracy guarantees: the (statistically optimal) least-squares estimation and the (computationally tractable) Borda count estimation. In particular, we establish an interesting phase transition phenomenon with respect to the critical smoothness level. We demonstrate that a block-wise polynomial of order $(m-2)(m+1)/2$ is sufficient and necessary for accurate recovery of order-$m$ tensors, in contrast to earlier beliefs on constant block approximation. Experiments demonstrate the effectiveness of both theoretical findings and algorithms. 
+
+There are several possible extensions from our work. The theory in this paper assumes symmetry on the signal tensor $\Theta$ for simplicity of exposition. In fact, all our results naturally extend to non-symmetric signal tensors. A non-symmetric tensor $\Theta\in\bbR^{d_1\times \cdots\times d_m}$ can be represented by $\Theta(i_1,\ldots,i_m) = f\left({\pi_1(i_1)\over d_1},\ldots,{\pi_m(i_m)\over d_m}\right)$, where $\pi_\ell\colon [d_\ell]\rightarrow [d_\ell]$ is the latent permutation for each mode $\ell\in[m]$, and the function $f$ is a smooth but non-symmetric function. Under the condition that $d_1,\ldots, d_m$ are asymptotically of the same order, similar estimation algorithms and theoretical accuracy guarantees still hold true.  
+
+Our framework of block-wise polynomial approximation can be extended to allow other nonparametric techniques, including B splines, smoothing splines, kernel regression, wavelets, etc. We choose to use polynomial basis because of its simplicity. The parsimony allows us to establish the insights on critical smoothness level $ (m-2)(m+1)/2$. For example, our result suggests that quadratic splines are enough for accurate estimation of order-3 tensors. One can combine our approach with the modern trend filtering techniques~\citep{tibshirani2014adaptive,ortelli2019prediction},
+\[
+\hat f =\argmin_{f}\sum_{(i_1,i_2,i_3)}\left(\tY(\hat \pi(i_1),\hat \pi(i_2),\hat \pi(i_3))-f\left({i_1\over d},{i_2\over d},{i_3\over d}\right)\right)^2+\lambda \norm{{\boldsymbol \nabla}_2 f},
+\]
+where $\norm{{\boldsymbol \nabla}_2 f}$ represents total variation of second order difference. The case of $m=2$ (matrix) reduces to the total variation smoothing in graphons~\citep{chan2014consistent}. For general order-$m$ tensors, our theory provides a principle of guidance for the order of smoothness needed. Exploiting the benefits and properties of various nonparametric fitting techniques for general tensor models warrants future research.
+
+Finally, our current approach assumes no randomness in the signal tensor $\Theta$. One can also extend the generative model to allow random designs, where the signal tensor is represented by $\Theta(i_1,\ldots,i_m)=f(x_{i_1},\ldots,x_{i_m})$ with $(x_i)_{i=1}^d$ i.i.d.\ randomly drawn from certain distribution. Similar techniques have been developed for graphons and hypergraphons~\citep{chan2014consistent,gao2015rate,klopp2017oracle,balasubramanian2021nonparametric}. The two choices of designs lead to different analysis in the same spirit as random- vs. fixed-designs in nonparametric regression. Extending our theory to random design is an interesting question for future research.
+
+
+\section*{Acknowledgements}
+This research is supported in part by NSF grants DMS-1915978, DMS-2023239, and funding from the Wisconsin Alumni Research foundation.
+
+\bibliographystyle{Chicago.bst}
+\bibliography{tensor_wang}
+
+\clearpage
+\appendix
+\section*{Appendix}
+The appendix includes extra simulation results and technical lemmas. 
+
+
+
+
+\renewcommand{\thefigure}{S\arabic{figure}}
+\setcounter{figure}{0}   
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{table}{0}   
+
+\section{Extra numerical results}
+\subsection{Results for Models 2 and 4 in Table~\ref{tab:comp}}\label{sec:extra}
+We first present simulation results for Models 2 and 4 omitted in Section~\ref{sec:sim}. Figure~\ref{fig:extrav} compares the estimation performance among the {\bf \small Borda count, LSE}, and {\bf \small Spectral methods}. We find that our Borda count algorithm outperforms others in both models. The first two columns in Figure~\ref{fig:extrasim1} show the impact of the number of blocks $k$ and degree of polynomial $\ell$ for the approximation with fixed dimension $d = 100$. Similar to results for Models 1, 3 and 5 in the main paper, we find the optimal $k$ balances the trade-off between approximation error and signal tensor estimation error within each block. The last two columns compare our {\bf \small Borda count} with other alternative methods. We find that our method still outperforms {\bf \small LSE} and {\bf \small Spectral} in all scenarios under Models 2 and 4.
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+    \vspace{0.5cm}
+    
+    \includegraphics[width = \textwidth]{figure/deg_dim_c.pdf} 
+    \vspace{0cm}
+    \end{subfigure}
+    \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width =\textwidth]{figure/deg_dim_b.pdf}    
+    \end{subfigure}
+    \caption{MSE versus the tensor dimension based on different polynomial approximations. Columns 1-5 consider the Models 1-5 in Table~\ref{tb:md} respectively. Panel (a) is for continuous tensors, whereas (b) is for the binary tensors.}
+    \label{fig:degdim}
+\end{figure}
+
+
+\begin{figure}[htp!]
+    \centering
+    \includegraphics[width =0.9\textwidth]{figure/extravfinal.pdf}
+    \caption{Performance comparison between different methods. The observed data tensors, true signal tensors, and estimated signal tensors are plotted for Models 2 and 4 in Table~\ref{tb:md} with fixed dimension $d = 80$. Numbers in parenthesis indicate the mean squared error.}
+    \label{fig:extrav}
+\end{figure}
+
+
+\begin{figure}[htp!]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width = \textwidth]{figure/extra_conti.pdf}  
+        \vspace{0cm}
+    \end{subfigure}
+    \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width = \textwidth]{figure/extra_binary.pdf}    
+    \end{subfigure}
+    \caption{Simulation results for Models 2 and 4 in Table~\ref{tb:md}. Columns 1-2 plots MSE versus the number of blocks for different polynomial approximation, while Columns 3-4 shows the MSE versus the tensor dimension according to estimation methods. Panel (a) is for continuous tensors, whereas (b) is for the binary tensors.}
+    \label{fig:extrasim1}
+\end{figure}
+
+
+
+\subsection{Investigation of non-symmetric tensors}\label{subsec:asym}
+Here we describe the simulation set-up for non-symmetric tensors. We simulate order-3 tensors based on the non-symmetric functions in Table~\ref{tb:md2}. 
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c|c}
+        Model ID  &  $f(x,y,z)$  \\\hline
+        1 &    $xy+z$ \\
+        2&  $x^2+y +yz^2$\\
+        3 & $x(1+\exp(-3(x^2+y^2+z^2)))^{-1}$\\
+        4 & $\log(1+\max(x,y,z)+x^2+yz)$ \\
+        5 &  $\exp\left(-x-\sqrt{y}-z^3\right)$
+    \end{tabular}
+    \caption{List of non-symmetric smooth functions in simulation.}
+    \label{tb:md2}
+\end{table}
+
+
+We fix the tensor dimension ${30\times40\times 50}$ and assume that the noise tensors are from Gaussian distribution. Similar to other simulations, we evaluate the accuracy of the estimation by MSE and report the summary statistics across $n_{\text{sim}} = 20$ replicates. The hyperparameters are chosen via cross-validation that give the best accuracy for each method. Table~\ref{tb:hyper} summarizes the choice of hyperparameters.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c}
+        Method &  Model 1 & Model 2 & Model 3& Model 4 & Model 5  \\\hline
+        Borda count &   (2,1,2)&(1,2,2)& (1,3,3) &(2,1,2)&(1,4,4)\\
+        LSE &(6,2,3)&(8,5,8)&(6,9,6)&(9,5,6)&(7,9,3)\\
+        Spectral & (1,24)&(3,48)&(1,48)&(1,28)&(1,22)
+    \end{tabular}
+    \caption{Hyperparameters for the methods under Models 1-5 in Table~\ref{tb:md2}. For {\bf \small Borda count} and {\bf \small LSE} methods, the values in the table indicate the number of blocks. For {\bf \small Spectral} method, the first value indicates the tensor unfolding mode, while the second one represents the singular value threshold.}
+    \label{tb:hyper}
+\end{table}
+
+\subsection{Extra results on Chicago crime data analysis}\label{subsec:chicago}
+We investigate the ten groups of crime types clustered by our method. Table~\ref{tb:crimetb} shows that the clustering captures the similar type of crimes. For example, group 2 consists of misdemeanors such as public indecency, non-criminal, and concealed carry license violation, while group 6 represents sex-related offenses such as prostitution, sex offense, and crime sexual assault.
+
+\begin{table}[ht!]
+    \centering
+    \includegraphics[width = \textwidth]{figure/crimetable.pdf}
+    \caption{Groups of crime types learned based on the Borda count estimation.}
+    \label{tb:crimetb}
+\end{table}
+
+
+
 \section{Technical lemmas}\label{sec:tech}
+
+
+
+\begin{proof}[Proof of Lemma~\ref{lem:permutation}]
+We provide the proof for $m=3$ only. The extension to higher orders $(m\geq 4)$ uses exactly the same techniques and thus is omitted. 
+Let us pick $\omega_1,\ldots,\omega_{k/3}\in\{0,1\}^{k^2/9}$ such that $\rho_H(\omega_p,\omega_q)\geq k^2/36$ for all $p\neq q\in [k/3]$. This selection is possible by lemma~\ref{lem:covering}.
+Fixing such $\omega_1,\ldots,\omega_{k/3}$, we define a symmetric core tensor $\tS\in\bbR^{k\times k\times k}$ for $p<q<r$,
+\begin{align}
+    \tS(p,q,r) = \begin{cases}s_{p,q,r} &\text{if }p\in\{1,\ldots,k/3\},q\in\{k/3+1,\ldots,2k/3\}, r\in\{2k/3+1,\ldots,k\},\\0 &\text{Otherwise,}
+    \end{cases}
+\end{align}
+where $\left\{s_{p,q,r}\colon p\in\{1,\ldots,k/3\},q\in\{k/3+1,\ldots,2k/3\}, r\in\{2k/3+1,\ldots,k \}\right\}$ satisfies
+\begin{align}
+\label{eq:structure}
+    \ms(r)&:= \text{vec}\left(\tS\left(1:\frac{k}{3},\ \frac{k}{3}+1:\frac{2k}{3},\ r\right)\right)\\
+    &= \sqrt{c\sigma^2\log k\over d^{2}}\omega_{r-2k/3} \quad \text{ for any } r\in\{2k/3+1,\ldots,k\}.
+\end{align}
+The choice of constant $c>0$ is deferred to a later part of the proof.
+Notice that for any $r_1,r_2\in\{2k/3+1,\ldots,k\}$, we have
+\begin{align}\label{eq:sr}
+    \FnormSize{}{\ms(r_1)-\ms(r_2)}^2\geq \frac{c\sigma^2k^2\log k}{36d^2}.
+\end{align}
+
+Define a subset of permutation set $\Pi(d,k)$ by
+\begin{align}
+    \tZ = \left\{z\in \Pi(d,k)\colon |z^{-1}(p)| = \frac{d}{k} \text{ for } a\in[k], z^{-1}(a) = \left\{\frac{(p-1)d}{k}+1,\ldots,\frac{pd}{k} \text{ for } p\in[2k/3]\right\}\right\}.
+\end{align}
+Each $z\in\tZ$ induces a block tensor in $\tB(k,0)$. We consider the collection of block tensors induced by $\tZ$; i.e.,
+\begin{align}
+    \tB(\tZ) = \{\Theta^z\in\bbR^{d\times d\times d}\colon \Theta^z(i,j,k) = \tS(z(i),z(j),z(k)) \text{ for } z\in\tZ\}.
+\end{align}
+To apply Proposition~\ref{prop:minmax}, we find upper bound $\sup_{\Theta,\Theta'\in\tB(\tZ)}D(\mathbb{P}_\Theta|\mathbb{P}_{\Theta'})$ and lower bound $\log \tM(\epsilon,\tB(\tZ),\rho)$, where $\rho$ is defined by 
+$\rho(\Theta,\Theta') = \frac{1}{n^3}\FnormSize{}{\Theta-\Theta'}^2.$
+For sub-Gaussian signal plus noise model, we have
+\begin{align}\label{eq:kldistance}
+    D(\mathbb{P}_\Theta|\mathbb{P}_{\Theta'})\leq \frac{1}{2\sigma^2}\FnormSize{}{\Theta-\Theta'}\leq \frac{1}{2\sigma^2}d^3 \frac{c\sigma^2\log k}{d^2}=\frac{cd\log k}{2},
+\end{align}where the first inequality holds for any $\Theta,\Theta'\in\tB(\tZ)$ by \citet[Proposition 4.2]{gao2015rate}. Now we provide a lower bound of the packing number $\log \tM(\epsilon,\tB(\tZ),\epsilon)$ with $\epsilon^2 \asymp {\sigma^2\log k \over d^2}$. From the construction of $\tS$ in \eqref{eq:structure}, we have one to one correspondence between $\tZ$ and $\tB(\tZ)$. Thus $\tM(\epsilon,\tB(\tZ),\rho) = \tM(\epsilon,\tZ,\rho')$ for some metric $\rho'$ on $\tZ$ defined by $\rho'(z_1,z_2) = \rho(\Theta^{z_1},\Theta^{z_2})$. Let $P$ be the packing set in $\tZ$ with the same cardinality of $\tM(\epsilon,\tZ,\rho').$ Given any $z\in\tZ$, define its $\epsilon$-neighbor by $\tN(z,\epsilon) = \{z'\in\tZ\colon \rho'(z,z')\leq \epsilon\}.$ Then, we have $\cup_{z\in P} \tN(z,\epsilon) = \tZ$, because the cardinality of $P$ is same as packing number $\tM(\epsilon,\tZ,\rho')$. Therefore, we have
+\begin{align}\label{eq:packing}
+    |\tZ|\leq\sum_{z\in P}|\tN(z,\epsilon)|\leq |P|\max_{z\in P}|\tN(z,\epsilon)|.
+\end{align}
+It remains to find the upper bound of $\max_{z\in P}|\tN(z,\epsilon)|.$ For any $z_1,z_2\in\tZ$, $z_1(i) = z_2(i)$ for $i\in[2d/3]$ and $|z_1^{-1}(p)| = d/k$ for all $p\in[k].$ Therefore,
+\begin{align}
+    \rho'^2(z_1,z_2) &\geq \frac{1}{d^3}\sum_{1\leq i_1\leq d/3<i_2\leq 2d/3\leq i_3\leq d}\left( \tS\left(z_1(i_1),z_1(i_2),z_1(i_3)\right)-\tS\left(z_2(i_1),z_2(i_2),z_2(i_3)\right)\right)^2\\
+    &= \frac{1}{d^3}\sum_{2n/3<i_3\leq n}\sum_{1\leq p \leq k/3< q\leq 2k/3}\sum_{i_1\in z_1^{-1}(p),i_2\in z_1^{-1}(q)}\left( \tS\left(p,q,z_1(i_3)\right)-\tS\left(p,q,z_2(i_3)\right)\right)^2\\&=
+    \frac{1}{d^3}\sum_{2n/3<i_3\leq n}\sum_{1\leq p \leq k/3< q\leq 2k/3}\left(d\over k\right)^2\left( \tS\left(p,q,z_1(i_3)\right)-\tS\left(p,q,z_2(i_3)\right)\right)^2\\&=
+    \frac{1}{d^3}\sum_{2n/3<i_3\leq n}\left(d\over k\right)^2\FnormSize{}{\ms(z_1(i_3)-\ms(z_2(i_3))}^2
+    \\&\geq  \frac{c\sigma^2\log k}{36d^3}|\{j\colon z_1(j)\neq z_2(j)\}|,
+\end{align}where the last inequality is from \eqref{eq:sr}. Hence with the choice of $\epsilon^2 = \frac{c\sigma^2\log k}{288d^2}$, we have $|\{j\colon z(j)\neq z'(j)\}|\leq d/8$ for any $z'\in\tN(z,\epsilon)$.
+This implies
+\begin{align}\label{eq:n}
+    |\tN(z,\epsilon)|\leq {d\choose d/8}k^{d/8}\leq (8e)^{d/8}k^{d/8}\leq \exp\left(\frac{1}{5}d\log k\right),
+\end{align}
+for sufficiently large $k$.
+Now we find the lower bound of $|\tZ|$ based on Stirling's formula,
+\begin{align}\label{eq:z}
+    |\tZ| = \frac{(d/3)!}{[(d/k)!]^{k/3}} = \exp\left(\frac{1}{3}d\log k + o(d\log k)\right)\geq\exp\left(\frac{1}{4}d\log k\right).
+\end{align}
+Plugging \eqref{eq:n} and \eqref{eq:z} into \eqref{eq:packing} yields
+\begin{align}\label{eq:fpacking}
+    \tM(\epsilon,\tB(\tZ),\rho) = |P| \geq\frac{\max_{z\in P}\tN(z,\epsilon)}{|\tZ|}\geq\exp\left(\frac{1}{20}d\log k\right).
+\end{align}
+Finally, applying Proposition~\ref{prop:minmax} based on  \eqref{eq:kldistance} and \eqref{eq:fpacking} gives
+\begin{align}
+    \inf_{\hat\Theta}\sup_{\Theta\in\tB(\tZ)}\mathbb{P}\left(\frac{1}{d^3}\FnormSize{}{\hat\Theta-\Theta}^2\geq \frac{C\sigma^2\log k}{d^2}\right)=\inf_{\hat\Theta}\sup_{z\in\tZ}\mathbb{P}\left(\frac{1}{d^3}\FnormSize{}{\hat\Theta-\Theta}^2\geq \frac{C\sigma^2\log k}{d^2}\right)\geq 0.9,
+\end{align}
+with some constant $C>0$ for sufficiently small $c>0$ in \eqref{eq:structure}.
+\end{proof}
+
 
 \begin{lem}[Sub-Gaussian maxima under full embedding]\label{lem:embedding}
 Let $\mA\in\bbR^{d_1\times d_2}$ be a deterministic matrix with rank $r\leq\min(d_1,d_2)$. Let $\my\in\bbR^{d_1}$ be a sub-Gaussian random vector with variance proxy $\sigma^2$. Then, there exists a sub-Gaussian random vector $\mx\in\bbR^r$  with variance prosy $\sigma^2$ such that  

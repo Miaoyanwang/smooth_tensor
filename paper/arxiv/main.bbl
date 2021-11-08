@@ -1,0 +1,232 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Balasubramanian}{Balasubramanian}{2021}]{balasubramanian2021nonparametric}
+Balasubramanian, K. (2021).
+\newblock Nonparametric modeling of higher-order interactions via
+  hypergraphons.
+\newblock {\em Journal of Machine Learning Research\/}~{\em 22}, 1--25.
+
+\bibitem[\protect\citeauthoryear{Baltrunas, Kaminskas, Ludwig, Moling, Ricci,
+  Aydin, L{\"u}ke, and Schwaiger}{Baltrunas
+  et~al.}{2011}]{baltrunas2011incarmusic}
+Baltrunas, L., M.~Kaminskas, B.~Ludwig, O.~Moling, F.~Ricci, A.~Aydin, K.-H.
+  L{\"u}ke, and R.~Schwaiger (2011).
+\newblock {I}n{C}ar{M}usic: Context-aware music recommendations in a car.
+\newblock In {\em International Conference on Electronic Commerce and Web
+  Technologies}, pp.\  89--100. Springer.
+
+\bibitem[\protect\citeauthoryear{Bi, Qu, and Shen}{Bi
+  et~al.}{2018}]{bi2018multilayer}
+Bi, X., A.~Qu, and X.~Shen (2018).
+\newblock Multilayer tensor factorization with applications to recommender
+  systems.
+\newblock {\em The Annals of Statistics\/}~{\em 46\/}(6B), 3308--3333.
+
+\bibitem[\protect\citeauthoryear{Bickel and Chen}{Bickel and
+  Chen}{2009}]{bickel2009nonparametric}
+Bickel, P.~J. and A.~Chen (2009).
+\newblock A nonparametric view of network models and newman--girvan and other
+  modularities.
+\newblock {\em Proceedings of the National Academy of Sciences\/}~{\em
+  106\/}(50), 21068--21073.
+
+\bibitem[\protect\citeauthoryear{Chan and Airoldi}{Chan and
+  Airoldi}{2014}]{chan2014consistent}
+Chan, S. and E.~Airoldi (2014).
+\newblock A consistent histogram estimator for exchangeable graph models.
+\newblock In {\em International Conference on Machine Learning}, pp.\
+  208--216.
+
+\bibitem[\protect\citeauthoryear{Chatterjee}{Chatterjee}{2015}]{chatterjee2015matrix}
+Chatterjee, S. (2015).
+\newblock Matrix estimation by universal singular value thresholding.
+\newblock {\em The Annals of Statistics\/}~{\em 43\/}(1), 177--214.
+
+\bibitem[\protect\citeauthoryear{Chen, Gao, and Zhang}{Chen
+  et~al.}{2021}]{chen2021optimal}
+Chen, P., C.~Gao, and A.~Y. Zhang (2021).
+\newblock Optimal full ranking from pairwise comparisons.
+\newblock {\em arXiv preprint arXiv:2101.08421\/}.
+
+\bibitem[\protect\citeauthoryear{Ding, Ma, Wu, and Xu}{Ding
+  et~al.}{2021}]{ding2021efficient}
+Ding, J., Z.~Ma, Y.~Wu, and J.~Xu (2021).
+\newblock Efficient random graph matching via degree profiles.
+\newblock {\em Probability Theory and Related Fields\/}~{\em 179\/}(1),
+  29--115.
+
+\bibitem[\protect\citeauthoryear{Flammarion, Mao, and Rigollet}{Flammarion
+  et~al.}{2019}]{flammarion2019optimal}
+Flammarion, N., C.~Mao, and P.~Rigollet (2019).
+\newblock Optimal rates of statistical seriation.
+\newblock {\em Bernoulli\/}~{\em 25\/}(1), 623--653.
+
+\bibitem[\protect\citeauthoryear{Gao, Lu, and Zhou}{Gao
+  et~al.}{2015}]{gao2015rate}
+Gao, C., Y.~Lu, and H.~H. Zhou (2015).
+\newblock Rate-optimal graphon estimation.
+\newblock {\em The Annals of Statistics\/}~{\em 43\/}(6), 2624--2652.
+
+\bibitem[\protect\citeauthoryear{Gy{\"o}rfi, Kohler, Krzy{\.z}ak, and
+  Walk}{Gy{\"o}rfi et~al.}{2002}]{gyorfi2002distribution}
+Gy{\"o}rfi, L., M.~Kohler, A.~Krzy{\.z}ak, and H.~Walk (2002).
+\newblock {\em A distribution-free theory of nonparametric regression},
+  Volume~1.
+\newblock Springer.
+
+\bibitem[\protect\citeauthoryear{Han, Luo, Wang, and Zhang}{Han
+  et~al.}{2020}]{han2020exact}
+Han, R., Y.~Luo, M.~Wang, and A.~R. Zhang (2020).
+\newblock Exact clustering in tensor block model: Statistical optimality and
+  computational limit.
+\newblock {\em arXiv preprint arXiv:2012.09996\/}.
+
+\bibitem[\protect\citeauthoryear{Hore, Vi{\~n}uela, Buil, Knight, McCarthy,
+  Small, and Marchini}{Hore et~al.}{2016}]{hore2016tensor}
+Hore, V., A.~Vi{\~n}uela, A.~Buil, J.~Knight, M.~I. McCarthy, K.~Small, and
+  J.~Marchini (2016).
+\newblock Tensor decomposition for multiple-tissue gene expression experiments.
+\newblock {\em Nature genetics\/}~{\em 48\/}(9), 1094.
+
+\bibitem[\protect\citeauthoryear{H{\"u}tter, Mao, Rigollet, and
+  Robeva}{H{\"u}tter et~al.}{2020}]{hutter2020estimation}
+H{\"u}tter, J.-C., C.~Mao, P.~Rigollet, and E.~Robeva (2020).
+\newblock Estimation of monge matrices.
+\newblock {\em Bernoulli\/}~{\em 26\/}(4), 3051--3080.
+
+\bibitem[\protect\citeauthoryear{Jeremy}{Jeremy}{}]{Jeremy.2020}
+Jeremy, G.
+\newblock A trying first half of 2020 included spike in shootings and homicides
+  in chicago.
+\newblock {\em Chicago Tribune\/}.
+
+\bibitem[\protect\citeauthoryear{Klopp, Tsybakov, and Verzelen}{Klopp
+  et~al.}{2017}]{klopp2017oracle}
+Klopp, O., A.~B. Tsybakov, and N.~Verzelen (2017).
+\newblock Oracle inequalities for network models and sparse graphon estimation.
+\newblock {\em The Annals of Statistics\/}~{\em 45\/}(1), 316--354.
+
+\bibitem[\protect\citeauthoryear{Kolda and Bader}{Kolda and
+  Bader}{2009}]{kolda2009tensor}
+Kolda, T.~G. and B.~W. Bader (2009).
+\newblock Tensor decompositions and applications.
+\newblock {\em SIAM Review\/}~{\em 51\/}(3), 455--500.
+
+\bibitem[\protect\citeauthoryear{Li, Shah, Song, and Yu}{Li
+  et~al.}{2019}]{li2019nearest}
+Li, Y., D.~Shah, D.~Song, and C.~L. Yu (2019).
+\newblock Nearest neighbors for matrix estimation interpreted as blind
+  regression for latent variable model.
+\newblock {\em IEEE Transactions on Information Theory\/}~{\em 66\/}(3),
+  1760--1784.
+
+\bibitem[\protect\citeauthoryear{Livi and Rizzi}{Livi and
+  Rizzi}{2013}]{livi2013graph}
+Livi, L. and A.~Rizzi (2013).
+\newblock The graph matching problem.
+\newblock {\em Pattern Analysis and Applications\/}~{\em 16\/}(3), 253--283.
+
+\bibitem[\protect\citeauthoryear{Lov{\'a}sz}{Lov{\'a}sz}{2012}]{lovasz2012large}
+Lov{\'a}sz, L. (2012).
+\newblock {\em Large networks and graph limits}, Volume~60.
+\newblock American Mathematical Soc.
+
+\bibitem[\protect\citeauthoryear{Ortelli and van~de Geer}{Ortelli and van~de
+  Geer}{2021}]{ortelli2019prediction}
+Ortelli, F. and S.~van~de Geer (2021).
+\newblock Prediction bounds for higher order total variation regularized least
+  squares.
+\newblock {\em Annals of Statistics, in press\/}.
+
+\bibitem[\protect\citeauthoryear{Pananjady and Samworth}{Pananjady and
+  Samworth}{2021}]{pananjady2020isotonic}
+Pananjady, A. and R.~J. Samworth (2021).
+\newblock Isotonic regression with unknown permutations: Statistics,
+  computation, and adaptation.
+\newblock {\em The Annals of Statistics, in press\/}.
+
+\bibitem[\protect\citeauthoryear{Phillippe~Rigollet}{Phillippe~Rigollet}{2015}]{phillippek2016}
+Phillippe~Rigollet, J.-C.~H. (2015).
+\newblock High dimensional statistics.
+\newblock {\em Lecture notes for course 18S997\/}.
+
+\bibitem[\protect\citeauthoryear{Shah, Balakrishnan, and Wainwright}{Shah
+  et~al.}{2019}]{shah2019low}
+Shah, N., S.~Balakrishnan, and M.~Wainwright (2019).
+\newblock Low permutation-rank matrices: Structural properties and noisy
+  completion.
+\newblock {\em Journal of Machine Learning Research\/}~{\em 20}, 1--43.
+
+\bibitem[\protect\citeauthoryear{Stone}{Stone}{1982}]{stone1982optimal}
+Stone, C.~J. (1982).
+\newblock Optimal global rates of convergence for nonparametric regression.
+\newblock {\em The Annals of Statistics\/}~{\em 10\/}(4), 1040--1053.
+
+\bibitem[\protect\citeauthoryear{Sun, Lu, Liu, and Cheng}{Sun
+  et~al.}{2017}]{sun2017provable}
+Sun, W.~W., J.~Lu, H.~Liu, and G.~Cheng (2017).
+\newblock Provable sparse tensor decomposition.
+\newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
+  Methodology)\/}~{\em 79\/}(3), 899--916.
+
+\bibitem[\protect\citeauthoryear{Tibshirani}{Tibshirani}{2014}]{tibshirani2014adaptive}
+Tibshirani, R.~J. (2014).
+\newblock Adaptive piecewise polynomial estimation via trend filtering.
+\newblock {\em The Annals of Statistics\/}~{\em 42\/}(1), 285--323.
+
+\bibitem[\protect\citeauthoryear{Tsybakov}{Tsybakov}{2009}]{tsybakov2009introduction}
+Tsybakov, A.~B. (2009).
+\newblock {\em Introduction to nonparametric estimation}.
+\newblock Springer Science \& Business Media.
+
+\bibitem[\protect\citeauthoryear{Wang and Li}{Wang and
+  Li}{2020}]{wang2018learning}
+Wang, M. and L.~Li (2020).
+\newblock Learning from binary multiway data: Probabilistic tensor
+  decomposition and its statistical optimality.
+\newblock {\em Journal of Machine Learning Research\/}~{\em 21\/}(154), 1--38.
+
+\bibitem[\protect\citeauthoryear{Wang and Zeng}{Wang and
+  Zeng}{2019}]{wang2019multiway}
+Wang, M. and Y.~Zeng (2019).
+\newblock Multiway clustering via tensor block models.
+\newblock In {\em Advances in Neural Information Processing Systems}, pp.\
+  713--723.
+
+\bibitem[\protect\citeauthoryear{Wasserman}{Wasserman}{2006}]{wasserman2006all}
+Wasserman, L. (2006).
+\newblock {\em All of nonparametric statistics}.
+\newblock Springer Science \& Business Media.
+
+\bibitem[\protect\citeauthoryear{Xu}{Xu}{2018}]{xu2018rates}
+Xu, J. (2018).
+\newblock Rates of convergence of spectral methods for graphon estimation.
+\newblock In {\em International Conference on Machine Learning}, pp.\
+  5433--5442.
+
+\bibitem[\protect\citeauthoryear{Young, St-Onge, Desrosiers, and
+  Dub{\'e}}{Young et~al.}{2018}]{young2018universality}
+Young, J.-G., G.~St-Onge, P.~Desrosiers, and L.~J. Dub{\'e} (2018).
+\newblock Universality of the stochastic block model.
+\newblock {\em Physical Review E\/}~{\em 98\/}(3), 032309.
+
+\bibitem[\protect\citeauthoryear{Zhang and Xia}{Zhang and
+  Xia}{2018}]{zhang2018tensor}
+Zhang, A. and D.~Xia (2018).
+\newblock Tensor {SVD}: Statistical and computational limits.
+\newblock {\em IEEE Transactions on Information Theory\/}~{\em 64\/}(11), 7311
+  -- 7338.
+
+\bibitem[\protect\citeauthoryear{Zhao}{Zhao}{2015}]{zhao2015hypergraph}
+Zhao, Y. (2015).
+\newblock Hypergraph limits: a regularity approach.
+\newblock {\em Random Structures \& Algorithms\/}~{\em 47\/}(2), 205--226.
+
+\bibitem[\protect\citeauthoryear{Zhou, Li, and Zhu}{Zhou
+  et~al.}{2013}]{zhou2013tensor}
+Zhou, H., L.~Li, and H.~Zhu (2013).
+\newblock Tensor regression with applications in neuroimaging data analysis.
+\newblock {\em Journal of the American Statistical Association\/}~{\em
+  108\/}(502), 540--552.
+
+\end{thebibliography}

@@ -1,0 +1,107 @@
+\begin{thebibliography}{10}
+
+\bibitem{Agarwal2006HigherOL}
+Sameer Agarwal, Kristin Branson, and Serge~J. Belongie.
+\newblock Higher order learning with graphs.
+\newblock {\em Proceedings of the 23rd international conference on Machine
+  learning}, 2006.
+
+\bibitem{balasubramanian2021nonparametric}
+Krishnakumar Balasubramanian.
+\newblock Nonparametric modeling of higher-order interactions via
+  hypergraphons.
+\newblock {\em arXiv preprint arXiv:2105.08678}, 2021.
+
+\bibitem{baltrunas2011incarmusic}
+Linas Baltrunas, Marius Kaminskas, Bernd Ludwig, Omar Moling, Francesco Ricci,
+  Aykan Aydin, Karl-Heinz L{\"u}ke, and Roland Schwaiger.
+\newblock Incarmusic: Context-aware music recommendations in a car.
+\newblock In {\em International Conference on Electronic Commerce and Web
+  Technologies}. Springer, 2011.
+
+\bibitem{chan2014consistent}
+Stanley Chan and Edoardo Airoldi.
+\newblock A consistent histogram estimator for exchangeable graph models.
+\newblock In {\em International Conference on Machine Learning}, pages
+  208--216, 2014.
+
+\bibitem{gao2016optimal}
+Chao Gao, Yu~Lu, Zongming Ma, and Harrison~H Zhou.
+\newblock Optimal estimation and completion of matrices with biclustering
+  structures.
+\newblock {\em Journal of Machine Learning Research}, 17(1):5602--5630, 2016.
+
+\bibitem{gao2018minimax}
+Chao Gao and Zongming Ma.
+\newblock Minimax rates in network analysis: Graphon estimation, community
+  detection and hypothesis testing.
+\newblock {\em arXiv preprint arXiv:1811.06055}, 2018.
+
+\bibitem{han2019isotonic}
+Qiyang Han, Tengyao Wang, Sabyasachi Chatterjee, and Richard~J Samworth.
+\newblock Isotonic regression in general dimensions.
+\newblock {\em The Annals of Statistics}, 47(5):2440--2471, 2019.
+
+\bibitem{han2020exact}
+Rungang Han, Yuetian Luo, Miaoyan Wang, and Anru~R Zhang.
+\newblock Exact clustering in tensor block model: Statistical optimality and
+  computational limit.
+\newblock {\em arXiv preprint arXiv:2012.09996}, 2020.
+
+\bibitem{Jeremy.2020}
+Gorner Jeremy.
+\newblock A trying first half of 2020 included spike in shootings and homicides
+  in chicago.
+\newblock {\em Chicago Tribune}.
+
+\bibitem{klopp2017oracle}
+Olga Klopp, Alexandre~B Tsybakov, and Nicolas Verzelen.
+\newblock Oracle inequalities for network models and sparse graphon estimation.
+\newblock {\em The Annals of Statistics}, 45(1):316--354, 2017.
+
+\bibitem{li2019nearest}
+Yihua Li, Devavrat Shah, Dogyoon Song, and Christina~Lee Yu.
+\newblock Nearest neighbors for matrix estimation interpreted as blind
+  regression for latent variable model.
+\newblock {\em IEEE Transactions on Information Theory}, 66(3):1760--1784,
+  2019.
+
+\bibitem{Michoel2012AlignmentAI}
+Tom Michoel and Bruno Nachtergaele.
+\newblock Alignment and integration of complex networks by hypergraph-based
+  spectral clustering.
+\newblock {\em Physical review. E, Statistical, nonlinear, and soft matter
+  physics}, 86 5 Pt 2:056111, 2012.
+
+\bibitem{pananjady2020isotonic}
+Ashwin Pananjady and Richard~J Samworth.
+\newblock Isotonic regression with unknown permutations: Statistics,
+  computation, and adaptation.
+\newblock {\em arXiv preprint arXiv:2009.02609}, 2020.
+
+\bibitem{shah2019low}
+N~Shah, Sivaraman Balakrishnan, and M~Wainwright.
+\newblock Low permutation-rank matrices: Structural properties and noisy
+  completion.
+\newblock {\em Journal of machine learning research}, 2019.
+
+\bibitem{shah2020permutation}
+Nihar~B Shah, Sivaraman Balakrishnan, and Martin~J Wainwright.
+\newblock A permutation-based model for crowd labeling: Optimal estimation and
+  robustness.
+\newblock {\em IEEE Transactions on Information Theory}, 67(6):4162--4184,
+  2020.
+
+\bibitem{wang2019multiway}
+Miaoyan Wang and Yuchen Zeng.
+\newblock Multiway clustering via tensor block models.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  713--723, 2019.
+
+\bibitem{xu2018rates}
+Jiaming Xu.
+\newblock Rates of convergence of spectral methods for graphon estimation.
+\newblock In {\em International Conference on Machine Learning}, pages
+  5433--5442, 2018.
+
+\end{thebibliography}

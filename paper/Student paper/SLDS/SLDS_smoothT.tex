@@ -48,7 +48,8 @@
     {\underbrace{\scriptscriptstyle#1}}%
   }\limits
 }
-
+\usepackage{microtype}
+\usepackage{wrapfig}
 
 \allowdisplaybreaks
 \usepackage[colorlinks,citecolor=blue]{hyperref}
@@ -65,7 +66,7 @@
 \begin{document}
 
 \if1\blind
-{ \title{Smooth tensor estimation with  unknown permutations}
+{ \title{Smooth Tensor Estimation with Unknown Permutations}
  \date{}
 \author{%
 Chanwoo Lee \\
@@ -83,11 +84,12 @@ University of Wisconsin -- Madison\\
 \if0\blind
 {
  \date{}
-  \title{Smooth tensor estimation with  unknown permutations}
+  \title{Smooth Tensor Estimation with Unknown Permutations}
 \author{}
 \maketitle
 } \fi
 
+\vspace{-2cm}
 \begin{abstract}%  
  We consider the problem of structured tensor denoising in the presence of unknown permutations. Such data problems arise commonly in recommendation system, neuroimaging, community detection, and multiway comparison applications. Here, we develop a general family of smooth tensor models up to arbitrary index permutations; the model incorporates the popular tensor block models and Lipschitz hypergraphon models as special cases. We show that a constrained least-squares estimator in the block-wise polynomial family achieves the minimax error bound. A phase transition phenomenon is revealed with respect to the smoothness threshold needed for optimal recovery. In particular, we find that a polynomial of degree up to {\footnotesize $(m-2)(m+1)/2$} is sufficient for accurate recovery of order-$m$ tensors, whereas higher degree exhibits no further benefits. This phenomenon reveals the intrinsic distinction for smooth tensor estimation problems with and without unknown permutations. Furthermore, we provide an efficient polynomial-time Borda count algorithm that provably achieves optimal rate under monotonicity assumptions. The efficacy of our procedure is demonstrated through both simulations and Chicago crime data analysis. 
   \end{abstract}
@@ -97,14 +99,14 @@ University of Wisconsin -- Madison\\
 {\it Keywords:} Tensor estimation, latent permutation, diverging dimensionality, phase transition, statistical-computational efficiency. 
 
 
-
+\clearpage
 \section{Introduction}
 \label{sec:intro}
-Higher-order tensor datasets are rising ubiquitously in modern data science applications, for instance, recommendation systems \citep{baltrunas2011incarmusic,bi2018multilayer}, social networks \citep{bickel2009nonparametric},
+Higher-order tensor datasets arise ubiquitously in modern data science applications, for instance, recommendation systems \citep{baltrunas2011incarmusic,bi2018multilayer}, social networks \citep{bickel2009nonparametric},
 genomics \citep{hore2016tensor}, and neuroimaging \citep{zhou2013tensor}.
 Tensor provides effective representation of data structure that classical vector- and matrix-based methods fail to capture. 
 One example is music recommendation system~\citep{baltrunas2011incarmusic} that records ratings of songs from users on various contexts. This three-way tensor of user $\times$ song $\times$ context allows us to investigate interactions of users and songs in a context-specific manner.
-Another example is network dataset that records the connections among a set of nodes. Pairwise interactions are often insufficient to capture the complex relationships, whereas multi-way interactions improve the understanding of networks in molecular system~\citep{young2018universality} and social networks~\citep{han2020exact}. In both examples, higher-order tensors represent multi-way interactions in an efficient way.
+Another example is network dataset that records the connections among a set of nodes. Pairwise interactions are often insufficient to capture the complex relationships, whereas multi-way interactions improve the understanding of networks in molecular system~\citep{young2018universality} and social sciences~\citep{wang2019multiway,han2020exact}. In both examples, higher-order tensors represent multi-way interactions in an efficient way.
 
 
 Tensor estimation problem cannot be solved without imposing structures. An appropriate reordering of tensor entries often provides effective representation of the hidden salient structure. In the music recommendation example, suppose that we have certain criteria available (such as, similarities of music genres, ages of users, and importance of contexts) to reorder the songs, users, and contexts. Then, the sorted tensor will exhibit smooth structure, because entries from similar groups tend to have similar values. Similar observation applies to network examples. An $m$-uniform hypergraph network can be represented by an order-$m$ adjacency tensor, with entries indicating the presence and absence of $m$-way interactions among a set of nodes. Suppose the characteristics of individual nodes are available so that one can rearrange nodes based on their similarities. Then, the sorted adjacency tensor will exhibit smooth structure by the same reason.
@@ -125,7 +127,7 @@ where $\pi\colon[d]\rightarrow[d]$ is an \emph{unknown} latent permutation, $\Th
 
 
 \subsection{Our contributions}
-We develops a suite of statistical theory, efficient algorithms, and related applications for permuted smooth tensor models~\eqref{eq:gmd}.  
+We develop a suite of statistical theory, efficient algorithms, and related applications for permuted smooth tensor models~\eqref{eq:gmd}.  
 Our contributions are summarized below. 
 
 First, we develop a general permuted $\alpha$-smooth tensor model of arbitrary smoothness level $\alpha\geq 0$. We establish the statistically optimal error rate and its dependence on model complexity, including tensor order, tensor dimension, smoothness level, signal-to-noise ratio, and unknown permutations. Table~\ref{tab:comp} summarizes the comparison of our work with previous results.  Our framework substantially generalizes earlier works which focus on only matrices with $m=2$~\citep{gao2015rate,klopp2017oracle} or Lipschitz function with $\alpha=1$~\citep{balasubramanian2021nonparametric,li2019nearest}. The generalization enables us to obtain results previously impossible: i) As tensor order $m$ increases, we demonstrate the failure of pervious clustering-based algorithms~\citep{balasubramanian2021nonparametric,gao2015rate}, and we develop a new block-wise polynomial algorithm for tensors of order $m\geq 3$; ii) As smoothness $\alpha$ increases, we demonstrate that the error rate converges to a fast rate $\tO(d^{-(m-1)})$, thereby disproving the conjectured lower bound $\tO(d^{-2m/(m+2)})$ posed by earlier work~\citep{balasubramanian2021nonparametric}. The results showcase the accuracy gain of our new approach, as well as the intrinsic distinction between matrices and higher-order tensors. 
@@ -389,14 +391,21 @@ Now we introduce the \emph{Borda count} estimation that consists of two stages. 
     \label{fig:borda}
 \end{figure}
 
- \item {\bf  Block-wise polynomial approximation stage:} Given sorted observation $\tilde \tY $, we estimate the signal tensor by block-wise polynomial tensor based on the following optimization,
+ \item {\bf Block-wise polynomial approximation stage:} Given sorted observation $\tilde \tY $, we estimate the signal tensor by block-wise polynomial tensor based on the following optimization,
     \begin{align}\label{eq:bclse}
         \hat\Theta^{\text{BC}} = \argmin_{\Theta\in\caliB(k,\ell)}\FnormSize{}{\tilde\tY-\Theta},
     \end{align}
-    where $\tB(k,\ell)$ denotes the block-$k$ degree-$\ell$ tensor class  in~\eqref{eq:polynomial}. An example of this procedure is shown in Figure~\ref{fig:borda}(c). The estimator $\hat\Theta^{\text{BC}}$ depends on two tuning parameters: the number of blocks $k$ and polynomial degree $\ell$. The optimal choice of $(k^*,\ell^*)$ is provided in Theorem~\ref{thm:BC}.
-    Notice that the least-squares estimator in \eqref{eq:lseopt} requires a combinatoric search with exponential-time complexity for estimating the permutation. By contrast, the estimator~\eqref{eq:bclse} requires only the estimation of degree-$\ell$ polynomial within $k$ canonical blocks. Therefore, the Borda count estimator is polynomial-time efficient. Our algorithm implementation is available in CRAN.
+    where $\tB(k,\ell)$ denotes the block-$k$ degree-$\ell$ tensor class  in~\eqref{eq:polynomial}. An example of this procedure is shown in Figure~\ref{fig:borda}(c).    
     \end{enumerate}
+    
+The pseudo algorithm is summarized below.
+\begin{center}
+\includegraphics[width=1\textwidth]{figure/algorithm_template.pdf}
+\end{center}
 
+
+The estimator $\hat\Theta^{\text{BC}}$ depends on two tuning parameters: the number of blocks $k$ and polynomial degree $\ell$. The optimal choice of $(k^*,\ell^*)$ is provided in Theorem~\ref{thm:BC}.
+ Notice that the least-squares estimator in \eqref{eq:lseopt} requires a combinatoric search with exponential-time complexity for estimating the permutation. By contrast, the estimator~\eqref{eq:bclse} requires only the estimation of degree-$\ell$ polynomial within $k$ canonical blocks. Therefore, the Borda count estimator is polynomial-time efficient. Our algorithm implementation is available in CRAN. 
 
 
 
@@ -449,7 +458,7 @@ Based on our theorems, a polynomial of degree $\ell^*=(m-2)(m+1)/2$ is sufficien
 \section{Numerical analysis}\label{sec:sim}
 
 \subsection{Synthetic data}
-We simulate order-3 $d$-dimensional tensors based on the permuted smooth tensor model~\eqref{eq:rep}. Both symmetric and non-symmetric tensors are investigated. The symmetric tensors are generated based on functions $f$ in Table~\ref{tb:md}, and the non-symmetric set-up is described in Appendix~\ref{subsec:asym}.
+We simulate order-3 $d$-dimensional tensors based on the permuted smooth tensor model~\eqref{eq:rep}. Both symmetric and non-symmetric tensors are investigated. The symmetric tensors are generated based on functions $f$ in Table~\ref{tb:md}, and the non-symmetric results are discussed later.
 \begin{table}[htp]
     \centering
     \begin{tabular}{c|c|c|c}
@@ -526,8 +535,39 @@ Figure~\ref{fig:contim} displays true signal tensors of three models and corresp
 The outperformance of {\bf \small Borda count} demonstrates the efficacy of our method.
 
 
-\paragraph{Investigation of non-symmetric tensors.}
-Our models and techniques easily extend to non-symmetric tensors. We use non-symmetric functions to generate order-3 signal tensors; see detailed setup in Appendix~\ref{subsec:asym}. We choose hyperparameters that give the best accuracy for each method (see Table~\ref{tb:hyper}). Table~\ref{tb:asymresult} compares the MSEs from repeated simulations based on different methods under Models 1-5 (see Table~\ref{tb:md2}). We find that Borda count estimation outperforms all alternative methods for non-symmetric tensors. The results demonstrate the applicability of our method to general tensors. 
+\paragraph{Investigation of non-symmetric tensors.}\label{sec:asym}
+Our models and techniques easily extend to non-symmetric tensors. We simulate order-3 tensors based on the non-symmetric functions in Table~\ref{tb:md2}. 
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c|c}
+        Model ID  &  $f(x,y,z)$  \\\hline
+        1 &    $xy+z$ \\
+        2&  $x^2+y +yz^2$\\
+        3 & $x(1+\exp(-3(x^2+y^2+z^2)))^{-1}$\\
+        4 & $\log(1+\max(x,y,z)+x^2+yz)$ \\
+        5 &  $\exp\left(-x-\sqrt{y}-z^3\right)$
+    \end{tabular}
+    \caption{List of non-symmetric smooth functions in simulation.}
+    \label{tb:md2}
+\end{table}
+
+
+We fix the tensor dimension ${30\times40\times 50}$ and assume that the noise tensors are from Gaussian distribution. Similar to other simulations, the hyperparameters are chosen via cross-validation that give the best accuracy for each method. Table~\ref{tb:hyper} summarizes the choice of hyperparameters.  Table~\ref{tb:asymresult} compares the MSEs from repeated simulations based on different methods under Models 1-5 (see Table~\ref{tb:md2}). We find that Borda count estimation outperforms all alternative methods for non-symmetric tensors. The results demonstrate the applicability of our method to general tensors. 
+
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c}
+        Method &  Model 1 & Model 2 & Model 3& Model 4 & Model 5  \\\hline
+        Borda count &   (2,1,2)&(1,2,2)& (1,3,3) &(2,1,2)&(1,4,4)\\
+        LSE &(6,2,3)&(8,5,8)&(6,9,6)&(9,5,6)&(7,9,3)\\
+        Spectral & (1,24)&(3,48)&(1,48)&(1,28)&(1,22)
+    \end{tabular}
+    \caption{Hyperparameters for the methods under Models 1-5 in Table~\ref{tb:md2}. For {\bf \small Borda count} and {\bf \small LSE} methods, the values in the table indicate the number of blocks. For {\bf \small Spectral} method, the first value indicates the tensor unfolding mode, while the second one represents the singular value threshold.}
+    \label{tb:hyper}
+\end{table}
+
 
 \begin{table}[ht]
     \centering
@@ -624,7 +664,7 @@ The appendix includes extra simulation results, proof of main theormes, and tech
 
 \section{Extra numerical results}
 \subsection{Results for Models 2 and 4 in Table~\ref{tab:comp}}\label{sec:extra}
-We first present simulation results for Models 2 and 4 omitted in Section~\ref{sec:sim}. Figure~\ref{fig:extrav} compares the estimation performance among the {\bf \small Borda count, LSE}, and {\bf \small Spectral methods}. We find that our Borda count algorithm outperforms others in both models. The first two columns in Figure~\ref{fig:extrasim1} show the impact of the number of blocks $k$ and degree of polynomial $\ell$ for the approximation with fixed dimension $d = 100$. Similar to results for Models 1, 3 and 5 in the main paper, we find the optimal $k$ balances the trade-off between approximation error and signal tensor estimation error within each block. The last two columns compare our {\bf \small Borda count} with other alternative methods. We find that our method still outperforms {\bf \small LSE} and {\bf \small Spectral} in all scenarios under Models 2 and 4.
+We first present simulation results for Models 2 and 4 omitted in Section~\ref{sec:sim}. Figure~\ref{fig:extrav} compares the estimation performance among the {\bf \small Borda count, LSE}, and {\bf \small Spectral methods}. We find that our Borda count algorithm outperforms others in both models. The first two columns in Figure~\ref{fig:extrasim1} show the impact of the number of blocks $k$ and degree of polynomial $\ell$ for the approximation with fixed dimension $d = 100$. Similar to results for Models 1, 3 and 5 in the main paper, we find the optimal $k$ balances the trade-off between approximation error and signal tensor estimation error within each block. The last two columns compare our {\bf \small Borda count} with other alternative methods. We find that our method still outperforms {\bf \small LSE} and {\bf \small Spectral} in all scenarios under Models~2 and~4.
 
 \begin{figure}[h!]
     \centering
@@ -663,39 +703,6 @@ We first present simulation results for Models 2 and 4 omitted in Section~\ref{s
     \label{fig:extrasim1}
 \end{figure}
 
-
-
-\subsection{Investigation of non-symmetric tensors}\label{subsec:asym}
-Here we describe the simulation set-up for non-symmetric tensors. We simulate order-3 tensors based on the non-symmetric functions in Table~\ref{tb:md2}. 
-
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{c|c}
-        Model ID  &  $f(x,y,z)$  \\\hline
-        1 &    $xy+z$ \\
-        2&  $x^2+y +yz^2$\\
-        3 & $x(1+\exp(-3(x^2+y^2+z^2)))^{-1}$\\
-        4 & $\log(1+\max(x,y,z)+x^2+yz)$ \\
-        5 &  $\exp\left(-x-\sqrt{y}-z^3\right)$
-    \end{tabular}
-    \caption{List of non-symmetric smooth functions in simulation.}
-    \label{tb:md2}
-\end{table}
-
-
-We fix the tensor dimension ${30\times40\times 50}$ and assume that the noise tensors are from Gaussian distribution. Similar to other simulations, we evaluate the accuracy of the estimation by MSE and report the summary statistics across $n_{\text{sim}} = 20$ replicates. The hyperparameters are chosen via cross-validation that give the best accuracy for each method. Table~\ref{tb:hyper} summarizes the choice of hyperparameters.
-
-\begin{table}[ht]
-    \centering
-    \begin{tabular}{c|c|c|c|c|c}
-        Method &  Model 1 & Model 2 & Model 3& Model 4 & Model 5  \\\hline
-        Borda count &   (2,1,2)&(1,2,2)& (1,3,3) &(2,1,2)&(1,4,4)\\
-        LSE &(6,2,3)&(8,5,8)&(6,9,6)&(9,5,6)&(7,9,3)\\
-        Spectral & (1,24)&(3,48)&(1,48)&(1,28)&(1,22)
-    \end{tabular}
-    \caption{Hyperparameters for the methods under Models 1-5 in Table~\ref{tb:md2}. For {\bf \small Borda count} and {\bf \small LSE} methods, the values in the table indicate the number of blocks. For {\bf \small Spectral} method, the first value indicates the tensor unfolding mode, while the second one represents the singular value threshold.}
-    \label{tb:hyper}
-\end{table}
 
 \subsection{Extra results on Chicago crime data analysis}\label{subsec:chicago}
 We investigate the ten groups of crime types clustered by our method. Table~\ref{tb:crimetb} shows that the clustering captures the similar type of crimes. For example, group 2 consists of misdemeanors such as public indecency, non-criminal, and concealed carry license violation, while group 6 represents sex-related offenses such as prostitution, sex offense, and crime sexual assault.

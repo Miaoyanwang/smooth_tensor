@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2019)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: appendix.aux
+The style file: plain.bst
+Database file #1: tensor_wang.bib
+You've used 10 entries,
+            2118 wiz_defined-function locations,
+            580 strings with 6011 characters,
+and the built_in function-call counts, 3235 in all, are:
+= -- 324
+> -- 130
+< -- 2
++ -- 53
+- -- 42
+* -- 226
+:= -- 544
+add.period$ -- 30
+call.type$ -- 10
+change.case$ -- 50
+chr.to.int$ -- 0
+cite$ -- 10
+duplicate$ -- 123
+empty$ -- 261
+format.name$ -- 42
+if$ -- 668
+int.to.chr$ -- 0
+int.to.str$ -- 10
+missing$ -- 11
+newline$ -- 53
+num.names$ -- 20
+pop$ -- 45
+preamble$ -- 1
+purify$ -- 41
+quote$ -- 0
+skip$ -- 86
+stack$ -- 0
+substring$ -- 234
+swap$ -- 23
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 38
+warning$ -- 0
+while$ -- 34
+width$ -- 12
+write$ -- 110

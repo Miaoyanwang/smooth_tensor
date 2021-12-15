@@ -1,0 +1,59 @@
+This is BibTeX, Version 0.99d (TeX Live 2019)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: SLDS_smoothT.aux
+The style file: Chicago.bst.bst
+Database file #1: tensor_wang.bib
+Warning--no number and no volume in chen2021optimal
+Warning--page numbers missing in chen2021optimal
+Warning--no number and no volume in han2020exact
+Warning--page numbers missing in han2020exact
+Warning--no number and no volume in Jeremy.2020
+Warning--page numbers missing in Jeremy.2020
+Warning--no number and no volume in ortelli2019prediction
+Warning--page numbers missing in ortelli2019prediction
+Warning--no number and no volume in pananjady2020isotonic
+Warning--page numbers missing in pananjady2020isotonic
+Warning--no number and no volume in phillippek2016
+Warning--page numbers missing in phillippek2016
+You've used 36 entries,
+            2861 wiz_defined-function locations,
+            847 strings with 10922 characters,
+and the built_in function-call counts, 26134 in all, are:
+= -- 2150
+> -- 2002
+< -- 6
++ -- 604
+- -- 674
+* -- 2426
+:= -- 4744
+add.period$ -- 109
+call.type$ -- 36
+change.case$ -- 269
+chr.to.int$ -- 36
+cite$ -- 48
+duplicate$ -- 690
+empty$ -- 1548
+format.name$ -- 774
+if$ -- 4858
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 40
+newline$ -- 183
+num.names$ -- 360
+pop$ -- 202
+preamble$ -- 1
+purify$ -- 489
+quote$ -- 0
+skip$ -- 716
+stack$ -- 0
+substring$ -- 1407
+swap$ -- 238
+text.length$ -- 6
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 680
+warning$ -- 12
+while$ -- 348
+width$ -- 0
+write$ -- 477
+(There were 12 warnings)

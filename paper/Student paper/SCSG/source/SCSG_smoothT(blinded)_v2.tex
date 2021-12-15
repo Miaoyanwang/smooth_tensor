@@ -53,6 +53,7 @@
 % If you use BibTeX in apalike style, activate the following line:
 %\bibliographystyle{apalike}
 \input macros.tex
+
 \usepackage{mathrsfs}  
 \def\caliB{\mathscr{B}}
 \usepackage{float}
@@ -125,7 +126,6 @@ The primary goal of our work is to provide statistical and computational estimat
 \vspace{-.2cm}
 \begin{table*}[http]
     \centering
-    \resizebox{\textwidth}{!}{%
     \begin{tabular}{c|cccc}
     & Pananjady et al~\cite{pananjady2020isotonic}&  Balasubramanian~\cite{balasubramanian2021nonparametric}&  Li et al~\cite{li2019nearest}&\textbf{Ours$^*$}\\
     \hline
@@ -137,12 +137,11 @@ The primary goal of our work is to provide statistical and computational estimat
      Polynomial algorithm& $\surd$ &$\times$ & $\surd$ & $\surd$\\
         \hline
     \end{tabular}
-    }
     \caption{\small Comparison of our results with previous works. $^*$We  list here only the result for infinitely smooth order-3 tensors. Our results allow general tensors of arbitrary order $m$ and smoothness $\alpha$; See Theorems~\ref{thm:LSE}-\ref{thm:BC} in Sections~\ref{sec:lse}-\ref{sec:borda}.}\label{tab:comp}
 \end{table*}
 \vspace{-.3cm}
 \begin{itemize}[wide,labelwidth=0pt, labelindent=0pt,itemsep=.4ex,topsep=-2pt]
-\item We develop a general permuted $\alpha$-smooth tensor model, where $\alpha\geq 0$ is some natural measure of functional smoothness (formal definition in Section~\ref{sec:md}). In contrast to earlier work~\cite{balasubramanian2021nonparametric,li2019nearest}, we establish the statistically optima rate and fully characterize its dependence on tensor order, dimension, and smoothness index. Table~\ref{tab:comp} summarizes our improvement over previous works on tensor learning with latent permutations. 
+\item We develop a general permuted $\alpha$-smooth tensor model, where $\alpha\geq 0$ is some natural measure of functional smoothness (formal definition in Section~\ref{sec:md}). In contrast to earlier work~\cite{balasubramanian2021nonparametric,li2019nearest}, we establish the statistically optimal rate and fully characterize its dependence on tensor order, dimension, and smoothness index. Table~\ref{tab:comp} summarizes our improvement over previous works on tensor learning with latent permutations. 
 
 %We establish the upper bound of the least-square estimate with high probability and show that this upper bound matches with minimax lower bound implying its optimality. 
 \item We discover a phase transition phenomenon with respect to the smoothness threshold needed for optimal recovery in model~\eqref{eq:rep}. 
@@ -155,7 +154,7 @@ Figure~\ref{fig:rate}(b) plots the dependence of estimation error in terms of sm
 {\bf Notation.} We use $[d]=\{1,\ldots,d\}$ for $d$-set with $d\in\mathbb{N}_{+}$. For a set $S$, $\mathds{1}_S$ denotes the indicator function. For positive two sequences $\{a_n\},\{b_n\}$,  we denote $a_n\lesssim b_n$ if $\lim_{n\to\infty} a_n/b_n\leq c$,  and $a_n\asymp b_n$ if $c_1\leq \lim_{n\to \infty} a_n/b_n\leq c_2$ for some constants $c,c_1,c_2>0$. Given number $a\in\mathbb{R}$, the floor function $\lfloor a\rfloor$ is the largest integer no greater than $a$, and the ceiling function $\lceil a\rceil$ is the smallest integer no less than $a$. An event $A$ is said to occur \emph{with high probability} if $\mathbb{P}(A)$ tends to 1 as the tensor dimension $d\to\infty$.We use $\Theta_{i_1,\ldots,i_m}$ to denote the tensor entry indexed by $(i_1,\ldots,i_m)$, and use $\Theta\circ\pi$ to denote the permuted tensor such that $(\Theta\circ\pi)_{i_1,\ldots,i_m} = \Theta_{\pi(i_1),\ldots,\pi(i_m)}$ for all $(i_1,\ldots,i_m)\in[d]^m$. We use $S(d)=\{\pi\colon [d]\to[d]\}$ to denote all possible permutations on $[d]$.
 
 
-\section{Smooth tensor model with unknown permutation}\label{sec:md}
+\section{Smooth tensor model with unknown permutation  and block-wise approximation}\label{sec:md}
 \vspace{-.1cm}
 Suppose we observe an order-$m$ $d$-dimensional symmetric data tensor from the permuted tensors in \eqref{eq:rep}.
 %Suppose we observe an order-$m$ $d$-dimensional data tensor from the following model,
@@ -283,10 +282,10 @@ The least-squares estimation error has two sources of error: the nonparametric e
 
 
 We now compare our results with existing work in the literature. %Theorem~\ref{thm:LSE} shows that the best rate is obtained with the choice of  $(\ell^*, k^*) = (0,\lceil d^{1\over\alpha\wedge1+1}\rceil)$ in the matrix case ($m =2$). 
-In the matrix case ($m=2$), our block-wise constant approximation and convergence rate reduce to the results in~\cite{klopp2017oracle}. For higher order tensor case ($m\geq 3$), earlier work~\citep{balasubramanian2021nonparametric} suggests that constant block approximation ($\ell^*=0$) remains minimax optimal for tensors. 
-Our Theorem~\ref{thm:LSE} disproves this conjecture, and we reveal a much faster rate $d^{-(m-1)}$ compared to the conjectured lower bound $d^{-2m/( m+2)}$~\citep{balasubramanian2021nonparametric}. For example, permuted $\alpha$-smooth tensors of order-3 require quadratic approximation $(\ell^*=2)$ with $k^*\asymp d^{1/3}$ blocks, for all $\alpha\geq 2$. The results show the clear difference from matrices and highlight the challenges with tensors. 
+In the matrix case ($m=2$), our block-wise constant approximation and convergence rate reduce to the results in~\cite{klopp2017oracle}. For higher order tensor case ($m\geq 3$), earlier work~\citep{balasubramanian2021nonparametric} conjectures that constant block approximation ($\ell^*=0$) remains minimax optimal for tensors. 
+Our Theorem~\ref{thm:LSE} disproves this conjecture, and we reveal a much faster rate $d^{-(m-1)}$ compared to the conjectured lower bound $d^{-2m/( m+2)}$~\citep{balasubramanian2021nonparametric}. In fact, permuted $\alpha$-smooth tensors of order-3 require quadratic approximation $(\ell^*=2)$ with $k^*\asymp d^{1/3}$ blocks, for all $\alpha\geq 2$. The results show the clear difference from matrices and highlight the challenges with tensors. 
 
-The next theorem shows that the critical polynomial degree $(m-2)(m+1)/2$ $=[m(m-1)/2-1]$ is not only sufficient but also necessary for accurate estimation of order-$m$ permuted smooth tensors. 
+The next theorem shows that the critical polynomial degree up to $(m-2)(m+1)/2$ is not only sufficient but also necessary for accurate estimation of order-$m$ permuted smooth tensors. 
 
 \begin{thm}[Minimax lower bound]\label{thm:minimax} For any given $\alpha\in(0,\infty)$, the estimation problem based on model~\eqref{eq:rep} obeys the minimax lower bound 
 \begin{equation}\label{eq:minimax}
@@ -372,7 +371,7 @@ Theorem~\ref{thm:BC} shows the estimation consistency of Borda count estimator. 
 
 \section{Numerical experiments and data application}\label{sec:sim}
 \vspace{-.1cm}
-{\bf Numerical comparisons.} We simulate symmetric order-3 $d$-dimensional tensors based on the permuted smooth tensor model~\eqref{eq:rep} with function $f$ in Figure~\ref{fig:area}a. The detailed simulation procedure is described in Appendix. We assess the performance for the four popular tensor methods: (a) Spectral method ({\bf \small Spectral})~\citep{xu2018rates} on unfolded tensor; (b) Least-squares estimation ({\bf \small LSE})  with $\ell=0$ implied by~\citep{gao2021minimax}; (c) Lease square estimation ({\bf \small BAL}) implied by~\cite{balasubramanian2021nonparametric}; (d) Our {\bf \small Borda Count} algorithm. The performance accuracy is assessed via mean square error (MSE) $= d^{-3}\FnormSize{}{\Theta\circ\pi-\hat\Theta\circ\hat\pi}^2$. 
+{\bf Numerical comparisons.} We simulate symmetric order-3 $d$-dimensional tensors based on the permuted smooth tensor model~\eqref{eq:rep} with diverse functions $f$. The detailed simulation procedure is described in Appendix. We assess the performance for the four popular tensor methods: (a) Spectral method ({\bf \small Spectral})~\citep{xu2018rates} on unfolded tensor; (b) Least-squares estimation ({\bf \small LSE})  with $\ell=0$ implied by~\citep{gao2021minimax}; (c) Lease square estimation ({\bf \small BAL}) implied by~\cite{balasubramanian2021nonparametric}; (d) Our {\bf \small Borda Count} algorithm. The performance accuracy is assessed via mean square error (MSE) $= d^{-3}\FnormSize{}{\Theta\circ\pi-\hat\Theta\circ\hat\pi}^2$. 
 
 %Notice that considered functions cover a reasonable range of model complexities from low rank to high rank. We generate the entries of the noise tensor i.i.d. from Gaussian distribution $N(0,0.5^2)$. The permutation $\pi$ is randomly sampled from all permutations. 
 %Throughout all experiments, we evaluate the accuracy of the estimation by mean square error (MSE) $= d^{-3}\FnormSize{}{\Theta\circ\pi-\hat\Theta\circ\hat\pi}^2$.
@@ -381,12 +380,12 @@ Theorem~\ref{thm:BC} shows the estimation consistency of Borda count estimator. 
 \begin{figure}[htp]
     \centering
     \includegraphics[width =\textwidth]{figures/sim2.pdf}    
-    \caption{(a-c) MSE comparison versus the number of blocks under simulation models 1-3 respectively. (d-f) MSE comparison versus tensor dimension under models 1-3 respectively. MSEs are measured across $n_{\text{sim}} = 20$ replications.}
+    \caption{(a-c) MSE comparison versus the number of blocks under simulation models 1,3 and 5 respectively. (d-f) MSE comparison versus tensor dimension under models 1,3 and 5 respectively. MSEs are measured across $n_{\text{sim}} = 20$ replications.}
     \label{fig:degk}
     \vspace{-.3cm}
 \end{figure}
 
-Figure~\ref{fig:degk}a-c examines the impact of the block number $k$ and degree of polynomial $\ell$ for the approximation. We fix the tensor dimension $d = 100$, and vary the number of blocks $k\in\{1,\ldots,15\}$ and polynomial degree $\ell\in\{0,1,2,3\}.$ The result demonstrates the trade-off in accuracy determined by the number of blocks for each polynomial degree. We find that degree-2 polynomials give the smallest MSE among all considered approximation for order-3 tensors. These observations are consistent with our theoretical results in Sections~\ref{sec:lse}-\ref{sec:borda}. Figure~\ref{fig:degk}d-f shows that our algorithm {\bf \small Borda Count} achieves the best performance in all scenarios as the tensor dimension increases. The poor performance of {\bf \small Spectral} can be explained by the loss of multilinear structure in the tensor unfolding procedure. The sub-optimality of {\bf \small LSE} is possibly due to its limits in both statistics and computations. Statistically, our theorems have shown that constant block approximation has sub-optimal rates. Computationally, the least-squares estimation~\eqref{eq:lseopt} is highly non-convex and computationally unstable. The outperformance of {\bf \small Borda count} demonstrates the efficacy of our method.
+Figure~\ref{fig:degk}a-c examine the impact of the block number $k$ and degree of polynomial $\ell$ for the approximation. We fix the tensor dimension $d = 100$, and vary the number of blocks $k\in\{1,\ldots,15\}$ and polynomial degree $\ell\in\{0,1,2,3\}.$ The result demonstrates the trade-off in accuracy determined by the number of blocks for each polynomial degree. We find that degree-2 polynomials give the smallest MSE among all considered approximation for order-3 tensors. These observations are consistent with our theoretical results in Sections~\ref{sec:lse}-\ref{sec:borda}. Figure~\ref{fig:degk}d-f shows that our algorithm {\bf \small Borda Count} achieves the best performance in all scenarios as the tensor dimension increases. The poor performance of {\bf \small Spectral} can be explained by the loss of multilinear structure in the tensor unfolding procedure. The sub-optimality of the least square estimations is possibly due to its limits in both statistics and computations. Statistically, our theorems have shown that constant block approximation has sub-optimal rates. Computationally, the least-squares estimation~\eqref{eq:lseopt} is highly non-convex and computationally unstable. The outperformance of {\bf \small Borda count} demonstrates the efficacy of our method.
 
 \begin{figure}[h]
     \centering

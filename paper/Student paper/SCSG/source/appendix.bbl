@@ -1,0 +1,58 @@
+\begin{thebibliography}{10}
+
+\bibitem{balasubramanian2021nonparametric}
+Krishnakumar Balasubramanian.
+\newblock Nonparametric modeling of higher-order interactions via
+  hypergraphons.
+\newblock {\em Journal of Machine Learning Research}, 22:1--25, 2021.
+
+\bibitem{chatterjee2015matrix}
+Sourav Chatterjee.
+\newblock Matrix estimation by universal singular value thresholding.
+\newblock {\em The Annals of Statistics}, 43(1):177--214, 2015.
+
+\bibitem{gao2015rate}
+Chao Gao, Yu~Lu, and Harrison~H Zhou.
+\newblock Rate-optimal graphon estimation.
+\newblock {\em The Annals of Statistics}, 43(6):2624--2652, 2015.
+
+\bibitem{gao2021minimax}
+Chao Gao and Zongming Ma.
+\newblock Minimax rates in network analysis: Graphon estimation, community
+  detection and hypothesis testing.
+\newblock {\em Statistical Science}, 36(1):16--33, 2021.
+
+\bibitem{gyorfi2002distribution}
+L{\'a}szl{\'o} Gy{\"o}rfi, Michael Kohler, Adam Krzy{\.z}ak, and Harro Walk.
+\newblock {\em A distribution-free theory of nonparametric regression},
+  volume~1.
+\newblock Springer, 2002.
+
+\bibitem{han2020exact}
+Rungang Han, Yuetian Luo, Miaoyan Wang, and Anru~R Zhang.
+\newblock Exact clustering in tensor block model: Statistical optimality and
+  computational limit.
+\newblock {\em arXiv preprint arXiv:2012.09996}, 2020.
+
+\bibitem{klopp2017oracle}
+Olga Klopp, Alexandre~B Tsybakov, and Nicolas Verzelen.
+\newblock Oracle inequalities for network models and sparse graphon estimation.
+\newblock {\em The Annals of Statistics}, 45(1):316--354, 2017.
+
+\bibitem{phillippek2016}
+Jan-Christian~Hitter Phillippe~Rigollet.
+\newblock High dimensional statistics.
+\newblock {\em Lecture notes for course 18S997}, 2015.
+
+\bibitem{stone1982optimal}
+Charles~J Stone.
+\newblock Optimal global rates of convergence for nonparametric regression.
+\newblock {\em The Annals of Statistics}, 10(4):1040--1053, 1982.
+
+\bibitem{xu2018rates}
+Jiaming Xu.
+\newblock Rates of convergence of spectral methods for graphon estimation.
+\newblock In {\em International Conference on Machine Learning}, pages
+  5433--5442, 2018.
+
+\end{thebibliography}

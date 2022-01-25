@@ -1,0 +1,58 @@
+\begin{thebibliography}{1}
+
+\bibitem{balasubramanian2021nonparametric}
+Krishnakumar Balasubramanian.
+\newblock Nonparametric modeling of higher-order interactions via
+  hypergraphons.
+\newblock {\em Journal of Machine Learning Research}, 22:1--25, 2021.
+
+\bibitem{baltrunas2011incarmusic}
+Linas Baltrunas, Marius Kaminskas, Bernd Ludwig, Omar Moling, Francesco Ricci,
+  Aykan Aydin, Karl-Heinz L{\"u}ke, and Roland Schwaiger.
+\newblock {I}n{C}ar{M}usic: Context-aware music recommendations in a car.
+\newblock In {\em International Conference on Electronic Commerce and Web
+  Technologies}, pages 89--100. Springer, 2011.
+
+\bibitem{bickel2009nonparametric}
+Peter~J Bickel and Aiyou Chen.
+\newblock A nonparametric view of network models and newman--girvan and other
+  modularities.
+\newblock {\em Proceedings of the National Academy of Sciences},
+  106(50):21068--21073, 2009.
+
+\bibitem{gao2015rate}
+Chao Gao, Yu~Lu, and Harrison~H Zhou.
+\newblock Rate-optimal graphon estimation.
+\newblock {\em The Annals of Statistics}, 43(6):2624--2652, 2015.
+
+\bibitem{han2020exact}
+Rungang Han, Yuetian Luo, Miaoyan Wang, and Anru~R Zhang.
+\newblock Exact clustering in tensor block model: Statistical optimality and
+  computational limit.
+\newblock {\em arXiv preprint arXiv:2012.09996}, 2020.
+
+\bibitem{klopp2017oracle}
+Olga Klopp, Alexandre~B Tsybakov, and Nicolas Verzelen.
+\newblock Oracle inequalities for network models and sparse graphon estimation.
+\newblock {\em The Annals of Statistics}, 45(1):316--354, 2017.
+
+\bibitem{li2019nearest}
+Yihua Li, Devavrat Shah, Dogyoon Song, and Christina~Lee Yu.
+\newblock Nearest neighbors for matrix estimation interpreted as blind
+  regression for latent variable model.
+\newblock {\em IEEE Transactions on Information Theory}, 66(3):1760--1784,
+  2019.
+
+\bibitem{pananjady2020isotonic}
+Ashwin Pananjady and Richard~J Samworth.
+\newblock Isotonic regression with unknown permutations: Statistics,
+  computation, and adaptation.
+\newblock {\em The Annals of Statistics, in press}, 2021.
+
+\bibitem{shah2019low}
+N~Shah, Sivaraman Balakrishnan, and M~Wainwright.
+\newblock Low permutation-rank matrices: Structural properties and noisy
+  completion.
+\newblock {\em Journal of Machine Learning Research}, 20:1--43, 2019.
+
+\end{thebibliography}
